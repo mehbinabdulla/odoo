@@ -10,16 +10,22 @@
                         <h2><field name="name"/></h2>
                     </div>
                     <group>
-                        <field name="student_id"/>
-                        <field name="date_from" widget="daterange" options="{'always_range':true,'end_date_field':'date_to'}"/>
-                        <field name="date_to" widget="daterange" options="{'always_range':true,'start_date_field':'date_from'}"/>
-                        <field name="is_half_day"/>
-                        <field name="half_day"/>
-                        <field name="number_of_days"/>
+                        <group>
+                            <field name="student_id" options="{'no_quick_create': True, 'no_create': True}"/>
+                            <field name="date_from" string="Period" widget="daterange" invisible="is_half_day" options="{'always_range':true,'end_date_field':'date_to'}"/>
+                            <field name="date_from" string="Period" invisible="not is_half_day"/>
+                            <field name="date_to" invisible="1"/>
+                            <label for="is_half_day"/>
+                            <div class="o_row">
+                                <field name="is_half_day"/>
+                                <field name="half_day" invisible="not is_half_day"/>
+                            </div>
+                            <field name="number_of_days"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Reason">
-                            <field name="reason"/>
+                            <field name="reason" placeholder="Type the reason for the leave..."/>
                         </page>
                     </notebook>
                 </sheet>
