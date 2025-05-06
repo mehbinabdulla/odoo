@@ -80,29 +80,45 @@
     </t>
     <t t-else="">
       <div t-if="!isScopedApp" class="o_navbar_apps_menu">
-        <Dropdown>
-          <button data-hotkey="h" title="Home Menu">
-            <i class="oi oi-apps" />
+          <button data-hotkey="h" title="Home Menu" t-on-click.prevent="_openAppMenuSidebar">
+              <i class="fa fa-th-large"></i>
+              <t t-if="!state.isAllAppsMenuOpened and currentApp" class="d-flex align-items-center m-3 mb-0">
+                  <img style="height: 1.7em;" t-if="currentApp.webIconData" class="o_app_icon me-2" t-attf-src="{{currentApp.webIconData}}"/>
+              </t>
           </button>
-          <t t-set-slot="content">
-            <DropdownItem
-              t-foreach="apps"
-              t-as="app"
-              t-key="app.id"
-              class="{ 'o_app': true, focus: menuService.getCurrentApp() === app }"
-              onSelected="() => this.onNavBarDropdownItemSelection(app)"
-              t-esc="app.name"
-              attrs="{ href: getMenuItemHref(app), 'data-menu-xmlid': app.xmlid, 'data-section': app.id }"
-            />
-          </t>
-        </Dropdown>
+          <Transition name="'o-app-menu-sidebar'" visible="state.isAppMenuSidebarOpened" leaveDuration="200" t-slot-scope="transition">
+        <div class="o_app_menu_sidebar position-fixed top-0 bottom-0 end-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
+          <div class="o_sidebar_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4">
+              <small class="d-flex align-items-center justify-content-between ms-2">
+                  <a href="/odoo" class="btn btn-primary" t-on-click.prevent="onAllAppsBtnClick"><i class="oi oi-apps"></i><span class="px-2">All Apps</span></a>
+              </small>
+              <button class="o_sidebar_close oi oi-close btn d-flex align-items-center h-100 bg-transparent border-0 fs-2 text-reset" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeAppMenuSidebar"/>
+          </div>
+          <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
+                <ul class="list-unstyled py-2 ps-0 mb-0">
+                      <t t-foreach="apps" t-as="app" t-key="app_index">
+                        <li t-att-data-menu-xmlid="app.xmlid" class="o_app fw-bolder py-2" t-att-class="{'bg-primary-subtle border-primary-subtle': menuService.getCurrentApp() === app}" t-on-click="() => {this.onNavBarDropdownItemSelection(app); this._closeAppMenuSidebar();}">
+                          <div class="d-flex align-items-center">
+                            <img style="height: 3em;" t-if="app.webIconData" class="o_app_icon me-2" t-attf-src="{{app.webIconData}}"/>
+                            <t t-esc="app.name"/>
+                          </div>
+                        </li>
+                      </t>
+                </ul>
+          </nav>
+        </div>
+      </Transition>
       </div>
       <div t-else="" class="mx-2"/>
     </t>
   </t>
 
   <t t-name="web.NavBar.AppsMenu.Sidebar">
-    <i class="fa fa-bars" aria-hidden="true"/>
+      <button data-hotkey="h" title="Home Menu">
+          <t t-if="!state.isAllAppsMenuOpened and currentApp" class="d-flex align-items-center m-3 mb-0">
+              <img style="height: 1.7em;" t-if="currentApp.webIconData" class="o_app_icon me-2" t-attf-src="{{currentApp.webIconData}}"/>
+          </t>
+      </button>
     <t t-portal="'body'">
       <Transition name="'o-app-menu-sidebar'" visible="state.isAppMenuSidebarOpened" leaveDuration="200" t-slot-scope="transition">
         <div class="o_app_menu_sidebar position-fixed top-0 bottom-0 end-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
