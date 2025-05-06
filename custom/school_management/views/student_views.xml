@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="student_list" model="ir.ui.view">
+        <field name="name">student.list</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <list string="Student" decoration-info="stage == 'draft'">
+                <field name="name"/>
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="email"/>
+                <field name="mobile"/>
+                <field name="stage"
+                       decoration-success="stage == 'registered'"
+                       decoration-info="stage == 'draft'"
+                       widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="student_form" model="ir.ui.view">
+        <field name="name">student.form</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <form string="Student">
+                <header>
+                    <button name="action_register_student" string="Register" class="oe_highlight" type="object" invisible="stage=='registered'"/>
+                    <button name="action_deregister_student" string="Reset to Draft" type="object" invisible="stage=='draft'"/>
+                    <field name="stage" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <field name="photo" widget="image" class="oe_avatar" readonly="stage=='registered'"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                        <label for="first_name"/>
+                        <group class="col-6">
+                            <h2><field name="first_name" placeholder="First Name" readonly="stage=='registered'"/></h2>
+                            <h2><field name="last_name" placeholder="Last Name" readonly="stage=='registered'"/></h2>
+                        </group>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="partner_id"/>
+                            <div class="o_row">
+                                <field name="partner_id" readonly="stage=='registered'" string="Partner" placeholder="Related Partner" domain="[('partner_type', '=', 'student'), ('name', 'ilike', first_name and last_name)]" widget="many2one_avatar_user" options="{'no_create': True ,'no_quick_create': True}"/>
+                                <button string="Create Partner" class="btn btn-link" type="object" name="action_create_partner" invisible="partner_id or stage=='registered'"/>
+                            </div>
+                            <field name="email" placeholder="eg: student@example.com" readonly="stage=='registered'"/>
+                            <field name="mobile" placeholder="eg: +1 5432 000 000" readonly="stage=='registered'"/>
+                        </group>
+                        <group>
+                            <field name="reg_date" readonly="stage=='registered'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Personal Details">
+                            <group>
+                                <group string="Student Details">
+                                    <field name="aadhaar_number" placeholder="12 digit Aadhaar number" readonly="stage=='registered'"/>
+                                    <field name="dob" placeholder="eg: 01/01/2000" options="{'max_date':'today'}" readonly="stage=='registered'"/>
+                                    <field name="age" placeholder="eg: 20"/>
+                                    <field name="gender" widget="radio" options="{'horizontal': true}" readonly="stage=='registered'"/>
+                                </group>
+                                <group string="Parent Details">
+                                    <field name="father" placeholder="Name of Father" readonly="stage=='registered'"/>
+                                    <field name="mother" placeholder="Name of Mother" readonly="stage=='registered'"/>
+                                </group>
+                            </group>
+                        </page>
+                         <page string="Address">
+                            <group>
+                                <group string="Communication Address">
+                                    <div class="o_address_format">
+                                        <field name="communication_addr_street" placeholder="Street..." class="o_address_street" readonly="stage=='registered'"/>
+                                        <field name="communication_addr_street2" placeholder="Street 2..." class="o_address_street" readonly="stage=='registered'"/>
+                                        <field name="communication_addr_city" placeholder="City" class="o_address_city" readonly="stage=='registered'"/>
+                                        <field name="communication_addr_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" readonly="stage=='registered'"/>
+                                        <field name="communication_addr_zip" placeholder="ZIP" class="o_address_zip" readonly="stage=='registered'"/>
+                                        <field name="communication_addr_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="stage=='registered'"/>
+                                    </div>
+                                </group>
+                                <group string="Permanent Address">
+                                    <div class="o_address_format">
+                                        <span class="d-inline-flex">
+                                            <field name="is_same_as_com" readonly="stage=='registered'"/>
+                                            <label for="is_same_as_com"/>
+                                        </span>
+                                        <div invisible="is_same_as_com">
+                                            <field name="permanent_addr_street" placeholder="Street..." class="o_address_street" readonly="stage=='registered'"/>
+                                            <field name="permanent_addr_street2" placeholder="Street 2..." class="o_address_street" readonly="stage=='registered'"/>
+                                            <field name="permanent_addr_city" placeholder="City" class="o_address_city" readonly="stage=='registered'"/>
+                                            <field name="permanent_addr_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" readonly="stage=='registered'"/>
+                                            <field name="permanent_addr_zip" placeholder="ZIP" class="o_address_zip" readonly="stage=='registered'"/>
+                                            <field name="permanent_addr_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="stage=='registered'"/>
+                                        </div>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Academics">
+                            <group>
+                                <group string="Transfer Certificate">
+                                    <field name="prev_dept_id" placeholder="eg: LP" readonly="stage=='registered'"/>
+                                    <field name="prev_class_id" placeholder="eg: Class 1" readonly="stage=='registered'"/>
+                                    <field name="tc" filename="tc_filename" widget="file" readonly="stage=='registered'"/>
+                                </group>
+                                <group string="Clubs">
+                                    <field name="club_ids" placeholder="eg: Arts Club" widget="many2many_tags" options="{'no_create': True, 'no_quick_create': True}"/>
+                                </group>
+                                <group string="School Details">
+                                    <field name="school_id" placeholder="eg: HS School" readonly="stage=='registered'"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_student">
+        <field name="name">Registration</field>
+        <field name="res_model">student</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new record
+            </p><p>
+            </p>
+        </field>
+    </record>
+</odoo>

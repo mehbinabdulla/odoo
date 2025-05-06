@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="school_club_list" model="ir.ui.view">
+        <field name="name">school.club.list</field>
+        <field name="model">school.club</field>
+        <field name="arch" type="xml">
+            <list string="Club">
+                <field name="name"/>
+                <field name="student_ids"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="school_club_form" model="ir.ui.view">
+        <field name="name">school.club.form</field>
+        <field name="model">school.club</field>
+        <field name="arch" type="xml">
+            <form string="Club">
+                <header>
+
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_event_smart_button"
+                                type="object" class="oe_stat_button" icon="fa-calendar">
+                            <field name="event_count" string="Events" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <span>Club</span>
+                        <h1><field name="name" placeholder="eg: Arts Club"/></h1>
+                    </div>
+                   <notebook>
+                       <page string="Students">
+                           <field name="student_ids"/>
+                       </page>
+                   </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_school_club" model="ir.actions.act_window">
+        <field name="name">Clubs</field>
+        <field name="res_model">school.club</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new record
+            </p>
+        </field>
+    </record>
+
+</odoo>

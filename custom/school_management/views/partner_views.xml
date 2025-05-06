@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//span[@name='address_name']" position="before">
+                <field name="partner_type" invisible="is_company == True"/>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="widget"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="partner_simple_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_simple_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='function']" position="replace">
+                <field name="partner_type" invisible="is_company == True"/>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="widget"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_partner_student" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,activity,form</field>
+        <field name="domain">[('partner_type', '=', 'student')]</field>
+        <field name="context">{'default_partner_type': 'student'}</field>
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new record
+            </p>
+        </field>
+    </record>
+
+    <record id="action_partner_teacher" model="ir.actions.act_window">
+        <field name="name">Teachers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,activity,form</field>
+        <field name="domain">[('partner_type', '=', 'teacher')]</field>
+        <field name="context">{'default_partner_type': 'teacher'}</field>
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new record
+            </p>
+        </field>
+    </record>
+
+    <record id="action_partner_staff" model="ir.actions.act_window">
+        <field name="name">Office Staff</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,activity,form</field>
+        <field name="domain">[('partner_type', '=', 'staff')]</field>
+        <field name="context">{'default_partner_type': 'staff'}</field>
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new record
+            </p>
+        </field>
+    </record>
+
+</odoo>

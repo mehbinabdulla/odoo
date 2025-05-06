@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="school_event_form" model="ir.ui.view">
+        <field name="name">school.event.form</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_tz']" position="after">
+                <field name="club_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="school_event_kanban" model="ir.ui.view">
+        <field name="name">school.event.kanban</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='fw-bold fs-5 o_text_overflow']" position="after">
+                <div>
+                    <field t-if="record.club_id.value" name="club_id" class="ms-1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_school_event" model="ir.actions.act_window">
+        <field name="name">Events</field>
+        <field name="res_model">event.event</field>
+        <field name="view_mode">kanban,calendar,pivot,graph,activity,list,form</field>
+        <field name="domain">[('club_id', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new event
+            </p>
+        </field>
+    </record>
+</odoo>

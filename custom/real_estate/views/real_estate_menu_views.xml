@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem id="real_estate_menu_root"
+          name="Real Estate"
+          web_icon="real_estate,static/description/icon.png"
+          sequence="30"/>
+
+    <menuitem id="real_estate_menu_orders"
+          name="Orders"
+          action="action_real_estate_orders"
+          parent="real_estate_menu_root"
+          sequence="10"/>
+
+    <menuitem id="real_estate_menu_properties_root"
+          name="Properties"
+          parent="real_estate_menu_root"
+          sequence="20"/>
+
+    <menuitem id="real_estate_menu_properties"
+          name="Properties"
+          parent="real_estate_menu_properties_root"
+          action="action_real_estate_property"
+          sequence="10"/>
+
+    <menuitem id="real_estate_menu_property_type"
+          name="Property Types"
+          parent="real_estate_menu_properties_root"
+          action="action_real_estate_property_type"
+          sequence="20"/>
+</odoo>

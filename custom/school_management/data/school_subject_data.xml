@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="school_subject_1" model="school.subject">
+        <field name="name">English</field>
+        <field name="department_id" ref="school_department_lp"/>
+    </record>
+    <record id="school_subject_2" model="school.subject">
+        <field name="name">Malayalam</field>
+        <field name="department_id" ref="school_department_lp"/>
+    </record>
+    <record id="school_subject_3" model="school.subject">
+        <field name="name">Social Science</field>
+        <field name="department_id" ref="school_department_up"/>
+    </record>
+    <record id="school_subject_4" model="school.subject">
+        <field name="name">Basic Science</field>
+        <field name="department_id" ref="school_department_up"/>
+    </record>
+    <record id="school_subject_5" model="school.subject">
+        <field name="name">Physics</field>
+        <field name="department_id" ref="school_department_hs"/>
+    </record>
+    <record id="school_subject_6" model="school.subject">
+        <field name="name">Chemistry</field>
+        <field name="department_id" ref="school_department_hs"/>
+    </record>
+</odoo>

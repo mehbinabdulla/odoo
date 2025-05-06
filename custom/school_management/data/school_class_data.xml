@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="school_class_1" model="school.class">
+        <field name="name">Class 1</field>
+        <field name="department_id" ref="school_department_lp"/>
+    </record>
+    <record id="school_class_2" model="school.class">
+        <field name="name">Class 2</field>
+        <field name="department_id" ref="school_department_lp"/>
+    </record>
+    <record id="school_class_3" model="school.class">
+        <field name="name">Class 3</field>
+        <field name="department_id" ref="school_department_lp"/>
+    </record>
+    <record id="school_class_4" model="school.class">
+        <field name="name">Class 4</field>
+        <field name="department_id" ref="school_department_up"/>
+    </record>
+    <record id="school_class_5" model="school.class">
+        <field name="name">Class 5</field>
+        <field name="department_id" ref="school_department_up"/>
+    </record>
+    <record id="school_class_6" model="school.class">
+        <field name="name">Class 6</field>
+        <field name="department_id" ref="school_department_up"/>
+    </record>
+    <record id="school_class_7" model="school.class">
+        <field name="name">Class 7</field>
+        <field name="department_id" ref="school_department_up"/>
+    </record>
+    <record id="school_class_8" model="school.class">
+        <field name="name">Class 8</field>
+        <field name="department_id" ref="school_department_hs"/>
+    </record>
+     <record id="school_class_9" model="school.class">
+        <field name="name">Class 9</field>
+        <field name="department_id" ref="school_department_hs"/>
+    </record>
+    <record id="school_class_10" model="school.class">
+        <field name="name">Class 10</field>
+        <field name="department_id" ref="school_department_hs"/>
+    </record>
+</odoo>

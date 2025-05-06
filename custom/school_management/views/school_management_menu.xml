@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem id="school_menu_root"
+          name="School Management"
+          web_icon="school_management,static/description/icon.png"
+          sequence="10"/>
+
+    <menuitem id="school_menu_student_root"
+          name="Students"
+          parent="school_menu_root"
+          sequence="10"/>
+
+    <menuitem id="school_menu_student_register"
+          name="Registration"
+          action="action_student"
+          parent="school_menu_student_root"
+          sequence="10"/>
+
+    <menuitem id="school_menu_student"
+          name="Students"
+          action="action_partner_student"
+          parent="school_menu_student_root"
+          sequence="20"/>
+
+    <menuitem id="school_menu_partner"
+          name="Employees"
+          parent="school_menu_root"
+          sequence="20"/>
+
+    <menuitem id="school_menu_teacher"
+          name="Teachers"
+          parent="school_menu_partner"
+          action="action_partner_teacher"
+          sequence="10"/>
+
+    <menuitem id="school_menu_staff"
+          name="Staff"
+          parent="school_menu_partner"
+          action="action_partner_staff"
+          sequence="20"/>
+
+    <menuitem id="school_menu_leave"
+          name="Leaves"
+          parent="school_menu_root"
+          action="action_student_leave"
+          sequence="30"/>
+
+    <menuitem id="school_menu_club_root"
+          name="Clubs"
+          parent="school_menu_root"
+          sequence="40"/>
+
+    <menuitem id="school_menu_club"
+          name="Clubs"
+          parent="school_menu_club_root"
+          action="action_school_club"
+          sequence="10"/>
+
+    <menuitem id="school_menu_event"
+          name="Events"
+          parent="school_menu_club_root"
+          action="action_school_event"
+          sequence="20"/>
+
+    <menuitem id="school_menu_config"
+          name="Configuration"
+          parent="school_menu_root"
+          sequence="50"/>
+
+    <menuitem id="school_menu_class"
+          name="Classes"
+          action="action_school_class"
+          parent="school_menu_config"
+          sequence="20"/>
+
+    <menuitem id="school_menu_department"
+          name="Departments"
+          action="action_school_department"
+          parent="school_menu_config"
+          sequence="30"/>
+
+
+    <menuitem id="school_menu_subject"
+          name="Subjects"
+          action="action_school_subject"
+          parent="school_menu_config"
+          sequence="40"/>
+
+    <menuitem id="school_menu_academic_year"
+          name="Academic Year"
+          parent="school_menu_config"
+          action="action_school_academic_year"
+          sequence="50"/>
+</odoo>

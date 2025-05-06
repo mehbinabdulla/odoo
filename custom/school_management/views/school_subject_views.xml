@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="school_subject_list" model="ir.ui.view">
+        <field name="name">school.subject.list</field>
+        <field name="model">school.subject</field>
+        <field name="arch" type="xml">
+            <list string="Subject">
+                <field name="name"/>
+                <field name="department_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="school_subject_form" model="ir.ui.view">
+        <field name="name">school.subject.form</field>
+        <field name="model">school.subject</field>
+        <field name="arch" type="xml">
+            <form string="Subject">
+                <sheet>
+                    <div class="oe_title">
+                        <span>Subject</span>
+                        <h1><field name="name" placeholder="eg: Physics"/></h1>
+                    </div>
+                    <field name="department_id" placeholder="eg: UP"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_school_subject" model="ir.actions.act_window">
+        <field name="name">Subjects</field>
+        <field name="res_model">school.subject</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new record
+            </p>
+        </field>
+    </record>
+
+</odoo>

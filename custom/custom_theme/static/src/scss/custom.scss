@@ -1,0 +1,189 @@
+// Override Odoo Default Colors
+$o-brand-primary-custom: #714B67 !default;   // Change primary color
+$o-brand-secondary: #714B67 !important; // Change secondary color
+$o-brand-odoo-custom: #714B67 !default;      // Odoo Brand Color
+
+// Apply Changes to Navbar
+.o_main_navbar,
+ .o_main_navbar.d-print-none {
+    background-color: $o-white !important;
+    border: none;
+}
+
+.o_menu_sections a,
+ .o-dropdown.dropdown-toggle.dropdown{
+    background-color: $o-white !important;
+}
+
+.o-dropdown-item.dropdown-item.o-navigable.o_menu_brand,
+ .o_main_navbar .o_menu_sections {
+    background-color: $o-white !important;
+}
+
+.o_menu_toggle.border-0.hasImage button,
+nav .o_navbar_apps_menu button {
+    padding-right: 0 !important;
+    padding-left: 16px !important;
+    transition: all 1s ease-out;
+    height: 46px;
+    background-color: transparent !important;
+    border: none;
+}
+
+.o_menu_toggle.border-0.hasImage button img.o_app_icon.me-2 {
+    margin: 0 !important;
+}
+
+.o_menu_toggle.border-0.hasImage button img.o_app_icon.me-2,
+nav .o_navbar_apps_menu button img.o_app_icon.me-2 {
+    min-width: 30px !important;
+    object-fit: contain;
+}
+
+nav .o_navbar_apps_menu button .fa.fa-th-large {
+    margin-right: 8px;
+}
+
+nav .o_navbar_apps_menu button .fa.fa-th-large,
+ nav .o_navbar_apps_menu button .fa.fa-th-large::before {
+    color: $o-gray-800 !important;
+    font-size: 18px;
+    display: none !important;
+    min-width: 30px !important;
+}
+
+nav .o_navbar_apps_menu button:hover .fa.fa-th-large,
+ nav .o_navbar_apps_menu button:hover .fa.fa-th-large::before {
+    display: block !important;
+}
+
+nav .o_navbar_apps_menu button:hover img.o_app_icon.me-2 {
+    display: none !important;
+}
+
+.o_menu_toggle.border-0.hasImage button {
+    padding-left: 0 !important;
+}
+
+nav span.min-w-0.text-truncate {
+    color: $o-gray-800 !important;
+}
+
+nav button.o_sidebar_close {
+    margin-right: 10px !important;
+}
+
+.o_popover.popover.mw-100.o-dropdown--menu.dropdown-menu.mx-0 {
+    margin: 4px 16px !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none
+}
+
+.o_popover.popover.mw-100.o-dropdown--menu.dropdown-menu.mx-0::-webkit-scrollbar {
+  display: none;
+}
+
+li.app-list {
+    padding: 8px 16px !important;
+    gap: 8px;
+    cursor: pointer !important;
+}
+
+li.app-list:hover {
+    background-color: darken($o-white, 5%) !important;
+}
+
+li.app-list div {
+    font-weight:500;
+}
+
+button.py-1.py-lg-0.o-dropdown.dropdown-toggle.dropdown {
+    padding-right: 16px !important;
+}
+
+.o_main_navbar .o_menu_systray .fa,
+ .o_main_navbar .o_menu_sections .fa,
+ .o_main_navbar .o_menu_sections a,
+ .o_main_navbar .o_menu_systray a,
+ .o-dropdown.dropdown-toggle.dropdown span,
+ .o-dropdown.dropdown-toggle.dropdown small,
+ .o-dropdown-item.dropdown-item.o-navigable.o_nav_entry {
+    color: $o-gray-800 !important;
+    font-weight: 500 !important;
+}
+
+.o_main_navbar .o_menu_systray .fa:hover,
+ .o_main_navbar .o_menu_sections .fa:hover,
+ .o_main_navbar .o_menu_sections a:hover,
+ .o_main_navbar .o_menu_systray a:hover,
+ .o-dropdown.dropdown-toggle.dropdown span:hover,
+ .o-dropdown-item.dropdown-item.o-navigable.o_nav_entry:hover {
+    color: $o-brand-primary-custom !important;
+}
+
+.o_app.fw-bolder.py-2:hover {
+    background-color: $o-gray-300 !important;
+}
+
+.o-dropdown-item.dropdown-item.o-navigable.o_menu_brand {
+       color: $o-brand-primary-custom !important;
+}
+
+.o-dropdown-item.dropdown-item.o-navigable.o_menu_brand.d-flex {
+    color: $o-gray-800 !important;
+    font-weight: 700 !important;
+}
+
+
+// Change Button Background and Text Color
+.btn-outline-primary {
+    border-color: $o-brand-primary-custom !important;
+    color: $o-brand-primary-custom !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: darken($o-brand-primary-custom, 5%) !important;
+    border-color: darken($o-brand-primary-custom, 5%) !important;
+    color: $o-white !important;
+}
+
+.btn-primary {
+    background-color: $o-brand-primary-custom !important; // Dark purple button
+    border-color: $o-brand-primary-custom !important;
+    color: $o-white !important;
+}
+
+.btn-primary:hover {
+    background-color: darken($o-brand-primary-custom, 5%) !important;
+    border-color: darken($o-brand-primary-custom, 5%) !important;
+}
+
+.btn.btn-primary.o-dropdown.dropdown-toggle.dropdown {
+    background-color: $o-brand-primary-custom !important; // Dark purple button
+}
+
+span.o-mail-DiscussSidebarChannel-badge.badge.rounded-pill,
+ span.o-mail-MessagingMenu-counter.badge.rounded-pill {
+    background-color: $o-danger !important;
+    color: $o-white !important;
+}
+
+span.o-mail-DiscussSidebarChannel-badge.badge.rounded-pill:hover,
+ span.o-mail-MessagingMenu-counter.badge.rounded-pill:hover {
+    color: $o-white !important;
+}
+
+.fa.text-success::before {
+    color: $o-danger !important;
+}
+
+.o_notebook .o_notebook_headers a.nav-link {
+    border: none !important;
+    color: $o-gray-600 !important;
+    font-weight: 600;
+}
+
+.o_notebook .o_notebook_headers a.nav-link.active {
+    border-bottom: 3px solid $o-brand-primary-custom !important;
+    color: $o-brand-primary-custom !important;
+}
