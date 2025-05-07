@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from email.policy import default
+
 from odoo import api, fields, models
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError
@@ -9,11 +11,12 @@ class Student(models.Model):
     _name = 'student'
     _description = 'Student'
 
-    name = fields.Char(string='Registration ID', readonly=True, default='New')
+    reg_id = fields.Char(string='Registration ID', readonly=True, default='New')
     stage = fields.Selection([('draft', 'Draft'),('registered', 'Registered')], string='Status', default='draft')
     first_name = fields.Char(string='Name', required=True)
     last_name = fields.Char(string='Last Name', required=True)
-    partner_id = fields.Many2one('res.partner', ondelete='cascade')
+    name = fields.Char(compute='_compute_name')
+    partner_id = fields.Many2one('res.partner', domain=[('partner_type', '=', 'student')], ondelete='cascade')
     email = fields.Char(string='Email', related='partner_id.email', store=True, readonly=False)
     mobile = fields.Char(string='Mobile', related='partner_id.mobile', store=True, readonly=False)
     dob = fields.Date(string='Date of Birth')
@@ -25,6 +28,7 @@ class Student(models.Model):
     ], default='male', string='Gender')
     reg_date = fields.Date(string='Registration Date', default=fields.Date.today)
     photo = fields.Binary(string='Photo')
+    class_id = fields.Many2one('school.class', string='Class')
     prev_dept_id = fields.Many2one('school.department', string='Previous Department')
     prev_class_id = fields.Many2one('school.class', string='Previous Class', domain="[('department_id', '=?', prev_dept_id)]")
     tc = fields.Binary(string='Upload TC')
@@ -32,6 +36,7 @@ class Student(models.Model):
     aadhaar_number = fields.Char(string='Aadhaar Number')
     school_id = fields.Many2one('res.company', string='School', default=lambda self: self.env.company)
     club_ids = fields.Many2many('school.club', string='Clubs')
+    exam_ids = fields.Many2many('school.exam', compute='_compute_exam')
 
     father = fields.Char(string='Father')
     mother = fields.Char(string='Mother')
@@ -67,8 +72,17 @@ class Student(models.Model):
         """To create sequence number for the record"""
         for val in vals:
             if val.get('stage') == 'draft':
-                val['name'] = 'Draft'
+                val['reg_id'] = 'Draft'
         return super(Student, self).create(vals)
+
+    @api.onchange('first_name','last_name')
+    def _compute_name(self):
+        """To compute full name of the student"""
+        for rec in self:
+            if rec.first_name and rec.last_name:
+                rec.name = f"{rec.first_name} {rec.last_name}"
+            else:
+                rec.name = 'New'
 
     @api.onchange('prev_dept_id')
     def _onchange_prev_dept_id(self):
@@ -82,13 +96,21 @@ class Student(models.Model):
         for val in self:
             val.age = relativedelta(fields.Date.from_string(fields.Date.today()), fields.Date.from_string(val.dob)).years
 
+    def _compute_exam(self):
+        """To display exams"""
+        for rec in self:
+            if rec.stage == 'registered':
+                records = rec.env['school.exam'].search([('class_id', '=', rec.class_id.name), ('state', '=', 'assigned')])
+                rec.exam_ids = records
+            else:
+                rec.exam_ids = None
 
     def action_register_student(self):
         """To set the sequence and stage to registered"""
         for val in self:
             val.stage = 'registered'
-            if val.name in ['Draft', 'New']:
-                val.name = self.env['ir.sequence'].next_by_code('student_id_seq')
+            if val.reg_id in ['Draft', 'New']:
+                val.reg_id = self.env['ir.sequence'].next_by_code('student_id_seq')
 
     def action_deregister_student(self):
         """To set the stage to draft"""
@@ -98,7 +120,6 @@ class Student(models.Model):
     def action_create_partner(self):
         """To create partner"""
         self.ensure_one()
-        self.partner_id = self.env["res.partner"].id if self.env["res.partner"].name == f"{self.first_name} {self.last_name}" else None
         if self.partner_id:
             raise ValidationError("This employee already has a partner.")
         return {
@@ -109,7 +130,6 @@ class Student(models.Model):
             'view_id': self.env.ref('base.view_partner_simple_form').id,
             'target': 'new',
             'context': dict(self._context, **{
-                'default_student_id': self.name,
                 'default_name': f"{self.first_name} {self.last_name}",
                 'default_mobile': self.mobile,
                 'default_email': self.email,

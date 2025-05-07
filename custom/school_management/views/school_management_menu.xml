@@ -40,16 +40,22 @@
           action="action_partner_staff"
           sequence="20"/>
 
+    <menuitem id="school_menu_exam"
+          name="Exams"
+          action="action_school_exam"
+          parent="school_menu_root"
+          sequence="30"/>
+
     <menuitem id="school_menu_leave"
           name="Leaves"
           parent="school_menu_root"
           action="action_student_leave"
-          sequence="30"/>
+          sequence="40"/>
 
     <menuitem id="school_menu_club_root"
           name="Clubs"
           parent="school_menu_root"
-          sequence="40"/>
+          sequence="50"/>
 
     <menuitem id="school_menu_club"
           name="Clubs"
@@ -66,7 +72,7 @@
     <menuitem id="school_menu_config"
           name="Configuration"
           parent="school_menu_root"
-          sequence="50"/>
+          sequence="60"/>
 
     <menuitem id="school_menu_class"
           name="Classes"

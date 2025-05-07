@@ -4,7 +4,7 @@
         <field name="name">school.department.list</field>
         <field name="model">school.department</field>
         <field name="arch" type="xml">
-            <list string="Department">
+            <list string="Department" sample="1">
                 <field name="name"/>
                 <field name="hod_id"/>
             </list>

@@ -3,6 +3,7 @@ from odoo import fields, models
 
 
 class SchoolClub(models.Model):
+    """Create and edit Clubs and Events"""
     _name = 'school.club'
     _description = 'School Club'
 
@@ -11,6 +12,7 @@ class SchoolClub(models.Model):
     event_count = fields.Integer(compute='_compute_event_count')
 
     def action_event_smart_button(self):
+        """To set the view for the smart button"""
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
@@ -22,6 +24,7 @@ class SchoolClub(models.Model):
         }
 
     def _compute_event_count(self):
+        """To compute the count of events of the club"""
         for record in self:
             record.event_count = self.env['event.event'].search_count(
                 [('club_id', '=', self.name)])

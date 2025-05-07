@@ -3,6 +3,7 @@ from odoo import api, fields, models
 
 
 class SchoolEvent(models.Model):
+    """Added club id to the event"""
     _inherit = 'event.event'
 
     club_id = fields.Many2one('school.club', string='Club')

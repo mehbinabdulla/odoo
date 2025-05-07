@@ -11,6 +11,114 @@
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="widget"/>
             </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_type']" position="after">
+                <span invisible="partner_type not in ['student', 'teacher', 'staff']">Name</span>
+            </xpath>
+            <xpath expr="//div[hasclass('o_row')]" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='function']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mobile']" position="attributes">
+                <attribute name="required">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="attributes">
+                <attribute name="required">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//span[@name='address_name']//span" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_in_form_inherit" model="ir.ui.view">
+        <field name="name">l10n.in.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_in.l10n_in_view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_in_gst_treatment']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_in_pan']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_in_gst_state_warning']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_in_form_inherit" model="ir.ui.view">
+        <field name="name">l10n.in.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_in.l10n_in_view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_in_gst_treatment']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_in_pan']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_in_gst_state_warning']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_base_vat_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base_vat.view_partner_base_vat_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='vat']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_partner_property_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_buttons_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="sale.res_partner_view_buttons"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_sale_order']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="partner_view_buttons_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.partner_view_buttons"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_partner_invoices']" position="attributes">
+                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
+            </xpath>
         </field>
     </record>
 

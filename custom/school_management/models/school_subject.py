@@ -3,6 +3,7 @@ from odoo import fields, models
 
 
 class SchoolSubject(models.Model):
+    """Create subjects"""
     _name = 'school.subject'
     _description = 'School Subject'
 

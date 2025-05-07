@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+
+    <record model="ir.ui.view" id="view_student_leave_kanban">
+        <field name="name">student.leave.kanban</field>
+        <field name="model">student.leave</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="number_of_days"/>
+                <templates>
+                    <t t-name="card" class="row g-0">
+                        <div class="ms-3 col">
+                            <span class="badge rounded-pill float-end"><field name="number_of_days"/> days</span>
+                            <field class="fw-bold fs-5" name="student_id"/>
+                            <div class="mb-1">
+                                <span class="text-muted">from </span>
+                                <field name="date_from" readonly="1"/>
+                                <span class="text-muted"> to </span>
+                                <field name="date_to" readonly="1"/>
+                            </div>
+                            <field name="name" nolabel="1"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_student_leave_list">
+        <field name="name">student.leave.list</field>
+        <field name="model">student.leave</field>
+        <field name="arch" type="xml">
+            <list sample="1">
+                <field name="student_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="number_of_days"/>
+            </list>
+        </field>
+    </record>
+
      <record id="view_student_leave_form" model="ir.ui.view">
         <field name="name">student.leave.form</field>
         <field name="model">student.leave</field>
@@ -7,11 +50,11 @@
             <form>
                 <sheet>
                     <div class="oe_title">
-                        <h2><field name="name"/></h2>
+                        <h1><field name="name"/></h1>
                     </div>
                     <group>
                         <group>
-                            <field name="student_id" options="{'no_quick_create': True, 'no_create': True}"/>
+                            <field name="student_id" widget="many2one_avatar_user" options="{'no_quick_create': True, 'no_create': True}"/>
                             <field name="date_from" string="Period" widget="daterange" invisible="is_half_day" options="{'always_range':true,'end_date_field':'date_to'}"/>
                             <field name="date_from" string="Period" invisible="not is_half_day"/>
                             <field name="date_to" invisible="1"/>

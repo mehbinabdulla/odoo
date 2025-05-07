@@ -4,7 +4,7 @@
         <field name="name">school.academic.year.list</field>
         <field name="model">school.academic.year</field>
         <field name="arch" type="xml">
-            <list string="Academic Year">
+            <list string="Academic Year" sample="1">
                 <field name="name"/>
                 <field name="start_date" string="Start Date"/>
                 <field name="end_date" string="End Date"/>

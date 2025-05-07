@@ -5,3 +5,6 @@ access_school_department,access.school.department,model_school_department,base.g
 access_school_subject,access.school.subject,model_school_subject,base.group_user,1,1,1,1
 access_school_academic_year,access.school.academic.year,model_school_academic_year,base.group_user,1,1,1,1
 access_school_club,access.school.club,model_school_club,base.group_user,1,1,1,1
+access_student_leave,access.student.leave,model_student_leave,base.group_user,1,1,1,1
+access_school_exam,access.school_exam,model_school_exam,base.group_user,1,1,1,1
+access_school_exam_paper,access.school.exam_paper,model_school_exam_paper,base.group_user,1,1,1,1

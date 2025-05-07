@@ -16,7 +16,7 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@class='fw-bold fs-5 o_text_overflow']" position="after">
+            <xpath expr="//div[hasclass('fw-bold')]" position="after">
                 <div>
                     <field t-if="record.club_id.value" name="club_id" class="ms-1"/>
                 </div>

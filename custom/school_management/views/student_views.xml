@@ -4,10 +4,10 @@
         <field name="name">student.list</field>
         <field name="model">student</field>
         <field name="arch" type="xml">
-            <list string="Student" decoration-info="stage == 'draft'">
+            <list string="Student" decoration-info="stage == 'draft'" sample="1">
+                <field name="reg_id"/>
                 <field name="name"/>
-                <field name="first_name"/>
-                <field name="last_name"/>
+                <field name="class_id"/>
                 <field name="email"/>
                 <field name="mobile"/>
                 <field name="stage"
@@ -31,8 +31,8 @@
                 <sheet>
                     <field name="photo" widget="image" class="oe_avatar" readonly="stage=='registered'"/>
                     <div class="oe_title">
-                        <label for="name"/>
-                        <h1><field name="name"/></h1>
+                        <label for="reg_id"/>
+                        <h1><field name="reg_id"/></h1>
                         <label for="first_name"/>
                         <group class="col-6">
                             <h2><field name="first_name" placeholder="First Name" readonly="stage=='registered'"/></h2>
@@ -43,7 +43,7 @@
                         <group>
                             <label for="partner_id"/>
                             <div class="o_row">
-                                <field name="partner_id" readonly="stage=='registered'" string="Partner" placeholder="Related Partner" domain="[('partner_type', '=', 'student'), ('name', 'ilike', first_name and last_name)]" widget="many2one_avatar_user" options="{'no_create': True ,'no_quick_create': True}"/>
+                                <field name="partner_id" readonly="stage=='registered'" string="Partner" placeholder="Related Partner" widget="many2one_avatar_user" options="{'no_create': True ,'no_quick_create': True}"/>
                                 <button string="Create Partner" class="btn btn-link" type="object" name="action_create_partner" invisible="partner_id or stage=='registered'"/>
                             </div>
                             <field name="email" placeholder="eg: student@example.com" readonly="stage=='registered'"/>
@@ -100,18 +100,20 @@
                         </page>
                         <page string="Academics">
                             <group>
+                                <group string="Academics">
+                                     <field name="class_id" placeholder="Current Class"/>
+                                     <field name="club_ids" placeholder="eg: Arts Club" widget="many2many_tags" options="{'no_create': True, 'no_quick_create': True}"/>
+                                     <field name="school_id" placeholder="eg: HS School" readonly="stage=='registered'"/>
+                                </group>
                                 <group string="Transfer Certificate">
                                     <field name="prev_dept_id" placeholder="eg: LP" readonly="stage=='registered'"/>
                                     <field name="prev_class_id" placeholder="eg: Class 1" readonly="stage=='registered'"/>
                                     <field name="tc" filename="tc_filename" widget="file" readonly="stage=='registered'"/>
                                 </group>
-                                <group string="Clubs">
-                                    <field name="club_ids" placeholder="eg: Arts Club" widget="many2many_tags" options="{'no_create': True, 'no_quick_create': True}"/>
-                                </group>
-                                <group string="School Details">
-                                    <field name="school_id" placeholder="eg: HS School" readonly="stage=='registered'"/>
-                                </group>
                             </group>
+                        </page>
+                        <page string="Exams">
+                            <field name="exam_ids"/>
                         </page>
                     </notebook>
                 </sheet>

@@ -4,7 +4,7 @@
         <field name="name">school.club.list</field>
         <field name="model">school.club</field>
         <field name="arch" type="xml">
-            <list string="Club">
+            <list string="Club" sample="1">
                 <field name="name"/>
                 <field name="student_ids"/>
             </list>
