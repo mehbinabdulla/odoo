@@ -27,6 +27,7 @@
         'views/partner_views.xml',
         'views/leave_views.xml',
         'views/exam_views.xml',
+        'views/student_attendance_views.xml',
         'views/school_management_menu.xml',
     ],
     'web_icon': 'static/description/icon.png',

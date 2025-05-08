@@ -4,7 +4,7 @@
         <field name="name">school.exam.list</field>
         <field name="model">school.exam</field>
         <field name="arch" type="xml">
-            <list string="Exam" decoration-info="state == 'draft'">
+            <list string="Exam" sample="1" decoration-info="state == 'draft'">
                 <field name="name"/>
                 <field name="class_id"/>
                 <field name="paper_ids"/>

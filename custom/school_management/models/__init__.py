@@ -7,5 +7,6 @@ from . import (school_class,
                school_event,
                sale_order,
                partner,
-               leave,
-               exam)
+               student_leave,
+               student_attendance,
+               school_exam)

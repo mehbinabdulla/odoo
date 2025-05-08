@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from email.policy import default
-
 from odoo import api, fields, models
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError
@@ -17,7 +15,7 @@ class Student(models.Model):
     last_name = fields.Char(string='Last Name', required=True)
     name = fields.Char(compute='_compute_name')
     partner_id = fields.Many2one('res.partner', domain=[('partner_type', '=', 'student')], ondelete='cascade')
-    email = fields.Char(string='Email', related='partner_id.email', store=True, readonly=False)
+    email = fields.Char(string='Email', related='partner_id.email', store=True, required=True, readonly=False)
     mobile = fields.Char(string='Mobile', related='partner_id.mobile', store=True, readonly=False)
     dob = fields.Date(string='Date of Birth')
     age = fields.Integer(string='Age', compute='_compute_age', store=True)
@@ -75,6 +73,7 @@ class Student(models.Model):
                 val['reg_id'] = 'Draft'
         return super(Student, self).create(vals)
 
+
     @api.onchange('first_name','last_name')
     def _compute_name(self):
         """To compute full name of the student"""
@@ -96,6 +95,7 @@ class Student(models.Model):
         for val in self:
             val.age = relativedelta(fields.Date.from_string(fields.Date.today()), fields.Date.from_string(val.dob)).years
 
+    @api.depends('class_id')
     def _compute_exam(self):
         """To display exams"""
         for rec in self:
@@ -111,34 +111,25 @@ class Student(models.Model):
             val.stage = 'registered'
             if val.reg_id in ['Draft', 'New']:
                 val.reg_id = self.env['ir.sequence'].next_by_code('student_id_seq')
+            if not val.partner_id:
+                val.partner_id = self.env['res.partner'].create([{
+                            'name': self.env['res.users'].create([{
+                                'name': self.name,
+                                'login': self.email,
+                            }]).name,
+                            'mobile': self.mobile,
+                            'email': self.email,
+                            'partner_type': 'student',
+                            'student_reg_id': self.reg_id,
+                            'street': self.communication_addr_street,
+                            'street2': self.communication_addr_street2,
+                            'zip': self.communication_addr_zip,
+                            'city': self.communication_addr_city,
+                            'state_id': self.communication_addr_state_id,
+                            'country_id': self.communication_addr_country_id,
+                }]).id
 
     def action_deregister_student(self):
         """To set the stage to draft"""
         for val in self:
             val.stage = 'draft'
-
-    def action_create_partner(self):
-        """To create partner"""
-        self.ensure_one()
-        if self.partner_id:
-            raise ValidationError("This employee already has a partner.")
-        return {
-            'name': 'Create Partner',
-            'type': 'ir.actions.act_window',
-            'res_model': 'res.partner',
-            'view_mode': 'form',
-            'view_id': self.env.ref('base.view_partner_simple_form').id,
-            'target': 'new',
-            'context': dict(self._context, **{
-                'default_name': f"{self.first_name} {self.last_name}",
-                'default_mobile': self.mobile,
-                'default_email': self.email,
-                'default_partner_type': 'student',
-                'default_street': self.communication_addr_street,
-                'default_street2': self.communication_addr_street2,
-                'default_zip': self.communication_addr_zip,
-                'default_city': self.communication_addr_city,
-                'default_state_id': self.communication_addr_state_id,
-                'default_country_id': self.communication_addr_country_id,
-            })
-        }

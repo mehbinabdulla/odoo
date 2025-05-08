@@ -46,11 +46,22 @@
           parent="school_menu_root"
           sequence="30"/>
 
+    <menuitem id="school_menu_attendance_root"
+          name="Attendance"
+          parent="school_menu_root"
+          sequence="40"/>
+
+    <menuitem id="school_menu_attendance"
+          name="Attendance"
+          parent="school_menu_attendance_root"
+          action="action_student_attendance"
+          sequence="10"/>
+
     <menuitem id="school_menu_leave"
           name="Leaves"
-          parent="school_menu_root"
+          parent="school_menu_attendance_root"
           action="action_student_leave"
-          sequence="40"/>
+          sequence="20"/>
 
     <menuitem id="school_menu_club_root"
           name="Clubs"
