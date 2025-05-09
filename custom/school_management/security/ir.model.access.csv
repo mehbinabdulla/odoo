@@ -8,3 +8,5 @@ access_school_club,access.school.club,model_school_club,base.group_user,1,1,1,1
 access_student_leave,access.student.leave,model_student_leave,base.group_user,1,1,1,1
 access_school_exam,access.school_exam,model_school_exam,base.group_user,1,1,1,1
 access_school_exam_paper,access.school.exam_paper,model_school_exam_paper,base.group_user,1,1,1,1
+access_student_attendance,access.student.attendance,model_student_attendance,base.group_user,1,1,1,1
+

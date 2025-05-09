@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-from email.policy import default
-
 from odoo import api, fields, models
-from odoo.api import ValuesType, Self
-from odoo.exceptions import ValidationError
 
 
 class Partner(models.Model):
@@ -15,8 +11,12 @@ class Partner(models.Model):
         ('teacher','Teacher'),
         ('staff','Office Staff')
     ], readonly=True, string='Partner Type')
-    student_reg_id = fields.Char()
-    attendance_id = fields.Many2one('student.attendance', domain=[('student_id.reg_id', '=', student_reg_id), ('date', '=', fields.Date.today())])
+    student_reg_id = fields.Char(string='Registration ID')
+    attendance_state = fields.Selection([
+        ('done','Present'),
+        ('blocked','Absent'),
+        ('normal','Not Marked')
+    ],compute='_compute_attendance_id', string='Attendance')
 
     _sql_constraints = [
         ('unique_email', 'UNIQUE(email)',
@@ -25,16 +25,17 @@ class Partner(models.Model):
          "You entered Mobile is already exists. Please check the data is correct!")
     ]
 
-    # def _compute_attendance_id(self):
-    #     for rec in self:
-    #         attendance_obj = self.env['student.attendance']
-    #         is_attendance = attendance_obj.search([('student_id.name', '=', rec.name), ('date', '=', fields.Date.today())]).state
-    #         state = attendance_obj.state
-    #         if is_attendance:
-    #             if state == 'present':
-    #                 rec.attendance_state = 'done'
-    #             elif state == 'absent':
-    #                 rec.attendance_state = 'blocked'
-    #             else:
-    #                 rec.attendance_state = 'normal'
+    def _compute_attendance_id(self):
+        for rec in self:
+            attendance_obj = self.env['student.attendance']
+            attendance = attendance_obj.search([
+                ('student_id.reg_id', '=', rec.student_reg_id),
+                ('att_date', '=', fields.Date.today())
+            ], limit=1).state
+            if attendance == 'present':
+                rec.attendance_state = 'done'
+            elif attendance == 'absent':
+                rec.attendance_state = 'blocked'
+            else:
+                rec.attendance_state = 'normal'
 

@@ -7,8 +7,11 @@
         <field name="arch" type="xml">
             <xpath expr="//span[@name='address_name']" position="before">
                 <field name="partner_type" invisible="partner_type==False and is_company == True"/>
-                <field name="attendance_id"/>
-                <field name="student_reg_id" readonly="1"/>
+                <field name="attendance_state" widget="badge"
+                       decoration-success="attendance_state == 'done'"
+                       decoration-danger="attendance_state == 'blocked'"
+                       invisible="partner_type!='student'"/>
+                <field name="student_reg_id" readonly="1" invisible="partner_type!='student'"/>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="widget"/>
@@ -52,7 +55,7 @@
         <field name="inherit_id" ref="base.res_partner_kanban_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='display_name']" position="before">
-                <span class="badge rounded-pill float-end"></span>
+                <span class="badge rounded-pill float-end"><field name="attendance_state" widget="state_selection" invisible="partner_type!='student'"/></span>
             </xpath>
         </field>
     </record>

@@ -1,6 +1,4 @@
-from datetime import datetime, timedelta, date
-from email.policy import default
-
+from datetime import timedelta, date
 from odoo import models, fields, api
 
 

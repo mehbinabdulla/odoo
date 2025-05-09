@@ -13,7 +13,7 @@ class Student(models.Model):
     stage = fields.Selection([('draft', 'Draft'),('registered', 'Registered')], string='Status', default='draft')
     first_name = fields.Char(string='Name', required=True)
     last_name = fields.Char(string='Last Name', required=True)
-    name = fields.Char(compute='_compute_name')
+    name = fields.Char(string='Full Name', compute='_compute_name')
     partner_id = fields.Many2one('res.partner', domain=[('partner_type', '=', 'student')], ondelete='cascade')
     email = fields.Char(string='Email', related='partner_id.email', store=True, required=True, readonly=False)
     mobile = fields.Char(string='Mobile', related='partner_id.mobile', store=True, readonly=False)
@@ -106,7 +106,7 @@ class Student(models.Model):
                 rec.exam_ids = None
 
     def action_register_student(self):
-        """To set the sequence and stage to registered"""
+        """Actions need to occur when registering a student"""
         for val in self:
             val.stage = 'registered'
             if val.reg_id in ['Draft', 'New']:

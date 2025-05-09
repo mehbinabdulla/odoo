@@ -8,22 +8,15 @@ class SchoolEvent(models.Model):
 
     club_id = fields.Many2one('school.club', string='Club')
 
-    # @api.model
-    # def unlink(self):
-    #     return super(SchoolEvent, self).unlink()
-    #
-    # def create_attendee(self):
-    #     attendee_obj = self.env['event.registration']
-    #     print(self.id)
-    #     self.ensure_one()
-    #     attendee_obj.search(['event_id.name', '=', self.name]).unlink()
-    #     for attendee in self.club_id.student_ids:
-    #         attendee_obj.create([{
-    #             'name': f"{attendee.first_name} {attendee.last_name}",
-    #             'event_id': self.id,
-    #         }])
-    #
-    # def write(self, vals):
-    #     res = super(SchoolEvent, self).write(vals)
-    #     self.create_attendee()
-    #     return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        template = self.env.ref('school_management.employee_event_mail_template')
+        template.send_mail(self.id, force_send=True)
+        return super(SchoolEvent, self).create(vals_list)
+
+    @api.autovacuum
+    def _check_event_ended(self):
+        event_ids = self.search([('date_end', '<',  fields.Date.today())])
+        for event_id in event_ids:
+            print(event_id.name)
+            event_id.active = False
