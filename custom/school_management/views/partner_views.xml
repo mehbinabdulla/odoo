@@ -31,9 +31,6 @@
             <xpath expr="//field[@name='function']" position="attributes">
                 <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
             </xpath>
-            <xpath expr="//field[@name='mobile']" position="attributes">
-                <attribute name="required">partner_type in ['student', 'teacher', 'staff']</attribute>
-            </xpath>
             <xpath expr="//field[@name='email']" position="attributes">
                 <attribute name="required">partner_type in ['student', 'teacher', 'staff']</attribute>
             </xpath>

@@ -43,7 +43,7 @@
                         <group>
                             <label for="partner_id"/>
                             <div class="o_row">
-                                <field name="partner_id" readonly="stage=='registered'" string="Partner" placeholder="Related Partner" widget="many2one_avatar_user" options="{'no_create': True ,'no_quick_create': True}"/>
+                                <field name="partner_id" string="Partner" placeholder="Related Partner" widget="many2one_avatar_user" options="{'no_create': True ,'no_quick_create': True}"/>
                             </div>
                             <field name="email" placeholder="eg: student@example.com" readonly="stage=='registered'"/>
                             <field name="mobile" placeholder="eg: +1 5432 000 000" readonly="stage=='registered'"/>

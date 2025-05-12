@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta, datetime, time
 from odoo import api, fields, models
 
 
@@ -16,7 +17,7 @@ class Partner(models.Model):
         ('done','Present'),
         ('blocked','Absent'),
         ('normal','Not Marked')
-    ],compute='_compute_attendance_id', string='Attendance')
+    ], compute='_compute_attendance_state', string='Attendance')
 
     _sql_constraints = [
         ('unique_email', 'UNIQUE(email)',
@@ -25,17 +26,30 @@ class Partner(models.Model):
          "You entered Mobile is already exists. Please check the data is correct!")
     ]
 
-    def _compute_attendance_id(self):
-        for rec in self:
-            attendance_obj = self.env['student.attendance']
-            attendance = attendance_obj.search([
-                ('student_id.reg_id', '=', rec.student_reg_id),
-                ('att_date', '=', fields.Date.today())
-            ], limit=1).state
-            if attendance == 'present':
-                rec.attendance_state = 'done'
-            elif attendance == 'absent':
-                rec.attendance_state = 'blocked'
-            else:
-                rec.attendance_state = 'normal'
+    def action_update_attendance(self):
+        print(self.search([]))
+        record_ids = self.search([])
+        for record in record_ids:
+            today = fields.Date.today()
+            now = fields.Datetime.now() + timedelta(hours=5, minutes=30)
+            student_leave_ids = self.env['student.leave'].search([('student_id.reg_id', '=', record.student_reg_id)])
+            record.attendance_state = 'done'
+            for student_leave in student_leave_ids:
+                date_from = student_leave.date_from
+                date_to = student_leave.date_to
+                is_half_day = student_leave.is_half_day
+                half_day = student_leave.half_day
+                noon = datetime.combine(date_from, time(hour=12, minute=0))
 
+                record.attendance_state = 'blocked' if date_from <= today <= date_to else 'done'
+                if date_from == date_to == today:
+                    record.attendance_state = 'blocked' if (
+                            (half_day == 'fn' and now <= noon) or
+                            (half_day == 'an' and now >= noon) or
+                            (date_from == date_to and not is_half_day)
+                    ) else 'done'
+                print(f"{record}  {student_leave}")
+
+    @api.depends('attendance_state')
+    def _compute_attendance_state(self):
+        self.action_update_attendance()

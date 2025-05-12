@@ -14,7 +14,7 @@ class Student(models.Model):
     first_name = fields.Char(string='Name', required=True)
     last_name = fields.Char(string='Last Name', required=True)
     name = fields.Char(string='Full Name', compute='_compute_name')
-    partner_id = fields.Many2one('res.partner', domain=[('partner_type', '=', 'student')], ondelete='cascade')
+    partner_id = fields.Many2one('res.partner', ondelete='cascade', readonly=True)
     email = fields.Char(string='Email', related='partner_id.email', store=True, required=True, readonly=False)
     mobile = fields.Char(string='Mobile', related='partner_id.mobile', store=True, readonly=False)
     dob = fields.Date(string='Date of Birth')
@@ -113,10 +113,7 @@ class Student(models.Model):
                 val.reg_id = self.env['ir.sequence'].next_by_code('student_id_seq')
             if not val.partner_id:
                 val.partner_id = self.env['res.partner'].create([{
-                            'name': self.env['res.users'].create([{
-                                'name': self.name,
-                                'login': self.email,
-                            }]).name,
+                            'name': self.name,
                             'mobile': self.mobile,
                             'email': self.email,
                             'partner_type': 'student',
@@ -128,6 +125,12 @@ class Student(models.Model):
                             'state_id': self.communication_addr_state_id,
                             'country_id': self.communication_addr_country_id,
                 }]).id
+                self.env['res.users'].create([{
+                    'name': self.name,
+                    'login': self.email,
+                    'mobile': self.mobile,
+                    'partner_id': val.partner_id.id,
+                }]),
 
     def action_deregister_student(self):
         """To set the stage to draft"""

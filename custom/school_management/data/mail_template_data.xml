@@ -1,22 +1,23 @@
 <odoo>
    <data>
        <record id="employee_event_mail_template" model="mail.template">
-            <field name="name">Event: Reminder</field>
-            <field name="model_id" ref="event.model_event_registration"/>
-            <field name="subject">{{ object.company_id.name }}</field>
-            <field name="email_from">me@gmail.com</field>
-            <field name="partner_to">{{ object.env['res.partner'].email }}</field>
-            <field name="description">Add Description</field>
+            <field name="name">Event: Send mail to the employee</field>
+            <field name="model_id" ref="event.model_event_event"/>
+            <field name="subject">{{ object.company_id.name }} is inviting you to the event {{ object.name }}.</field>
+            <field name="email_from">{{ (object.user_id.login or object.user_id.partner_id.email or object.organizer_id.email or object.company_id.email or '') }}</field>
+            <field name="email_to">{{ object.company_id.email }}</field>
+            <field name="description">Send event invitation to all employees</field>
+           <field name="auto_delete">False</field>
             <field name="body_html" type="html">
                <div>
                    <p>
-                       Hello {{ object.partner_id.id }},
+                       Hello,
                        <br/>
                        <br/>
-                       {{ object.company_id.name }} is inviting you to the event.
+                       I am is inviting you to the event.
                        <br/>
                        <br/>
-                       <br/>{{ (object.user_id.email) }}
+                       <br/>{{ (object.company_id.email) }}
                        <br/>
                        <br/>
                    </p>
