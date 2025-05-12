@@ -18,6 +18,7 @@
         'data/school_subject_data.xml',
         'data/mail_template_data.xml',
         'data/ir_cron_data.xml',
+        'data/ir_actions_server_data.xml',
         'views/student_views.xml',
         'views/school_class_views.xml',
         'views/school_department_views.xml',

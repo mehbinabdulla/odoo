@@ -17,7 +17,7 @@
                        I am is inviting you to the event.
                        <br/>
                        <br/>
-                       <br/>{{ (object.company_id.email) }}
+                       <br/>
                        <br/>
                        <br/>
                    </p>

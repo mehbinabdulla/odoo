@@ -111,6 +111,14 @@ class Student(models.Model):
             val.stage = 'registered'
             if val.reg_id in ['Draft', 'New']:
                 val.reg_id = self.env['ir.sequence'].next_by_code('student_id_seq')
+
+    def action_deregister_student(self):
+        """To set the stage to draft"""
+        for val in self:
+            val.stage = 'draft'
+
+    def action_create_user(self):
+        for val in self:
             if not val.partner_id:
                 val.partner_id = self.env['res.partner'].create([{
                             'name': self.name,
@@ -131,8 +139,3 @@ class Student(models.Model):
                     'mobile': self.mobile,
                     'partner_id': val.partner_id.id,
                 }]),
-
-    def action_deregister_student(self):
-        """To set the stage to draft"""
-        for val in self:
-            val.stage = 'draft'
