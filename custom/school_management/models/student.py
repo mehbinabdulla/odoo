@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
 from dateutil.relativedelta import relativedelta
-from odoo.exceptions import ValidationError
 
 
 class Student(models.Model):
@@ -109,33 +108,36 @@ class Student(models.Model):
         """Actions need to occur when registering a student"""
         for val in self:
             val.stage = 'registered'
-            if val.reg_id in ['Draft', 'New']:
-                val.reg_id = self.env['ir.sequence'].next_by_code('student_id_seq')
 
     def action_deregister_student(self):
         """To set the stage to draft"""
         for val in self:
             val.stage = 'draft'
 
-    def action_create_user(self):
-        for val in self:
+    def create_user(self):
+        """Automated actions need to occur when a student is registered"""
+        group_ids = [
+            self.env.ref('school_management.group_school_management_student').id,
+            self.env.ref('base.group_user').id,
+        ]
+        student_ids = self.search([])
+        for val in student_ids:
+            if val.reg_id in ['Draft', 'New']:
+                val.reg_id = self.env['ir.sequence'].next_by_code('student_id_seq')
             if not val.partner_id:
-                val.partner_id = self.env['res.partner'].create([{
-                            'name': self.name,
-                            'mobile': self.mobile,
-                            'email': self.email,
-                            'partner_type': 'student',
-                            'student_reg_id': self.reg_id,
-                            'street': self.communication_addr_street,
-                            'street2': self.communication_addr_street2,
-                            'zip': self.communication_addr_zip,
-                            'city': self.communication_addr_city,
-                            'state_id': self.communication_addr_state_id,
-                            'country_id': self.communication_addr_country_id,
-                }]).id
-                self.env['res.users'].create([{
-                    'name': self.name,
-                    'login': self.email,
-                    'mobile': self.mobile,
-                    'partner_id': val.partner_id.id,
-                }]),
+                val.partner_id = self.env['res.users'].create([{
+                    'name': val.name,
+                    'login': val.email,
+                    'email': val.email,
+                    'mobile': val.mobile,
+                    'partner_type': 'student',
+                    'student_reg_id': val.reg_id,
+                    'student_id': val.id,
+                    'street': val.communication_addr_street,
+                    'street2': val.communication_addr_street2,
+                    'zip': val.communication_addr_zip,
+                    'city': val.communication_addr_city,
+                    'state_id': val.communication_addr_state_id.id,
+                    'country_id': val.communication_addr_country_id.id,
+                    'groups_id': [(4, group_id) for group_id in group_ids]
+                }]).partner_id.id

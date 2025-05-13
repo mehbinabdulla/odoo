@@ -11,6 +11,7 @@
                        decoration-success="attendance_state == 'done'"
                        decoration-danger="attendance_state == 'blocked'"
                        invisible="partner_type!='student'"/>
+                <field name="student_id" readonly="1" invisible="partner_type!='student'"/>
                 <field name="student_reg_id" readonly="1" invisible="partner_type!='student'"/>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="attributes">
@@ -53,23 +54,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='display_name']" position="before">
                 <span class="badge rounded-pill float-end"><field name="attendance_state" widget="state_selection" invisible="partner_type!='student'"/></span>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="l10n_in_form_inherit" model="ir.ui.view">
-        <field name="name">l10n.in.inherit</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="l10n_in.l10n_in_view_partner_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='l10n_in_gst_treatment']" position="attributes">
-                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
-            </xpath>
-            <xpath expr="//field[@name='l10n_in_pan']" position="attributes">
-                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
-            </xpath>
-            <xpath expr="//field[@name='l10n_in_gst_state_warning']" position="attributes">
-                <attribute name="invisible">partner_type in ['student', 'teacher', 'staff']</attribute>
             </xpath>
         </field>
     </record>

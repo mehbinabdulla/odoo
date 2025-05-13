@@ -12,7 +12,8 @@ class Partner(models.Model):
         ('teacher','Teacher'),
         ('staff','Office Staff')
     ], readonly=True, string='Partner Type')
-    student_reg_id = fields.Char(string='Registration ID')
+    student_id = fields.Many2one('student', string='Registration ID')
+    student_reg_id = fields.Char(related='student_id.reg_id', string='Registration ID')
     attendance_state = fields.Selection([
         ('done','Present'),
         ('blocked','Absent'),
@@ -26,7 +27,8 @@ class Partner(models.Model):
          "You entered Mobile is already exists. Please check the data is correct!")
     ]
 
-    def action_update_attendance(self):
+    def update_attendance(self):
+        """Action to execute when the update attendance scheduled action triggered"""
         print(self.search([]))
         record_ids = self.search([])
         for record in record_ids:
@@ -50,6 +52,6 @@ class Partner(models.Model):
                     ) else 'done'
                 print(f"{record}  {student_leave}")
 
-    @api.depends('attendance_state')
     def _compute_attendance_state(self):
-        self.action_update_attendance()
+        """To call update_attendance action when the fields are changed"""
+        self.update_attendance()
