@@ -7,12 +7,11 @@
         <field name="arch" type="xml">
             <xpath expr="//span[@name='address_name']" position="before">
                 <field name="partner_type" invisible="partner_type==False and is_company == True"/>
+                <field name="student_reg_id" readonly="1" invisible="partner_type!='student'"/>
                 <field name="attendance_state" widget="badge"
                        decoration-success="attendance_state == 'done'"
                        decoration-danger="attendance_state == 'blocked'"
                        invisible="partner_type!='student'"/>
-                <field name="student_id" readonly="1" invisible="partner_type!='student'"/>
-                <field name="student_reg_id" readonly="1" invisible="partner_type!='student'"/>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="widget"/>

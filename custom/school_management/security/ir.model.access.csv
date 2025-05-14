@@ -20,21 +20,21 @@ access_school_academic_year_student,access.school.academic.year,model_school_aca
 access_school_academic_year_teacher,access.school.academic.year,model_school_academic_year,group_school_management_teacher,1,0,0,0
 access_school_academic_year_staff,access.school.academic.year,model_school_academic_year,group_school_management_staff,1,1,1,1
 
+access_school_partner_student,access.school.partner,base.model_res_partner,group_school_management_student,1,1,0,0
+access_school_partner_teacher,access.school.partner,base.model_res_partner,group_school_management_teacher,1,1,1,1
+access_school_partner_staff,access.school.partner,base.model_res_partner,group_school_management_staff,1,1,1,1
+
+access_school_users_student,access.school.partner,base.model_res_users,group_school_management_student,1,1,0,0
+access_school_users_teacher,access.school.partner,base.model_res_users,group_school_management_teacher,1,1,1,1
+access_school_users_staff,access.school.partner,base.model_res_users,group_school_management_staff,1,1,1,1
+
 access_school_club_student,access.school.club,model_school_club,group_school_management_student,1,0,0,0
 access_school_club_teacher,access.school.club,model_school_club,group_school_management_teacher,1,0,0,0
 access_school_club_staff,access.school.club,model_school_club,group_school_management_staff,1,1,1,1
 
-access_school_event_student,access.school.event,event.model_event_event,group_school_management_student,1,0,0,0
-access_school_event_teacher,access.school.event,event.model_event_event,group_school_management_teacher,1,0,0,0
-access_school_event_staff,access.school.event,event.model_event_event,group_school_management_staff,1,1,1,1
-
-access_school_event_stage_student,access.school.event,event.model_event_stage,group_school_management_student,1,0,0,0
-access_school_event_stage_teacher,access.school.event,event.model_event_stage,group_school_management_teacher,1,0,0,0
-access_school_event_stage_staff,access.school.event,event.model_event_stage,group_school_management_staff,1,1,1,1
-
-access_school_event_mail_student,access.school.event,event.model_event_mail,group_school_management_student,1,0,0,0
-access_school_event_mail_teacher,access.school.event,event.model_event_mail,group_school_management_teacher,1,0,0,0
-access_school_event_mail_staff,access.school.event,event.model_event_mail,group_school_management_staff,1,1,1,1
+access_school_event_registration_student,access.school.club,event.model_event_registration,group_school_management_student,1,0,0,0
+access_school_event_registration_teacher,access.school.club,event.model_event_registration,group_school_management_teacher,1,1,1,1
+access_school_event_registration_staff,access.school.club,event.model_event_registration,group_school_management_staff,1,1,1,1
 
 access_student_leave_student,access.student.leave,model_student_leave,group_school_management_student,1,1,1,1
 access_student_leave_teacher,access.student.leave,model_student_leave,group_school_management_teacher,1,1,1,1

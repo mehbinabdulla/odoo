@@ -6,9 +6,17 @@
           web_icon="school_management,static/description/icon.png"
           sequence="10"/>
 
-    <menuitem id="school_menu_student_root"
-          name="Students"
+    <menuitem id="school_menu_my_register"
+          name="My Registration"
+          action="action_student"
+          groups="group_school_management_student"
           parent="school_menu_root"
+          sequence="10"/>
+
+    <menuitem id="school_menu_student_root"
+          name="Registration"
+          parent="school_menu_root"
+          groups="group_school_management_teacher"
           sequence="10"/>
 
     <menuitem id="school_menu_student_register"
@@ -26,6 +34,7 @@
     <menuitem id="school_menu_partner"
           name="Employees"
           parent="school_menu_root"
+          groups="group_school_management_staff"
           sequence="20"/>
 
     <menuitem id="school_menu_teacher"
@@ -72,6 +81,7 @@
     <menuitem id="school_menu_config"
           name="Configuration"
           parent="school_menu_root"
+          groups="group_school_management_staff"
           sequence="60"/>
 
     <menuitem id="school_menu_class"
@@ -86,11 +96,11 @@
           parent="school_menu_config"
           sequence="30"/>
 
-
     <menuitem id="school_menu_subject"
           name="Subjects"
           action="action_school_subject"
           parent="school_menu_config"
+          groups="group_school_management_staff"
           sequence="40"/>
 
     <menuitem id="school_menu_academic_year"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-        <record id="automated_student_create_user_action" model="base.automation">
+    <record id="automated_student_create_user_action" model="base.automation">
         <field name="name">Create user from student registration</field>
         <field name="model_id" ref="school_management.model_student"/>
         <field name="trigger">on_create_or_write</field>
@@ -19,4 +19,25 @@
         <field name="usage">base_automation</field>
         <field name="base_automation_id" ref="automated_student_create_user_action"/>
     </record>
+
+    <record id="automated_partner_create_user_action" model="base.automation">
+        <field name="name">Create user from teacher/staff registration</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="trigger">on_create</field>
+        <field name="filter_domain">[("partner_type", "in", ['teacher','staff'])]</field>
+        <field name="action_server_ids">student_create_user_server</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="partner_create_user_server" model="ir.actions.server">
+        <field name="name">Create user from student registration</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">
+            model.create_user()
+        </field>
+        <field name="usage">base_automation</field>
+        <field name="base_automation_id" ref="automated_partner_create_user_action"/>
+    </record>
+
 </odoo>

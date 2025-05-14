@@ -117,15 +117,16 @@ class Student(models.Model):
     def create_user(self):
         """Automated actions need to occur when a student is registered"""
         group_ids = [
-            self.env.ref('school_management.group_school_management_student').id,
             self.env.ref('base.group_user').id,
+            self.env.ref('event.group_event_registration_desk').id,
+            self.env.ref('school_management.group_school_management_student').id,
         ]
         student_ids = self.search([])
         for val in student_ids:
             if val.reg_id in ['Draft', 'New']:
                 val.reg_id = self.env['ir.sequence'].next_by_code('student_id_seq')
             if not val.partner_id:
-                val.partner_id = self.env['res.users'].create([{
+                user_id = self.env['res.users'].create([{
                     'name': val.name,
                     'login': val.email,
                     'email': val.email,
@@ -140,4 +141,5 @@ class Student(models.Model):
                     'state_id': val.communication_addr_state_id.id,
                     'country_id': val.communication_addr_country_id.id,
                     'groups_id': [(4, group_id) for group_id in group_ids]
-                }]).partner_id.id
+                }])
+                val.partner_id = user_id.partner_id.id

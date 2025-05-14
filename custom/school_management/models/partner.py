@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import timedelta, datetime, time
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class Partner(models.Model):
@@ -12,7 +12,7 @@ class Partner(models.Model):
         ('teacher','Teacher'),
         ('staff','Office Staff')
     ], readonly=True, string='Partner Type')
-    student_id = fields.Many2one('student', string='Registration ID')
+    student_id = fields.Many2one('student')
     student_reg_id = fields.Char(related='student_id.reg_id', string='Registration ID')
     attendance_state = fields.Selection([
         ('done','Present'),
@@ -23,9 +23,24 @@ class Partner(models.Model):
     _sql_constraints = [
         ('unique_email', 'UNIQUE(email)',
          "You entered Email is already exists. Please check the data is correct!"),
-        ('unique_mobile', 'UNIQUE(mobile)',
-         "You entered Mobile is already exists. Please check the data is correct!")
     ]
+
+    def create_user(self):
+        partner_ids = self.search([('partner_type', 'in', ['teacher', 'staff'])])
+        for val in partner_ids:
+            existing_user = self.env['res.users'].search([('login', '=', val.email)], limit=1)
+            if not existing_user:
+                user_vals = {
+                    'name': val.name,
+                    'login': val.email,
+                    'mobile': val.mobile,
+                    'partner_id' : val.id
+                }
+                user_id = self.env['res.users'].create(user_vals)
+                if val.partner_type == 'staff':
+                    user_id.groups_id = [(4, self.env.ref('school_management.group_school_management_staff').id,)]
+                else:
+                    user_id.groups_id = [(4, self.env.ref('school_management.group_school_management_teacher').id,)]
 
     def update_attendance(self):
         """Action to execute when the update attendance scheduled action triggered"""
@@ -50,7 +65,6 @@ class Partner(models.Model):
                             (half_day == 'an' and now >= noon) or
                             (date_from == date_to and not is_half_day)
                     ) else 'done'
-                print(f"{record}  {student_leave}")
 
     def _compute_attendance_state(self):
         """To call update_attendance action when the fields are changed"""
