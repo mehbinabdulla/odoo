@@ -5,9 +5,18 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                 <button name="action_import_order_lines" type="object" string="Import Order Lines"/>
+            </xpath>
             <xpath expr="//field[@name='state']" position="attributes">
                 <attribute name="statusbar_visible">draft,sent,sale,admitted</attribute>
             </xpath>
         </field>
+    </record>
+     <record id="action_open_upload_wizard" model="ir.actions.act_window">
+        <field name="name">Upload File</field>
+        <field name="res_model">upload.sale.order.line.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
     </record>
 </odoo>

@@ -19,17 +19,17 @@
           groups="group_school_management_teacher"
           sequence="10"/>
 
-    <menuitem id="school_menu_student_register"
-          name="Registration"
-          action="action_student"
-          parent="school_menu_student_root"
-          sequence="10"/>
+        <menuitem id="school_menu_student_register"
+              name="Registration"
+              action="action_student"
+              parent="school_menu_student_root"
+              sequence="10"/>
 
-    <menuitem id="school_menu_student"
-          name="Students"
-          action="action_partner_student"
-          parent="school_menu_student_root"
-          sequence="20"/>
+        <menuitem id="school_menu_student"
+              name="Students"
+              action="action_partner_student"
+              parent="school_menu_student_root"
+              sequence="20"/>
 
     <menuitem id="school_menu_partner"
           name="Employees"
@@ -37,17 +37,17 @@
           groups="group_school_management_staff"
           sequence="20"/>
 
-    <menuitem id="school_menu_teacher"
-          name="Teachers"
-          parent="school_menu_partner"
-          action="action_partner_teacher"
-          sequence="10"/>
+        <menuitem id="school_menu_teacher"
+              name="Teachers"
+              parent="school_menu_partner"
+              action="action_partner_teacher"
+              sequence="10"/>
 
-    <menuitem id="school_menu_staff"
-          name="Staff"
-          parent="school_menu_partner"
-          action="action_partner_staff"
-          sequence="20"/>
+        <menuitem id="school_menu_staff"
+              name="Staff"
+              parent="school_menu_partner"
+              action="action_partner_staff"
+              sequence="20"/>
 
     <menuitem id="school_menu_exam"
           name="Exams"
@@ -66,46 +66,81 @@
           parent="school_menu_root"
           sequence="50"/>
 
-    <menuitem id="school_menu_club"
-          name="Clubs"
-          parent="school_menu_club_root"
-          action="action_school_club"
-          sequence="10"/>
+        <menuitem id="school_menu_club"
+              name="Clubs"
+              parent="school_menu_club_root"
+              action="action_school_club"
+              sequence="10"/>
 
-    <menuitem id="school_menu_event"
-          name="Events"
-          parent="school_menu_club_root"
-          action="action_school_event"
-          sequence="20"/>
+        <menuitem id="school_menu_event"
+              name="Events"
+              parent="school_menu_club_root"
+              action="action_school_event"
+              sequence="20"/>
+
+    <menuitem id="school_menu_report_root"
+              name="Reporting"
+              parent="school_menu_root"
+              sequence="60"/>
+
+        <menuitem id="school_menu_report_student"
+              name="Student"
+              parent="school_menu_report_root"
+              action="action_school_event"
+              sequence="10"/>
+
+        <menuitem id="school_menu_report_leave"
+              name="Leaves"
+              parent="school_menu_report_root"
+              action="action_school_event"
+              sequence="20"/>
+
+        <menuitem id="school_menu_report_exam"
+              name="Exams"
+              parent="school_menu_report_root"
+              action="action_school_event"
+              sequence="30"/>
+
+        <menuitem id="school_menu_report_club"
+              name="Clubs"
+              parent="school_menu_report_root"
+              action="action_school_event"
+              sequence="40"/>
+
+        <menuitem id="school_menu_report_event"
+              name="Events"
+              parent="school_menu_report_root"
+              action="action_school_event"
+              sequence="50"/>
 
     <menuitem id="school_menu_config"
           name="Configuration"
           parent="school_menu_root"
           groups="group_school_management_staff"
-          sequence="60"/>
+          sequence="70"/>
 
-    <menuitem id="school_menu_class"
-          name="Classes"
-          action="action_school_class"
-          parent="school_menu_config"
-          sequence="20"/>
+        <menuitem id="school_menu_class"
+              name="Classes"
+              action="action_school_class"
+              parent="school_menu_config"
+              sequence="20"/>
 
-    <menuitem id="school_menu_department"
-          name="Departments"
-          action="action_school_department"
-          parent="school_menu_config"
-          sequence="30"/>
+        <menuitem id="school_menu_department"
+              name="Departments"
+              action="action_school_department"
+              parent="school_menu_config"
+              sequence="30"/>
 
-    <menuitem id="school_menu_subject"
-          name="Subjects"
-          action="action_school_subject"
-          parent="school_menu_config"
-          groups="group_school_management_staff"
-          sequence="40"/>
+        <menuitem id="school_menu_subject"
+              name="Subjects"
+              action="action_school_subject"
+              parent="school_menu_config"
+              groups="group_school_management_staff"
+              sequence="40"/>
 
-    <menuitem id="school_menu_academic_year"
-          name="Academic Year"
-          parent="school_menu_config"
-          action="action_school_academic_year"
-          sequence="50"/>
+        <menuitem id="school_menu_academic_year"
+              name="Academic Year"
+              parent="school_menu_config"
+              action="action_school_academic_year"
+              sequence="50"/>
 </odoo>

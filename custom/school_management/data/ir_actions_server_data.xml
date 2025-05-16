@@ -39,5 +39,4 @@
         <field name="usage">base_automation</field>
         <field name="base_automation_id" ref="automated_partner_create_user_action"/>
     </record>
-
 </odoo>

@@ -32,10 +32,6 @@ access_school_club_student,access.school.club,model_school_club,group_school_man
 access_school_club_teacher,access.school.club,model_school_club,group_school_management_teacher,1,0,0,0
 access_school_club_staff,access.school.club,model_school_club,group_school_management_staff,1,1,1,1
 
-access_school_event_registration_student,access.school.club,event.model_event_registration,group_school_management_student,1,0,0,0
-access_school_event_registration_teacher,access.school.club,event.model_event_registration,group_school_management_teacher,1,1,1,1
-access_school_event_registration_staff,access.school.club,event.model_event_registration,group_school_management_staff,1,1,1,1
-
 access_student_leave_student,access.student.leave,model_student_leave,group_school_management_student,1,1,1,1
 access_student_leave_teacher,access.student.leave,model_student_leave,group_school_management_teacher,1,1,1,1
 access_student_leave_staff,access.student.leave,model_student_leave,group_school_management_staff,1,1,1,1
