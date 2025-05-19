@@ -1,17 +1,13 @@
 from odoo import models
 
 
-class SchoolManagementReport(models.TransientModel):
+class SchoolManagementReport(models.Model):
     _name = 'school.management.report'
     _description = 'School Management Report'
 
-    def action_import_order_lines(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': f'Print',
-            'res_model': 'school.report.wizard',
-            'target': 'new',
-            'view_mode': 'form',
-            'view_type': 'form',
-            'context': {'model': self.env['ir.model']},
-        }
+    def print_student_report(self, department_id, class_id):
+        domain = [('class_id', '=', class_id.id)] if class_id else [('dept_id', '=', department_id.id)]
+        docs = self.env['student'].search([])
+        docids = docs.ids
+        print(docids)
+        return self.env.ref('school_management.action_report_student_template').report_action(docids)

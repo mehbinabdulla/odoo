@@ -100,6 +100,7 @@
                         <page string="Academics">
                             <group>
                                 <group string="Academics">
+                                     <field name="dept_id" placeholder="Current Department"/>
                                      <field name="class_id" placeholder="Current Class"/>
                                      <field name="club_ids" placeholder="eg: Arts Club" widget="many2many_tags" options="{'no_create': True, 'no_quick_create': True}"/>
                                      <field name="school_id" placeholder="eg: HS School" readonly="1"/>
@@ -127,7 +128,6 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new record
-            </p><p>
             </p>
         </field>
     </record>

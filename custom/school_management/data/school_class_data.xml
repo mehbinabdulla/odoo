@@ -14,7 +14,7 @@
     </record>
     <record id="school_class_4" model="school.class">
         <field name="name">Class 4</field>
-        <field name="department_id" ref="school_department_up"/>
+        <field name="department_id" ref="school_department_lp"/>
     </record>
     <record id="school_class_5" model="school.class">
         <field name="name">Class 5</field>

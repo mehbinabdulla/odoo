@@ -1,1 +1,1 @@
-from . import school_report_wizard
+from . import student_report_wizard, leave_report_wizard
