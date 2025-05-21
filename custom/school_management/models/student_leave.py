@@ -9,7 +9,7 @@ class StudentLeave(models.Model):
 
     name = fields.Text(compute='_compute_name', default="New Leave")
     student_id = fields.Many2one('student', string='Student', ondelete='cascade', required=True)
-    class_id = fields.Many2one('school.class', string='Class')
+    class_id = fields.Many2one('school.class', related='student_id.class_id', store=True, string='Class')
     date_from = fields.Date('Start Date', required=True, default=fields.Date.today())
     date_to = fields.Date('End Date', default=fields.Date.today())
     number_of_days = fields.Float('Duration (Days)', compute="_compute_number_of_days")

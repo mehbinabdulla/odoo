@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <record id="view_student_report_wizard_form" model="ir.ui.view">
-        <field name="name">student.report.student.wizard.form</field>
-        <field name="model">student.report.wizard</field>
+    <record id="view_club_report_wizard_form" model="ir.ui.view">
+        <field name="name">club.report.wizard.form</field>
+        <field name="model">club.report.wizard</field>
         <field name="arch" type="xml">
             <form>
                 <group>
                     <group>
-                        <field name="department_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit': True, 'no_quick_create': True}"/>
+                        <field name="club_ids"/>
                     </group>
                     <group>
-                        <field name="class_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit': True, 'no_quick_create': True}"/>
+                        <field name="student_ids"/>
                     </group>
                 </group>
                 <footer>
@@ -26,13 +25,12 @@
         </field>
     </record>
 
-    <record id="action_print_student_report" model="ir.actions.act_window">
-        <field name="name">Student Report</field>
+    <record id="action_print_club_report" model="ir.actions.act_window">
+        <field name="name">Club Report</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">student.report.wizard</field>
+        <field name="res_model">club.report.wizard</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_student_report_wizard_form"/>
+        <field name="view_id" ref="view_club_report_wizard_form"/>
         <field name="target">new</field>
     </record>
-
 </odoo>

@@ -10,4 +10,49 @@
        <field name="binding_model_id" ref="school_management.model_student"/>
        <field name="binding_type">report</field>
    </record>
+
+    <record id="action_report_leave_template" model="ir.actions.report">
+       <field name="name">Leave Report</field>
+       <field name="model">student.leave</field>
+       <field name="report_type">qweb-pdf</field>
+       <field name="report_name">school_management.report_leave</field>
+       <field name="report_file">school_management.report_leave</field>
+       <field name="print_report_name">'Leave Report'</field>
+       <field name="binding_model_id" ref="school_management.model_student_leave"/>
+       <field name="binding_type">report</field>
+   </record>
+
+    <record id="action_report_exam_template" model="ir.actions.report">
+       <field name="name">Exam Report</field>
+       <field name="model">school.exam</field>
+       <field name="report_type">qweb-pdf</field>
+       <field name="report_name">school_management.report_exam</field>
+       <field name="report_file">school_management.report_exam</field>
+       <field name="print_report_name">'Exam Report'</field>
+       <field name="binding_model_id" ref="school_management.model_school_exam"/>
+       <field name="binding_type">report</field>
+   </record>
+
+    <record id="action_report_event_template" model="ir.actions.report">
+       <field name="name">Event Report</field>
+       <field name="model">event.event</field>
+       <field name="report_type">qweb-pdf</field>
+       <field name="report_name">school_management.report_event</field>
+       <field name="report_file">school_management.report_event</field>
+       <field name="print_report_name">'Event Report'</field>
+       <field name="binding_model_id" ref="event.model_event_event"/>
+       <field name="binding_type">report</field>
+   </record>
+
+    <record id="action_report_club_template" model="ir.actions.report">
+       <field name="name">Club Report</field>
+       <field name="model">school.club</field>
+       <field name="report_type">qweb-pdf</field>
+       <field name="report_name">school_management.report_club</field>
+       <field name="report_file">school_management.report_club</field>
+       <field name="print_report_name">'Club Report'</field>
+       <field name="binding_model_id" ref="school_management.model_school_club"/>
+       <field name="binding_type">report</field>
+   </record>
+
 </odoo>

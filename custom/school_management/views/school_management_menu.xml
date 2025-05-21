@@ -96,21 +96,21 @@
               sequence="20"/>
 
         <menuitem id="school_menu_report_exam"
-              name="Exams"
+              name="Exam Report"
               parent="school_menu_report_root"
-              action="action_school_event"
+              action="action_print_exam_report"
               sequence="30"/>
 
         <menuitem id="school_menu_report_club"
-              name="Clubs"
+              name="Club Report"
               parent="school_menu_report_root"
-              action="action_school_event"
+              action="action_print_club_report"
               sequence="40"/>
 
         <menuitem id="school_menu_report_event"
-              name="Events"
+              name="Event Report"
               parent="school_menu_report_root"
-              action="action_school_event"
+              action="action_print_event_report"
               sequence="50"/>
 
     <menuitem id="school_menu_config"

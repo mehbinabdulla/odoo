@@ -1,1 +1,1 @@
-from . import school_management_report
+from . import report_student, report_leave, report_exam

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-   <template id="report_student">
+    <template id="report_student">
        <t t-call="web.html_container">
            <t t-call="web.external_layout">
                <div class="page">
@@ -9,29 +9,244 @@
                        <span>Student Report</span>
                    </t>
                    <div class="row mb-4" id="informations">
+                       <div class="col" name="class_info">
+                            <strong>Class</strong>
+                            <div t-esc="', '.join(data.get('class_name','N/A'))"></div>
+                        </div>
+                       <div class="col" name="department_info">
+                            <strong>Department</strong>
+                            <div t-esc="', '.join(data.get('department_name','N/A'))"></div>
+                        </div>
                        <div class="col" name="printing_date">
-                            <strong>Date</strong>
+                            <strong>Printing Date</strong>
                             <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
                         </div>
+
                    </div>
-                   <table class="o_has_total_table table o_main_table table-borderless">
+                   <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
                         <thead style="display: table-row-group">
                             <tr>
-                                <th name="th_registration" class="text-start">Registration ID</th>
-                                <th name="th_name">Name</th>
-                                <th name="th_class">Class</th>
-                                <th name="th_email">Email</th>
-                                <th name="th_mobile" class="text-end text-nowrap">Mobile</th>
+                                <th name="th_registration" class="text-start"><strong>Registration ID</strong></th>
+                                <th name="th_name"><strong>Name</strong></th>
+                                <th name="th_class"><strong>Class</strong></th>
+                                <th name="th_email"><strong>Email</strong></th>
+                                <th name="th_mobile" class="text-end text-nowrap"><strong>Mobile</strong></th>
                             </tr>
                         </thead>
                         <tbody class="sale_tbody">
-                            <t t-foreach="docs" t-as="line">
+                            <t t-foreach="docs" t-as="student">
                                 <tr t-att-class="'fw-bold o_line_section'">
-                                    <td name="td_registration" class="text-start"><span t-field="line.reg_id"/></td>
-                                    <td name="td_name"><span t-field="line.name"/></td>
-                                    <td name="td_class"><span t-field="line.class_id.name"/></td>
-                                    <td name="td_email"><span t-field="line.email"/></td>
-                                    <td name="td_mobile" class="text-end text-nowrap"><span t-field="line.mobile"/></td>
+                                    <td name="td_registration" class="text-start"><span t-field="student.reg_id"/></td>
+                                    <td name="td_name"><span t-field="student.name"/></td>
+                                    <td name="td_class"><span t-field="student.class_id.name"/></td>
+                                    <td name="td_email"><span t-field="student.email"/></td>
+                                    <td name="td_mobile" class="text-end text-nowrap"><span t-field="student.mobile"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                   </table>
+               </div>
+           </t>
+       </t>
+   </template>
+
+    <template id="report_leave">
+       <t t-call="web.html_container">
+           <t t-call="web.external_layout">
+               <div class="page">
+                   <div class="oe_structure"/>
+                   <t t-set="layout_document_title">
+                       <span>Leave Report</span>
+                   </t>
+                   <div class="row mb-4" id="informations">
+                       <div class="col" name="Duration">
+                            <strong>Duration</strong>
+                            <div t-esc="data.get('duration')"></div>
+                       </div>
+                       <div class="col" name="class_info">
+                            <strong>Class</strong>
+                            <div t-esc="', '.join(data.get('class_name'))">N/A</div>
+                        </div>
+                       <div class="col" name="department_info">
+                            <strong>Student</strong>
+                            <div t-esc="', '.join(data.get('student_name'))">N/A</div>
+                        </div>
+                       <div class="col" name="printing_date">
+                            <strong>Printing Date</strong>
+                            <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
+                        </div>
+
+                   </div>
+                   <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th name="th_registration" class="text-start"><strong>Registration ID</strong></th>
+                                <th name="th_name"><strong>Name</strong></th>
+                                <th name="th_class"><strong>Class</strong></th>
+                                <th name="th_st_date"><strong>Start Date</strong></th>
+                                <th name="th_ed_date"><strong>End Date</strong></th>
+                                <th name="th_type" class="text-end text-nowrap"><strong>Type</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-foreach="docs" t-as="leave">
+                                <tr t-att-class="'fw-bold o_line_section'">
+                                    <td name="td_registration" class="text-start"><span t-field="leave.student_id.reg_id"/></td>
+                                    <td name="td_name"><span t-field="leave.student_id.name"/></td>
+                                    <td name="td_class"><span t-field="leave.class_id.name"/></td>
+                                    <td name="td_st_date"><span t-field="leave.date_from"/></td>
+                                    <td name="td_ed_date"><span t-field="leave.date_to"/></td>
+                                    <td name="td_type" class="text-end text-nowrap">
+                                        <t t-if="leave.is_half_day">
+                                            <span>Half Day</span><![CDATA[&nbsp;]]>(<span t-field="leave.half_day"/>)
+                                        </t>
+                                        <t t-else="">
+                                            <span>Full Day</span>
+                                        </t>
+
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                   </table>
+               </div>
+           </t>
+       </t>
+   </template>
+
+    <template id="report_exam">
+       <t t-call="web.html_container">
+           <t t-call="web.external_layout">
+               <div class="page">
+                   <div class="oe_structure"/>
+                   <t t-set="layout_document_title">
+                       <span>Exam Report</span>
+                   </t>
+                   <div class="row mb-4" id="informations">
+                       <div class="col" name="class_info">
+                            <strong>Class</strong>
+                            <div t-esc="', '.join(data.get('class_name'))">N/A</div>
+                        </div>
+                       <div class="col" name="department_info">
+                            <strong>Student</strong>
+                            <div t-esc="', '.join(data.get('student_name'))">N/A</div>
+                        </div>
+                       <div class="col" name="printing_date">
+                            <strong>Printing Date</strong>
+                            <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
+                        </div>
+
+                   </div>
+                   <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th name="th_exam" class="text-start"><strong>Exam</strong></th>
+                                <th name="th_class"><strong>Class</strong></th>
+                                <th name="th_cr_date"><strong>Created Time</strong></th>
+                                <th name="th_state" class="text-end text-nowrap"><strong>Status</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-foreach="docs" t-as="exam">
+                                <tr t-att-class="'fw-bold o_line_section'">
+                                    <td name="td_exam" class="text-start"><span t-field="exam.name"/></td>
+                                    <td name="td_class"><span t-field="exam.class_id.name"/></td>
+                                    <td name="td_cr_date"><span t-field="exam.create_date"/></td>
+                                    <td name="td_state" class="text-end text-nowrap"><span t-field="exam.state"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                   </table>
+               </div>
+           </t>
+       </t>
+   </template>
+
+    <template id="report_event">
+       <t t-call="web.html_container">
+           <t t-call="web.external_layout">
+               <div class="page">
+                   <div class="oe_structure"/>
+                   <t t-set="layout_document_title">
+                       <span>Exam Report</span>
+                   </t>
+                   <div class="row mb-4" id="informations">
+                       <div class="col" name="department_info">
+                            <strong>Club</strong>
+                            <div t-esc="', '.join(data.get('club_name'))">N/A</div>
+                        </div>
+                       <div class="col" name="printing_date">
+                            <strong>Printing Date</strong>
+                            <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
+                        </div>
+
+                   </div>
+                   <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th name="th_event" class="text-start"><strong>Event</strong></th>
+                                <th name="th_club"><strong>Club</strong></th>
+                                <th name="th_st_date"><strong>Start Date</strong></th>
+                                <th name="th_ed_date"><strong>End Date</strong></th>
+                                <th name="th_state" class="text-end text-nowrap"><strong>Status</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-foreach="docs" t-as="event">
+                                <tr t-att-class="'fw-bold o_line_section'">
+                                    <td name="td_event" class="text-start"><span t-field="event.name"/></td>
+                                    <td name="td_club"><span t-field="event.club_id.name"/></td>
+                                    <td name="td_st_date"><span t-field="event.date_begin"/></td>
+                                    <td name="td_ed_date"><span t-field="event.date_end"/></td>
+                                    <td name="td_state" class="text-end text-nowrap"><span t-field="event.stage_id.name"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                   </table>
+               </div>
+           </t>
+       </t>
+   </template>
+
+    <template id="report_club">
+       <t t-call="web.html_container">
+           <t t-call="web.external_layout">
+               <div class="page">
+                   <div class="oe_structure"/>
+                   <t t-set="layout_document_title">
+                       <span>Club Report</span>
+                   </t>
+                   <div class="row mb-4" id="informations">
+                       <div class="col" name="class_info">
+                            <strong>Club</strong>
+                            <div t-esc="', '.join(data.get('club_name'))">N/A</div>
+                        </div>
+                       <div class="col" name="department_info">
+                            <strong>Student</strong>
+                            <div t-esc="', '.join(data.get('student_name'))">N/A</div>
+                        </div>
+                       <div class="col" name="printing_date">
+                            <strong>Printing Date</strong>
+                            <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
+                        </div>
+
+                   </div>
+                   <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th name="th_exam" class="text-start"><strong>Club</strong></th>
+                                <th name="th_class"><strong>Class</strong></th>
+                                <th name="th_cr_date"><strong>Created Time</strong></th>
+                                <th name="th_state" class="text-end text-nowrap"><strong>Status</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-foreach="docs" t-as="exam">
+                                <tr t-att-class="'fw-bold o_line_section'">
+                                    <td name="td_exam" class="text-start"><span t-field="exam.name"/></td>
+                                    <td name="td_class"><span t-field="exam.class_id.name"/></td>
+                                    <td name="td_cr_date"><span t-field="exam.create_date"/></td>
+                                    <td name="td_state" class="text-end text-nowrap"><span t-field="exam.state"/></td>
                                 </tr>
                             </t>
                         </tbody>
