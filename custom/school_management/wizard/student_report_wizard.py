@@ -7,8 +7,18 @@ class StudentReportFilterWizard(models.TransientModel):
     _name = 'student.report.wizard'
     _description = 'Student Report Wizard'
 
-    department_ids = fields.Many2many('school.department')
-    class_ids = fields.Many2many('school.class', domain="[('department_id', 'in', department_ids)]")
+    department_ids = fields.Many2many('school.department', store=True, readonly=False, compute='_compute_department_ids')
+    class_ids = fields.Many2many('school.class', store=True, readonly=False, compute='_compute_class_ids')
+
+    @api.depends('department_ids')
+    def _compute_class_ids(self):
+        for record in self:
+            record.class_ids = None
+
+    @api.depends('class_ids')
+    def _compute_department_ids(self):
+        for record in self:
+            record.department_ids = record.class_ids.department_id
 
     def action_print_report(self):
         data = {

@@ -1,1 +1,1 @@
-from . import report_student, report_leave, report_exam
+from . import report_student, report_leave, report_exam, report_event, report_club

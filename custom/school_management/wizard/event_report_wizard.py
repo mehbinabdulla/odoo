@@ -13,9 +13,9 @@ class EventReportFilterWizard(models.TransientModel):
         ('month', 'This Month'),
         ('custom', 'Custom Date')
     ], default='day', required=True)
-    start_date = fields.Date()
-    end_date = fields.Date()
-    club_ids = fields.Many2one('school.club')
+    start_date = fields.Date(required=True if duration == 'custom' else False)
+    end_date = fields.Date(required=True if duration == 'custom' else False)
+    club_ids = fields.Many2many('school.club')
 
     def action_print_report(self):
         data = {
@@ -25,6 +25,7 @@ class EventReportFilterWizard(models.TransientModel):
             'club_ids': [club.id for club in self.club_ids],
             'club_name': [club.name for club in self.club_ids],
         }
+        print(data)
         return self.env.ref('school_management.action_report_event_template').report_action(None, data)
 
 

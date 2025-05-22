@@ -15,13 +15,23 @@ class LeaveReportFilterWizard(models.TransientModel):
     ], default='today', required=True)
     start_date = fields.Date(required=True if duration == 'custom' else False)
     end_date = fields.Date(required=True if duration == 'custom' else False)
-    class_ids = fields.Many2many('school.class')
-    student_ids = fields.Many2many('student', domain="[('class_id', 'in', class_ids)]")
+    class_ids = fields.Many2many('school.class', readonly=False, store=True, compute='_compute_class_ids')
+    student_ids = fields.Many2many('student', readonly=False, store=True, compute='_compute_student_ids')
 
     @api.constrains('start_date', 'end_date')
     def _check_date_difference(self):
         if self.start_date > self.end_date:
             raise ValidationError('Start date must be greater than or equal to end date!')
+
+    @api.depends('student_ids')
+    def _compute_class_ids(self):
+        for record in self:
+            record.class_ids = record.student_ids.class_id
+
+    @api.depends('class_ids')
+    def _compute_student_ids(self):
+        for record in self:
+            record.student_ids = None
 
     def action_print_report(self):
         data = {

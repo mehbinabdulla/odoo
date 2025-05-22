@@ -8,7 +8,7 @@ class SchoolEvent(models.Model):
     """Added club id to the event"""
     _inherit = 'event.event'
 
-    club_id = fields.Many2one('school.club', string='Club')
+    club_id = fields.Many2one('school.club', string='Club', default= lambda self: self.env['school.club'].search([], limit=1))
 
     @api.autovacuum
     def _check_event_ended(self):

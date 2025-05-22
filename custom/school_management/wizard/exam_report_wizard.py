@@ -1,5 +1,5 @@
 
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class ExamReportFilterWizard(models.TransientModel):
@@ -7,8 +7,18 @@ class ExamReportFilterWizard(models.TransientModel):
     _name = 'exam.report.wizard'
     _description = 'Exam Report Wizard'
 
-    class_ids = fields.Many2many('school.class')
-    student_ids = fields.Many2many('student')
+    student_ids = fields.Many2many('student', store=True, readonly=False, compute='_compute_student_ids')
+    class_ids = fields.Many2many('school.class', store=True, readonly=False, compute='_compute_class_ids')
+
+    @api.depends('student_ids')
+    def _compute_class_ids(self):
+        for record in self:
+            record.class_ids = record.student_ids.class_id
+
+    @api.depends('class_ids')
+    def _compute_student_ids(self):
+        for record in self:
+            record.student_ids = None
 
     def action_print_report(self):
         data = {

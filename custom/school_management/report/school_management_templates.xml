@@ -9,14 +9,18 @@
                        <span>Student Report</span>
                    </t>
                    <div class="row mb-4" id="informations">
-                       <div class="col" name="class_info">
-                            <strong>Class</strong>
-                            <div t-esc="', '.join(data.get('class_name','N/A'))"></div>
-                        </div>
-                       <div class="col" name="department_info">
-                            <strong>Department</strong>
-                            <div t-esc="', '.join(data.get('department_name','N/A'))"></div>
-                        </div>
+                       <t t-if="len(data.get('class_name')) &gt; 0">
+                           <div class="col" name="class_info">
+                                <strong>Class</strong>
+                                <div t-esc="', '.join(data.get('class_name','N/A'))"></div>
+                            </div>
+                       </t>
+                       <t t-if="len(data.get('department_name')) &gt; 0">
+                           <div class="col" name="department_info">
+                                <strong>Department</strong>
+                                <div t-esc="', '.join(data.get('department_name','N/A'))"></div>
+                            </div>
+                       </t>
                        <div class="col" name="printing_date">
                             <strong>Printing Date</strong>
                             <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
@@ -28,7 +32,9 @@
                             <tr>
                                 <th name="th_registration" class="text-start"><strong>Registration ID</strong></th>
                                 <th name="th_name"><strong>Name</strong></th>
-                                <th name="th_class"><strong>Class</strong></th>
+                                <t t-if="len(data.get('class_name')) != 1">
+                                    <th name="th_class"><strong>Class</strong></th>
+                                </t>
                                 <th name="th_email"><strong>Email</strong></th>
                                 <th name="th_mobile" class="text-end text-nowrap"><strong>Mobile</strong></th>
                             </tr>
@@ -38,7 +44,9 @@
                                 <tr t-att-class="'fw-bold o_line_section'">
                                     <td name="td_registration" class="text-start"><span t-field="student.reg_id"/></td>
                                     <td name="td_name"><span t-field="student.name"/></td>
-                                    <td name="td_class"><span t-field="student.class_id.name"/></td>
+                                    <t t-if="len(data.get('class_name')) != 1">
+                                        <td name="td_class"><span t-field="student.class_id.name"/></td>
+                                    </t>
                                     <td name="td_email"><span t-field="student.email"/></td>
                                     <td name="td_mobile" class="text-end text-nowrap"><span t-field="student.mobile"/></td>
                                 </tr>
@@ -59,18 +67,28 @@
                        <span>Leave Report</span>
                    </t>
                    <div class="row mb-4" id="informations">
+                       <t t-if="len(set(docs.student_id)) == 1">
+                           <div class="col" name="department_info">
+                                <strong>Student</strong>
+                                <div t-esc="docs.student_id.name"></div>
+                            </div>
+                       </t>
+                       <t t-if="len(set(docs.student_id)) == 1">
+                           <div class="col" name="department_info">
+                                <strong>Registration ID</strong>
+                                <div t-esc="docs.student_id.reg_id"></div>
+                            </div>
+                       </t>
                        <div class="col" name="Duration">
                             <strong>Duration</strong>
                             <div t-esc="data.get('duration')"></div>
                        </div>
-                       <div class="col" name="class_info">
-                            <strong>Class</strong>
-                            <div t-esc="', '.join(data.get('class_name'))">N/A</div>
-                        </div>
-                       <div class="col" name="department_info">
-                            <strong>Student</strong>
-                            <div t-esc="', '.join(data.get('student_name'))">N/A</div>
-                        </div>
+                       <t t-if="len(set(docs.student_id)) == 1">
+                           <div class="col" name="class_info">
+                                <strong>Class</strong>
+                                <div t-esc="docs.class_id.name"></div>
+                            </div>
+                       </t>
                        <div class="col" name="printing_date">
                             <strong>Printing Date</strong>
                             <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
@@ -80,9 +98,13 @@
                    <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
                         <thead style="display: table-row-group">
                             <tr>
-                                <th name="th_registration" class="text-start"><strong>Registration ID</strong></th>
-                                <th name="th_name"><strong>Name</strong></th>
-                                <th name="th_class"><strong>Class</strong></th>
+                                <t t-if="len(set(docs.student_id)) != 1">
+                                    <th name="th_registration" class="text-start"><strong>Registration ID</strong></th>
+                                    <th name="th_name"><strong>Name</strong></th>
+                                </t>
+                                <t t-if="len(set(docs.student_id)) != 1">
+                                    <th name="th_class"><strong>Class</strong></th>
+                                </t>
                                 <th name="th_st_date"><strong>Start Date</strong></th>
                                 <th name="th_ed_date"><strong>End Date</strong></th>
                                 <th name="th_type" class="text-end text-nowrap"><strong>Type</strong></th>
@@ -91,9 +113,13 @@
                         <tbody class="sale_tbody">
                             <t t-foreach="docs" t-as="leave">
                                 <tr t-att-class="'fw-bold o_line_section'">
-                                    <td name="td_registration" class="text-start"><span t-field="leave.student_id.reg_id"/></td>
-                                    <td name="td_name"><span t-field="leave.student_id.name"/></td>
-                                    <td name="td_class"><span t-field="leave.class_id.name"/></td>
+                                    <t t-if="len(set(docs.student_id)) != 1">
+                                        <td name="td_registration" class="text-start"><span t-field="leave.student_id.reg_id"/></td>
+                                        <td name="td_name"><span t-field="leave.student_id.name"/></td>
+                                    </t>
+                                    <t t-if="len(set(docs.student_id)) != 1">
+                                        <td name="td_class"><span t-field="leave.class_id.name"/></td>
+                                    </t>
                                     <td name="td_st_date"><span t-field="leave.date_from"/></td>
                                     <td name="td_ed_date"><span t-field="leave.date_to"/></td>
                                     <td name="td_type" class="text-end text-nowrap">
@@ -123,14 +149,18 @@
                        <span>Exam Report</span>
                    </t>
                    <div class="row mb-4" id="informations">
-                       <div class="col" name="class_info">
-                            <strong>Class</strong>
-                            <div t-esc="', '.join(data.get('class_name'))">N/A</div>
-                        </div>
-                       <div class="col" name="department_info">
-                            <strong>Student</strong>
-                            <div t-esc="', '.join(data.get('student_name'))">N/A</div>
-                        </div>
+                       <t t-if="len(data.get('class_name')) &gt; 0">
+                           <div class="col" name="class_info">
+                                <strong>Class</strong>
+                                <div t-esc="', '.join(data.get('class_name'))">N/A</div>
+                            </div>
+                       </t>
+                       <t t-if="len(data.get('student_name')) &gt; 0">
+                           <div class="col" name="department_info">
+                                <strong>Student</strong>
+                                <div t-esc="', '.join(data.get('student_name'))">N/A</div>
+                            </div>
+                       </t>
                        <div class="col" name="printing_date">
                             <strong>Printing Date</strong>
                             <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
@@ -141,7 +171,9 @@
                         <thead style="display: table-row-group">
                             <tr>
                                 <th name="th_exam" class="text-start"><strong>Exam</strong></th>
-                                <th name="th_class"><strong>Class</strong></th>
+                                <t t-if="len(data.get('class_name')) != 1">
+                                    <th name="th_class"><strong>Class</strong></th>
+                                </t>
                                 <th name="th_cr_date"><strong>Created Time</strong></th>
                                 <th name="th_state" class="text-end text-nowrap"><strong>Status</strong></th>
                             </tr>
@@ -150,7 +182,9 @@
                             <t t-foreach="docs" t-as="exam">
                                 <tr t-att-class="'fw-bold o_line_section'">
                                     <td name="td_exam" class="text-start"><span t-field="exam.name"/></td>
-                                    <td name="td_class"><span t-field="exam.class_id.name"/></td>
+                                    <t t-if="len(data.get('class_name')) != 1">
+                                        <td name="td_class"><span t-field="exam.class_id.name"/></td>
+                                    </t>
                                     <td name="td_cr_date"><span t-field="exam.create_date"/></td>
                                     <td name="td_state" class="text-end text-nowrap"><span t-field="exam.state"/></td>
                                 </tr>
@@ -168,18 +202,23 @@
                <div class="page">
                    <div class="oe_structure"/>
                    <t t-set="layout_document_title">
-                       <span>Exam Report</span>
+                       <span>Event Report</span>
                    </t>
                    <div class="row mb-4" id="informations">
-                       <div class="col" name="department_info">
-                            <strong>Club</strong>
-                            <div t-esc="', '.join(data.get('club_name'))">N/A</div>
-                        </div>
+                       <div class="col" name="duration">
+                            <strong>Duration</strong>
+                            <div t-esc="data.get('duration')"></div>
+                       </div>
+                       <t t-if="len(data.get('club_name')) &gt; 0">
+                           <div class="col" name="club_info">
+                                <strong>Club</strong>
+                                <div t-esc="', '.join(data.get('club_name'))">N/A</div>
+                            </div>
+                       </t>
                        <div class="col" name="printing_date">
                             <strong>Printing Date</strong>
                             <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
                         </div>
-
                    </div>
                    <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
                         <thead style="display: table-row-group">
@@ -217,40 +256,84 @@
                        <span>Club Report</span>
                    </t>
                    <div class="row mb-4" id="informations">
-                       <div class="col" name="class_info">
-                            <strong>Club</strong>
-                            <div t-esc="', '.join(data.get('club_name'))">N/A</div>
-                        </div>
-                       <div class="col" name="department_info">
-                            <strong>Student</strong>
-                            <div t-esc="', '.join(data.get('student_name'))">N/A</div>
-                        </div>
+                       <t t-if="len(set(docs)) == 1 and len(data.get('student_name')) &gt; 0">
+                           <div class="col" name="class_info">
+                                <strong>Club</strong>
+                                <div t-esc="docs.name"></div>
+                            </div>
+                       </t>
+                       <t t-if="len(data.get('student_name')) == 1">
+                           <div class="col" name="department_info">
+                                <strong>Student</strong>
+                                <div t-esc="', '.join(data.get('student_name'))"></div>
+                            </div>
+                       </t>
                        <div class="col" name="printing_date">
                             <strong>Printing Date</strong>
                             <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
                         </div>
-
                    </div>
-                   <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
-                        <thead style="display: table-row-group">
-                            <tr>
-                                <th name="th_exam" class="text-start"><strong>Club</strong></th>
-                                <th name="th_class"><strong>Class</strong></th>
-                                <th name="th_cr_date"><strong>Created Time</strong></th>
-                                <th name="th_state" class="text-end text-nowrap"><strong>Status</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody class="sale_tbody">
-                            <t t-foreach="docs" t-as="exam">
-                                <tr t-att-class="'fw-bold o_line_section'">
-                                    <td name="td_exam" class="text-start"><span t-field="exam.name"/></td>
-                                    <td name="td_class"><span t-field="exam.class_id.name"/></td>
-                                    <td name="td_cr_date"><span t-field="exam.create_date"/></td>
-                                    <td name="td_state" class="text-end text-nowrap"><span t-field="exam.state"/></td>
+                   <t t-if="len(set(docs)) != 0 and len(data.get('student_name')) == 0">
+                       <t t-foreach="docs" t-as="club">
+                           <div class="row mb-4" id="informations"></div>
+                           <h4><strong><span t-esc="club.name"/></strong></h4>
+                           <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                                <thead style="display: table-row-group">
+                                    <tr>
+                                        <t t-if="len(data.get('student_name')) &lt;= 0">
+                                            <th name="th_student" class="text-start"><strong>Student</strong></th>
+                                            <th name="th_class"><strong>Class</strong></th>
+                                            <th name="th_mobile" class="text-end text-nowrap"><strong>Mobile</strong></th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody class="sale_tbody">
+                                    <t t-foreach="club.student_ids" t-as="student">
+                                        <tr t-att-class="'fw-bold o_line_section'">
+                                            <td name="td_student" class="text-start"><span t-field="student.name"/></td>
+                                            <td name="td_class"><span t-field="student.class_id"/></td>
+                                            <td name="td_mobile" class="text-end text-nowrap"><span t-field="student.mobile"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                           </table>
+                       </t>
+                   </t>
+                   <t t-else="">
+                       <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                            <thead style="display: table-row-group">
+                                <tr>
+                                    <t t-if="len(data.get('student_name')) == 1">
+                                        <th name="th_club" class="text-start"><strong>Club</strong></th>
+                                        <th name="th_count"><strong>No. of Students</strong></th>
+                                    </t>
+                                    <t t-if="len(data.get('student_name')) &gt; 1">
+                                        <th name="th_student" class="text-start"><strong>Student</strong></th>
+                                        <th name="th_count"><strong>Clubs</strong></th>
+                                    </t>
                                 </tr>
-                            </t>
-                        </tbody>
-                   </table>
+                            </thead>
+                            <tbody class="sale_tbody">
+                                <t t-foreach="docs" t-as="club">
+                                    <t t-if="len(data.get('student_name')) == 1">
+                                        <tr t-att-class="'fw-bold o_line_section'">
+                                            <td name="td_club" class="text-start"><span t-field="club.name"/></td>
+                                            <td name="td_count"><span t-esc="len(club.student_ids)"/></td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <t t-if="len(data.get('student_name')) &gt; 1">
+                                    <t t-foreach="data.get('student_name')" t-as="student">
+                                        <tr t-att-class="'fw-bold o_line_section'">
+                                            <td name="td_name" class="text-start"><span t-esc="student"/></td>
+                                            <td name="td_count"><span t-esc="', '.join([club.name for club in docs])"/></td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+                       </table>
+                       <br/><br/>
+                   </t>
                </div>
            </t>
        </t>

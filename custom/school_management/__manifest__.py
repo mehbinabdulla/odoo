@@ -33,7 +33,6 @@
         'views/exam_views.xml',
         'report/school_management_templates.xml',
         'report/school_management_reports.xml',
-        'views/student_attendance_views.xml',
         'wizard/student_report_wizard_views.xml',
         'wizard/leave_report_wizard_views.xml',
         'wizard/event_report_wizard_views.xml',

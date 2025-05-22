@@ -6,7 +6,7 @@ from odoo.tools import SQL
 
 class ReportEvent(models.AbstractModel):
     _name = 'report.school_management.report_event'
-    _description = 'Leave Report'
+    _description = 'Event Report'
 
     @api.model
     def _get_report_values(self, docids, data=None):
@@ -24,16 +24,16 @@ class ReportEvent(models.AbstractModel):
         print(club_ids)
 
         self.env.cr.execute(SQL(f"""
-            SELECT id, club_id, # need more field.....
-            FROM student_leave
+            SELECT id, club_id, date_begin, date_end
+            FROM event_event
             WHERE ({
-                    '%(today)s BETWEEN date_from AND date_to' if duration == 'today'
-                    else """(date_from BETWEEN %(week_start)s AND %(week_end)s) 
-                        OR (date_to BETWEEN %(week_start)s AND %(week_end)s)""" if duration == 'week'
-                    else """(date_from BETWEEN %(month_start)s AND %(month_end)s) 
-                        OR (date_to BETWEEN %(month_start)s AND %(month_end)s)""" if duration == 'month'
-                    else """(date_from BETWEEN %(start_date)s AND %(end_date)s) 
-                        OR (date_to BETWEEN %(start_date)s AND %(end_date)s)""" if duration == 'custom'
+                    '%(today)s BETWEEN date_begin AND date_end' if duration == 'today'
+                    else """(date_begin BETWEEN %(week_start)s AND %(week_end)s) 
+                        OR (date_end BETWEEN %(week_start)s AND %(week_end)s)""" if duration == 'week'
+                    else """(date_begin BETWEEN %(month_start)s AND %(month_end)s) 
+                        OR (date_end BETWEEN %(month_start)s AND %(month_end)s)""" if duration == 'month'
+                    else """(date_begin BETWEEN %(start_date)s AND %(end_date)s) 
+                        OR (date_end BETWEEN %(start_date)s AND %(end_date)s)""" if duration == 'custom'
                     else 'FALSE'
                 }) AND ({   
                     f'club_id IN { club_ids }' if club_ids
@@ -45,10 +45,10 @@ class ReportEvent(models.AbstractModel):
                  start_date=start_date, end_date=end_date
         ))
 
-        leaves = self.env.cr.dictfetchall()
-        for leave in leaves:
-            print(leave)
-            docids.append(leave.get('id'))
+        events = self.env.cr.dictfetchall()
+        for event in events:
+            print(event)
+            docids.append(event.get('id'))
 
         if duration == 'today':
             data.update({'duration': today})
@@ -61,7 +61,7 @@ class ReportEvent(models.AbstractModel):
 
         return {
             'doc_ids': docids,
-            'doc_model': 'student.leave',
-            'docs': self.env['student.leave'].browse(docids),
+            'doc_model': 'event.event',
+            'docs': self.env['event.event'].browse(docids),
             'data': data
         }

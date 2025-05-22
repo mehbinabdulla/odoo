@@ -7,8 +7,8 @@ class SchoolExam(models.Model):
     _description = 'School Exam'
 
     name = fields.Char(string='Exam')
-    class_id = fields.Many2one('school.class', string='Class')
-    paper_ids = fields.Many2many('school.exam.paper')
+    class_id = fields.Many2one('school.class', string='Class', required=True)
+    paper_ids = fields.One2many('school.exam.paper', 'exam_id', required=True)
     state = fields.Selection([('draft', 'Draft'),('assigned', 'Assigned')], default='draft')
 
     def action_exam_assignment(self):
@@ -20,5 +20,6 @@ class SchoolExamPaper(models.Model):
     _description = 'School Exam Paper'
 
     subject_id = fields.Many2one('school.subject', string='Subject')
+    exam_id = fields.Many2one('school.exam')
     pass_mark = fields.Integer('Pass Mark')
     max_mark = fields.Integer('Total Mark')
