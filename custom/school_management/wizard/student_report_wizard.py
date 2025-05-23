@@ -1,5 +1,6 @@
-
+import json
 from odoo import api, models, fields
+from odoo.tools import json_default
 
 
 class StudentReportFilterWizard(models.TransientModel):
@@ -28,3 +29,22 @@ class StudentReportFilterWizard(models.TransientModel):
             'class_name': [cls.name for cls in self.class_ids],
         }
         return self.env.ref('school_management.action_report_student_template').report_action(None, data)
+
+    def action_print_xls(self):
+        data = {
+            'department_ids': [dept.id for dept in self.department_ids],
+            'class_ids': [cls.id for cls in self.class_ids],
+            'department_name': [dept.name for dept in self.department_ids],
+            'class_name': [cls.name for cls in self.class_ids],
+        }
+        return {
+            'type': 'ir.actions.report',
+            'data': {
+                'model': 'report.school_management.report_student',
+                 'options': json.dumps(data, default=json_default),
+                 'output_format': 'xlsx',
+                 'report_name': 'Student Report',
+            },
+            'report_type': 'xlsx',
+        }
+

@@ -1,4 +1,5 @@
 from odoo import api, models
+from odoo.exceptions import ValidationError
 from odoo.tools import SQL
 
 
@@ -30,9 +31,12 @@ class ReportClub(models.AbstractModel):
             print(club.get('name'))
             docids.append(club.get('id'))
 
-        return {
-            'doc_ids': docids,
-            'doc_model': 'school.club',
-            'docs': self.env['school.club'].browse(docids),
-            'data': data
-        }
+        if len(docids) > 0:
+            return {
+                'doc_ids': docids,
+                'doc_model': 'school.club',
+                'docs': self.env['school.club'].browse(docids),
+                'data': data
+            }
+        else:
+            raise ValidationError('No Record Found')

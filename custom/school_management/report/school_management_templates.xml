@@ -25,34 +25,38 @@
                             <strong>Printing Date</strong>
                             <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
                         </div>
-
                    </div>
-                   <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
-                        <thead style="display: table-row-group">
-                            <tr>
-                                <th name="th_registration" class="text-start"><strong>Registration ID</strong></th>
-                                <th name="th_name"><strong>Name</strong></th>
-                                <t t-if="len(data.get('class_name')) != 1">
-                                    <th name="th_class"><strong>Class</strong></th>
-                                </t>
-                                <th name="th_email"><strong>Email</strong></th>
-                                <th name="th_mobile" class="text-end text-nowrap"><strong>Mobile</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody class="sale_tbody">
-                            <t t-foreach="docs" t-as="student">
-                                <tr t-att-class="'fw-bold o_line_section'">
-                                    <td name="td_registration" class="text-start"><span t-field="student.reg_id"/></td>
-                                    <td name="td_name"><span t-field="student.name"/></td>
+                   <t t-if="len(docs) &gt; 0">
+                       <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                            <thead style="display: table-row-group">
+                                <tr>
+                                    <th name="th_registration" class="text-start"><strong>Registration ID</strong></th>
+                                    <th name="th_name"><strong>Name</strong></th>
                                     <t t-if="len(data.get('class_name')) != 1">
-                                        <td name="td_class"><span t-field="student.class_id.name"/></td>
+                                        <th name="th_class"><strong>Class</strong></th>
                                     </t>
-                                    <td name="td_email"><span t-field="student.email"/></td>
-                                    <td name="td_mobile" class="text-end text-nowrap"><span t-field="student.mobile"/></td>
+                                    <th name="th_email"><strong>Email</strong></th>
+                                    <th name="th_mobile" class="text-end text-nowrap"><strong>Mobile</strong></th>
                                 </tr>
-                            </t>
-                        </tbody>
-                   </table>
+                            </thead>
+                            <tbody class="sale_tbody">
+                                <t t-foreach="docs" t-as="student">
+                                    <tr t-att-class="'fw-bold o_line_section'">
+                                        <td name="td_registration" class="text-start"><span t-field="student.reg_id"/></td>
+                                        <td name="td_name"><span t-field="student.name"/></td>
+                                        <t t-if="len(data.get('class_name')) != 1">
+                                            <td name="td_class"><span t-field="student.class_id.name"/></td>
+                                        </t>
+                                        <td name="td_email"><span t-field="student.email"/></td>
+                                        <td name="td_mobile" class="text-end text-nowrap"><span t-field="student.mobile"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                       </table>
+                   </t>
+                   <t t-else="">
+                       <t t-call="school_management.no_data"/>
+                   </t>
                </div>
            </t>
        </t>
@@ -95,46 +99,57 @@
                         </div>
 
                    </div>
-                   <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
-                        <thead style="display: table-row-group">
-                            <tr>
-                                <t t-if="len(set(docs.student_id)) != 1">
-                                    <th name="th_registration" class="text-start"><strong>Registration ID</strong></th>
-                                    <th name="th_name"><strong>Name</strong></th>
-                                </t>
-                                <t t-if="len(set(docs.student_id)) != 1">
-                                    <th name="th_class"><strong>Class</strong></th>
-                                </t>
-                                <th name="th_st_date"><strong>Start Date</strong></th>
-                                <th name="th_ed_date"><strong>End Date</strong></th>
-                                <th name="th_type" class="text-end text-nowrap"><strong>Type</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody class="sale_tbody">
-                            <t t-foreach="docs" t-as="leave">
-                                <tr t-att-class="'fw-bold o_line_section'">
-                                    <t t-if="len(set(docs.student_id)) != 1">
-                                        <td name="td_registration" class="text-start"><span t-field="leave.student_id.reg_id"/></td>
-                                        <td name="td_name"><span t-field="leave.student_id.name"/></td>
-                                    </t>
-                                    <t t-if="len(set(docs.student_id)) != 1">
-                                        <td name="td_class"><span t-field="leave.class_id.name"/></td>
-                                    </t>
-                                    <td name="td_st_date"><span t-field="leave.date_from"/></td>
-                                    <td name="td_ed_date"><span t-field="leave.date_to"/></td>
-                                    <td name="td_type" class="text-end text-nowrap">
-                                        <t t-if="leave.is_half_day">
-                                            <span>Half Day</span><![CDATA[&nbsp;]]>(<span t-field="leave.half_day"/>)
-                                        </t>
-                                        <t t-else="">
-                                            <span>Full Day</span>
-                                        </t>
+                   <t t-if="len(docs) &gt; 0">
+                       <t t-if="len(set(docs.class_id)) != 0">
+                           <t t-foreach="set(docs.class_id)" t-as="class_id">
+                               <div class="row mb-4" id="informations"></div>
+                               <t t-if="len(set(docs.class_id)) &gt; 1">
+                                    <h4><strong><span t-esc="class_id.name"/></strong></h4>
+                               </t>
+                               <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                                    <thead style="display: table-row-group">
+                                        <tr>
+                                            <t t-if="len(set(docs.student_id)) != 1">
+                                                <th name="th_registration" class="text-start"><strong>Registration ID</strong></th>
+                                                <th name="th_name"><strong>Name</strong></th>
+                                            </t>
+                                            <th name="th_days"><strong>Number of Days</strong></th>
+                                            <th name="th_st_date"><strong>Start Date</strong></th>
+                                            <th name="th_ed_date"><strong>End Date</strong></th>
+                                            <th name="th_type" class="text-end text-nowrap"><strong>Type</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="sale_tbody">
+                                        <t t-foreach="docs" t-as="leave">
+                                            <t t-if="leave.class_id == class_id">
+                                                <tr t-att-class="'fw-bold o_line_section'">
+                                                    <t t-if="len(set(docs.student_id)) != 1">
+                                                        <td name="td_registration" class="text-start"><span t-field="leave.student_id.reg_id"/></td>
+                                                        <td name="td_name"><span t-field="leave.student_id.name"/></td>
+                                                    </t>
+                                                    <td name="td_days"><span t-field="leave.number_of_days"/></td>
+                                                    <td name="td_st_date"><span t-field="leave.date_from"/></td>
+                                                    <td name="td_ed_date"><span t-field="leave.date_to"/></td>
+                                                    <td name="td_type" class="text-end text-nowrap">
+                                                        <t t-if="leave.is_half_day">
+                                                            <span>Half Day</span><![CDATA[&nbsp;]]>(<span t-field="leave.half_day"/>)
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span>Full Day</span>
+                                                        </t>
 
-                                    </td>
-                                </tr>
-                            </t>
-                        </tbody>
-                   </table>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                               </table>
+                           </t>
+                       </t>
+                   </t>
+                   <t t-else="">
+                       <t t-call="school_management.no_data"/>
+                   </t>
                </div>
            </t>
        </t>
@@ -167,30 +182,35 @@
                         </div>
 
                    </div>
-                   <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
-                        <thead style="display: table-row-group">
-                            <tr>
-                                <th name="th_exam" class="text-start"><strong>Exam</strong></th>
-                                <t t-if="len(data.get('class_name')) != 1">
-                                    <th name="th_class"><strong>Class</strong></th>
-                                </t>
-                                <th name="th_cr_date"><strong>Created Time</strong></th>
-                                <th name="th_state" class="text-end text-nowrap"><strong>Status</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody class="sale_tbody">
-                            <t t-foreach="docs" t-as="exam">
-                                <tr t-att-class="'fw-bold o_line_section'">
-                                    <td name="td_exam" class="text-start"><span t-field="exam.name"/></td>
+                   <t t-if="len(docs) &gt; 0">
+                       <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                            <thead style="display: table-row-group">
+                                <tr>
+                                    <th name="th_exam" class="text-start"><strong>Exam</strong></th>
                                     <t t-if="len(data.get('class_name')) != 1">
-                                        <td name="td_class"><span t-field="exam.class_id.name"/></td>
+                                        <th name="th_class"><strong>Class</strong></th>
                                     </t>
-                                    <td name="td_cr_date"><span t-field="exam.create_date"/></td>
-                                    <td name="td_state" class="text-end text-nowrap"><span t-field="exam.state"/></td>
+                                    <th name="th_cr_date"><strong>Created Time</strong></th>
+                                    <th name="th_state" class="text-end text-nowrap"><strong>Status</strong></th>
                                 </tr>
-                            </t>
-                        </tbody>
-                   </table>
+                            </thead>
+                            <tbody class="sale_tbody">
+                                <t t-foreach="docs" t-as="exam">
+                                    <tr t-att-class="'fw-bold o_line_section'">
+                                        <td name="td_exam" class="text-start"><span t-field="exam.name"/></td>
+                                        <t t-if="len(data.get('class_name')) != 1">
+                                            <td name="td_class"><span t-field="exam.class_id.name"/></td>
+                                        </t>
+                                        <td name="td_cr_date"><span t-field="exam.create_date"/></td>
+                                        <td name="td_state" class="text-end text-nowrap"><span t-field="exam.state"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                       </table>
+                   </t>
+                   <t t-else="">
+                       <t t-call="school_management.no_data"/>
+                   </t>
                </div>
            </t>
        </t>
@@ -220,28 +240,37 @@
                             <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
                         </div>
                    </div>
-                   <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
-                        <thead style="display: table-row-group">
-                            <tr>
-                                <th name="th_event" class="text-start"><strong>Event</strong></th>
-                                <th name="th_club"><strong>Club</strong></th>
-                                <th name="th_st_date"><strong>Start Date</strong></th>
-                                <th name="th_ed_date"><strong>End Date</strong></th>
-                                <th name="th_state" class="text-end text-nowrap"><strong>Status</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody class="sale_tbody">
-                            <t t-foreach="docs" t-as="event">
-                                <tr t-att-class="'fw-bold o_line_section'">
-                                    <td name="td_event" class="text-start"><span t-field="event.name"/></td>
-                                    <td name="td_club"><span t-field="event.club_id.name"/></td>
-                                    <td name="td_st_date"><span t-field="event.date_begin"/></td>
-                                    <td name="td_ed_date"><span t-field="event.date_end"/></td>
-                                    <td name="td_state" class="text-end text-nowrap"><span t-field="event.stage_id.name"/></td>
+                   <t t-if="len(docs) &gt; 0">
+                       <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                            <thead style="display: table-row-group">
+                                <tr>
+                                    <th name="th_event" class="text-start"><strong>Event</strong></th>
+                                    <t t-if="len(set(docs.club_id)) != 1">
+                                        <th name="th_club"><strong>Club</strong></th>
+                                    </t>
+                                    <th name="th_st_date"><strong>Start Date</strong></th>
+                                    <th name="th_ed_date"><strong>End Date</strong></th>
+                                    <th name="th_state" class="text-end text-nowrap"><strong>Status</strong></th>
                                 </tr>
-                            </t>
-                        </tbody>
-                   </table>
+                            </thead>
+                            <tbody class="sale_tbody">
+                                <t t-foreach="docs" t-as="event">
+                                    <tr t-att-class="'fw-bold o_line_section'">
+                                        <td name="td_event" class="text-start"><span t-field="event.name"/></td>
+                                        <t t-if="len(set(docs.club_id)) != 1">
+                                            <td name="td_club"><span t-field="event.club_id.name"/></td>
+                                        </t>
+                                        <td name="td_st_date"><span t-field="event.date_begin"/></td>
+                                        <td name="td_ed_date"><span t-field="event.date_end"/></td>
+                                        <td name="td_state" class="text-end text-nowrap"><span t-field="event.stage_id.name"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                       </table>
+                   </t>
+                   <t t-else="">
+                       <t t-call="school_management.no_data"/>
+                   </t>
                </div>
            </t>
        </t>
@@ -273,69 +302,78 @@
                             <div t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options='{"widget": "date"}'>0000-00-00</div>
                         </div>
                    </div>
-                   <t t-if="len(set(docs)) != 0 and len(data.get('student_name')) == 0">
-                       <t t-foreach="docs" t-as="club">
-                           <div class="row mb-4" id="informations"></div>
-                           <h4><strong><span t-esc="club.name"/></strong></h4>
+                   <t t-if="len(docs) &gt; 0">
+                       <t t-if="len(set(docs)) != 0 and len(data.get('student_name')) == 0">
+                           <t t-foreach="docs" t-as="club">
+                               <div class="row mb-4" id="informations"></div>
+                               <h4><strong><span t-esc="club.name"/></strong></h4>
+                               <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
+                                    <thead style="display: table-row-group">
+                                        <tr>
+                                            <t t-if="len(data.get('student_name')) &lt;= 0">
+                                                <th name="th_student" class="text-start"><strong>Student</strong></th>
+                                                <th name="th_class"><strong>Class</strong></th>
+                                                <th name="th_mobile" class="text-end text-nowrap"><strong>Mobile</strong></th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="sale_tbody">
+                                        <t t-foreach="club.student_ids" t-as="student">
+                                            <tr t-att-class="'fw-bold o_line_section'">
+                                                <td name="td_student" class="text-start"><span t-field="student.name"/></td>
+                                                <td name="td_class"><span t-field="student.class_id"/></td>
+                                                <td name="td_mobile" class="text-end text-nowrap"><span t-field="student.mobile"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                               </table>
+                           </t>
+                       </t>
+                       <t t-else="">
                            <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
                                 <thead style="display: table-row-group">
                                     <tr>
-                                        <t t-if="len(data.get('student_name')) &lt;= 0">
+                                        <t t-if="len(data.get('student_name')) == 1">
+                                            <th name="th_club" class="text-start"><strong>Club</strong></th>
+                                            <th name="th_count"><strong>No. of Students</strong></th>
+                                        </t>
+                                        <t t-if="len(data.get('student_name')) &gt; 1">
                                             <th name="th_student" class="text-start"><strong>Student</strong></th>
-                                            <th name="th_class"><strong>Class</strong></th>
-                                            <th name="th_mobile" class="text-end text-nowrap"><strong>Mobile</strong></th>
+                                            <th name="th_count"><strong>Clubs</strong></th>
                                         </t>
                                     </tr>
                                 </thead>
                                 <tbody class="sale_tbody">
-                                    <t t-foreach="club.student_ids" t-as="student">
-                                        <tr t-att-class="'fw-bold o_line_section'">
-                                            <td name="td_student" class="text-start"><span t-field="student.name"/></td>
-                                            <td name="td_class"><span t-field="student.class_id"/></td>
-                                            <td name="td_mobile" class="text-end text-nowrap"><span t-field="student.mobile"/></td>
-                                        </tr>
+                                    <t t-foreach="docs" t-as="club">
+                                        <t t-if="len(data.get('student_name')) == 1">
+                                            <tr t-att-class="'fw-bold o_line_section'">
+                                                <td name="td_club" class="text-start"><span t-field="club.name"/></td>
+                                                <td name="td_count"><span t-esc="len(club.student_ids)"/></td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <t t-if="len(data.get('student_name')) &gt; 1">
+                                        <t t-foreach="data.get('student_name')" t-as="student">
+                                            <tr t-att-class="'fw-bold o_line_section'">
+                                                <td name="td_name" class="text-start"><span t-esc="student"/></td>
+                                                <td name="td_count"><span t-esc="', '.join([club.name for club in docs if student in [student_id.name for student_id in club.student_ids]])"/></td>
+                                            </tr>
+                                        </t>
                                     </t>
                                 </tbody>
                            </table>
+                           <br/><br/>
                        </t>
                    </t>
                    <t t-else="">
-                       <table class="o_has_total_table table o_main_table table table-condensed table-borderless">
-                            <thead style="display: table-row-group">
-                                <tr>
-                                    <t t-if="len(data.get('student_name')) == 1">
-                                        <th name="th_club" class="text-start"><strong>Club</strong></th>
-                                        <th name="th_count"><strong>No. of Students</strong></th>
-                                    </t>
-                                    <t t-if="len(data.get('student_name')) &gt; 1">
-                                        <th name="th_student" class="text-start"><strong>Student</strong></th>
-                                        <th name="th_count"><strong>Clubs</strong></th>
-                                    </t>
-                                </tr>
-                            </thead>
-                            <tbody class="sale_tbody">
-                                <t t-foreach="docs" t-as="club">
-                                    <t t-if="len(data.get('student_name')) == 1">
-                                        <tr t-att-class="'fw-bold o_line_section'">
-                                            <td name="td_club" class="text-start"><span t-field="club.name"/></td>
-                                            <td name="td_count"><span t-esc="len(club.student_ids)"/></td>
-                                        </tr>
-                                    </t>
-                                </t>
-                                <t t-if="len(data.get('student_name')) &gt; 1">
-                                    <t t-foreach="data.get('student_name')" t-as="student">
-                                        <tr t-att-class="'fw-bold o_line_section'">
-                                            <td name="td_name" class="text-start"><span t-esc="student"/></td>
-                                            <td name="td_count"><span t-esc="', '.join([club.name for club in docs])"/></td>
-                                        </tr>
-                                    </t>
-                                </t>
-                            </tbody>
-                       </table>
-                       <br/><br/>
+                       <t t-call="school_management.no_data"/>
                    </t>
                </div>
            </t>
        </t>
-   </template>
+    </template>
+
+    <template id="no_data">
+        <div class="center"><h5>No Records Found!</h5></div>
+    </template>
 </odoo>

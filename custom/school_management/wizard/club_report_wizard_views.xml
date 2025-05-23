@@ -7,10 +7,10 @@
             <form>
                 <group>
                     <group>
-                        <field name="club_ids" widget="many2many_tags" options="{'no_open': True, 'no_quick_create':True, 'no_create': True}"/>
+                        <field name="club_ids" placeholder="All" widget="many2many_tags" options="{'no_open': True, 'no_quick_create':True, 'no_create': True}"/>
                     </group>
                     <group>
-                        <field name="student_ids" widget="many2many_tags" options="{'no_open': True, 'no_quick_create':True, 'no_create': True}"/>
+                        <field name="student_ids" placeholder="All" widget="many2many_tags" options="{'no_open': True, 'no_quick_create':True, 'no_create': True}"/>
                     </group>
                 </group>
                 <footer>

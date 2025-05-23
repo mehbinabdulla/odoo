@@ -1,4 +1,9 @@
+import io
+from datetime import datetime
+
+import xlsxwriter
 from odoo import api, models
+from odoo.exceptions import ValidationError
 from odoo.tools import SQL
 
 
@@ -31,9 +36,39 @@ class ReportStudent(models.AbstractModel):
             print(student)
             docids.append(student.get('id'))
 
-        return {
-            'doc_ids': docids,
-            'doc_model': 'student',
-            'docs': self.env['student'].browse(docids),
-            'data': data
-        }
+        if len(docids) > 0:
+            return {
+                'doc_ids': docids,
+                'doc_model': 'student',
+                'docs': self.env['student'].browse(docids),
+                'data': data
+            }
+        else:
+            raise ValidationError('No Record Found')
+
+    def get_xlsx_report(self, data, response):
+        record = self._get_report_values([], data)
+        print(record)
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        sheet = workbook.add_worksheet()
+        print(sheet)
+        cell_format = workbook.add_format(
+            {'font_size': '12px', 'bold': True, 'align': 'center'})
+        head = workbook.add_format(
+            {'align': 'center', 'bold': True, 'font_size': '20px', 'color':'#714B67'})
+        txt = workbook.add_format({'font_size': '12px', 'align': 'center'})
+        sheet.merge_range('B2:I3', 'STUDENT REPORT', head)
+        sheet.merge_range('B4:C4', 'Printing Date:', cell_format)
+        sheet.merge_range('B5:C5', datetime.now().strftime('%Y-%m-%d'), txt)
+        if len(data.get('department_name')) > 0:
+            sheet.merge_range('D4:E4', 'Departments', cell_format)
+            sheet.merge_range('D5:E5', ', '.join(data.get('department_name')), txt)
+        if len(data.get('class_name')) > 0:
+            sheet.merge_range('F4:G4', 'Classes', cell_format)
+            sheet.merge_range('F5:G5', ', '.join(data.get('class_name')), txt)
+        workbook.close()
+        print('close')
+        output.seek(0)
+        response.stream.write(output.read())
+        output.close()

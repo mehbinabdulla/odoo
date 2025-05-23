@@ -12,7 +12,7 @@ class StudentLeave(models.Model):
     class_id = fields.Many2one('school.class', related='student_id.class_id', store=True, string='Class')
     date_from = fields.Date('Start Date', required=True, default=fields.Date.today())
     date_to = fields.Date('End Date', default=fields.Date.today())
-    number_of_days = fields.Float('Duration (Days)', compute="_compute_number_of_days")
+    number_of_days = fields.Float('Duration (Days)', store=True, compute="_compute_number_of_days")
     is_half_day = fields.Boolean('Is Half Day')
     half_day = fields.Selection([('fn','Forenoon'),('an','Afternoon')], default='fn', required=True)
     reason = fields.Html()

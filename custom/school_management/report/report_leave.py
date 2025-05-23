@@ -1,6 +1,7 @@
 from odoo import api, models
 from datetime import date, timedelta
 import calendar
+from odoo.exceptions import ValidationError
 from odoo.tools import SQL
 
 
@@ -35,8 +36,14 @@ class ReportLeave(models.AbstractModel):
                         OR (date_to BETWEEN %(week_start)s AND %(week_end)s)""" if duration == 'week'
                     else """(date_from BETWEEN %(month_start)s AND %(month_end)s) 
                         OR (date_to BETWEEN %(month_start)s AND %(month_end)s)""" if duration == 'month'
+                    else 'TRUE' if duration == 'custom' and not start_date and not end_date
+                    else """(date_from <= %(end_date)s) 
+                        OR (date_to <= %(end_date)s)""" if duration == 'custom' and not start_date
+                    else """(date_from >= %(start_date)s) 
+                        OR (date_to >= %(start_date)s)""" if duration == 'custom' and not end_date
                     else """(date_from BETWEEN %(start_date)s AND %(end_date)s) 
                         OR (date_to BETWEEN %(start_date)s AND %(end_date)s)""" if duration == 'custom'
+                    else 'TRUE' if duration == 'all'
                     else 'FALSE'
                 }) AND ({   
                     f'student_id IN { student_ids } AND  class_id IN { class_ids }' if class_ids and student_ids
@@ -62,11 +69,17 @@ class ReportLeave(models.AbstractModel):
         elif duration == 'month':
             data.update({'duration': f'{month_start} to {month_end}'})
         elif duration == 'custom':
-            data.update({'duration': f'{start_date} to {end_date}'})
+            data.update({'duration': f'{start_date if start_date else 'All'} to {end_date if end_date else 'All'}'})
+        elif duration == 'all':
+            data.update({'duration': 'All'})
 
-        return {
-            'doc_ids': docids,
-            'doc_model': 'student.leave',
-            'docs': self.env['student.leave'].browse(docids),
-            'data': data
-        }
+
+        if len(docids) > 0:
+            return {
+                'doc_ids': docids,
+                'doc_model': 'student.leave',
+                'docs': self.env['student.leave'].browse(docids),
+                'data': data
+            }
+        else:
+            raise ValidationError('No Record Found')

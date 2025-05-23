@@ -8,11 +8,11 @@
                 <group>
                     <field name="duration" widget="radio" options="{'horizontal': True}"/>
                     <group>
-                        <field name="start_date" invisible="duration != 'custom'"/>
-                        <field name="club_ids" widget="many2many_tags" options="{'no_open': True, 'no_quick_create':True, 'no_create': True}"/>
+                        <field name="start_date" placeholder="ALl" invisible="duration != 'custom'"/>
+                        <field name="club_ids" placeholder="All" widget="many2many_tags" options="{'no_open': True, 'no_quick_create':True, 'no_create': True}"/>
                     </group>
                     <group>
-                        <field name="end_date" invisible="duration != 'custom'"/>
+                        <field name="end_date" placeholder="All" invisible="duration != 'custom'"/>
                     </group>
                 </group>
                 <footer>
