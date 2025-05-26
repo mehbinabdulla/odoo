@@ -1,5 +1,7 @@
+import io
+import xlsxwriter
 from odoo import api, models
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 import calendar
 from odoo.exceptions import ValidationError
 from odoo.tools import SQL
@@ -83,3 +85,84 @@ class ReportLeave(models.AbstractModel):
             }
         else:
             raise ValidationError('No Record Found')
+
+    def  get_xlsx_report(self, data, response):
+        record = self._get_report_values([], data)
+        docs = record.get('docs')
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        sheet = workbook.add_worksheet()
+
+        head = workbook.add_format(
+            {'align': 'center', 'bold': True, 'font_size': '20px', 'color': '#714B67'})
+        sub_head = workbook.add_format(
+            {'font_size': '11px', 'align': 'vcenter', 'color': '#987000'})
+        col_head = workbook.add_format(
+            {'font_size': '11px', 'bold': True, 'align': 'vcenter', 'bg_color': '#e4d7e1'})
+        txt = workbook.add_format(
+            {'font_size': '11px', 'align': 'vcenter'})
+        row_even = workbook.add_format(
+            {'font_size': '11px', 'bg_color': '#f4eef2', 'align': 'left'})
+        row_odd = workbook.add_format(
+            {'font_size': '11px', 'bg_color': '#ffffff', 'align': 'left'})
+        class_head = workbook.add_format(
+            {'font_size': '12px', 'bold': True, 'align': 'vcenter', 'color': '#987000'})
+
+        sheet.merge_range(f'A6:{'G7' if len(data.get('class_name')) != 1 else 'E7'}', 'LEAVE REPORT', head)
+
+        sheet.write('A1', self.env.company.name, txt)
+        sheet.write('A2', self.env.company.street, txt)
+        sheet.write('A3', self.env.company.city, txt)
+        sheet.write('A4', self.env.company.state_id.name, txt)
+        sheet.write('A5', self.env.company.country_id.name, txt)
+
+        sheet.write('A9', 'Printing Date:', sub_head)
+        sheet.write('B9', datetime.now().strftime('%Y-%m-%d'), txt)
+        if len(set(docs.student_id)) == 1:
+            sheet.write('A10', 'Student', sub_head)
+            sheet.write('B10', docs.student_id.name, txt)
+            sheet.write('A11', 'Registration ID', sub_head)
+            sheet.write('B11', docs.student_id.reg_id, txt)
+            sheet.write('A12', 'Class', sub_head)
+            sheet.write('B12', docs.class_id.name, txt)
+        index = 12 if len(set(docs.student_id)) == 1 else 9
+        print(index)
+        for class_id in set(docs.class_id):
+            order = 0
+            index += 3
+            if len(set(docs.student_id)) != 1:
+                sheet.write(f'A{index}', class_id.name, class_head)
+                index += 1
+            sheet.write(f'A{index}', 'Sl. No.', col_head)
+            if len(set(docs.student_id)) != 1:
+                sheet.write(f'B{index}', 'Registration ID', col_head)
+                sheet.write(f'C{index}', 'Name', col_head)
+            sheet.write(f'{'D' if len(set(docs.student_id)) != 1 else 'B'}{index}', 'No. of Days', col_head)
+            sheet.write(f'{'E' if len(set(docs.student_id)) != 1 else 'C'}{index}', 'Start Date', col_head)
+            sheet.write(f'{'F' if len(set(docs.student_id)) != 1 else 'D'}{index}', 'End Date', col_head)
+            sheet.write(f'{'G' if len(set(docs.student_id)) != 1 else 'E'}{index}', 'Type', col_head)
+            for leave in docs:
+                if leave.class_id == class_id:
+                    index+=1
+                    order+=1
+                    sheet.write(f'A{index}', order, row_even if index % 2 == 0 else row_odd)
+                    if len(set(docs.student_id)) != 1:
+                        sheet.write(f'B{index}', leave.student_id.reg_id, row_even if index % 2 == 0 else row_odd)
+                        sheet.write(f'C{index}', leave.student_id.name, row_even if index % 2 == 0 else row_odd)
+                    sheet.write(f'{'D' if len(set(docs.student_id)) != 1 else 'B'}{index}',
+                                leave.number_of_days, row_even if index % 2 == 0 else row_odd)
+                    sheet.write(f'{'E' if len(set(docs.student_id)) != 1 else 'C'}{index}',
+                                leave.date_from.strftime('%Y-%m-%d'), row_even if index % 2 == 0 else row_odd)
+                    sheet.write(f'{'F' if len(set(docs.student_id)) != 1 else 'D'}{index}',
+                                leave.date_to.strftime('%Y-%m-%d'), row_even if index % 2 == 0 else row_odd)
+                    if leave.is_half_day:
+                        sheet.write(f'{'G' if len(set(docs.student_id)) != 1 else 'E'}{index}',
+                                    f'Half Day {leave.half_day}', row_even if index % 2 == 0 else row_odd)
+                    else:
+                        sheet.write(f'{'G' if len(set(docs.student_id)) != 1 else 'E'}{index}',
+                                    'Full Day', row_even if index % 2 == 0 else row_odd)
+        sheet.autofit()
+        workbook.close()
+        output.seek(0)
+        response.stream.write(output.read())
+        output.close()

@@ -1,5 +1,7 @@
+import json
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from odoo.tools import json_default
 
 
 class LeaveReportFilterWizard(models.TransientModel):
@@ -46,3 +48,23 @@ class LeaveReportFilterWizard(models.TransientModel):
         }
         return self.env.ref('school_management.action_report_leave_template').report_action(None, data)
 
+    def action_print_xls(self):
+        data = {
+            'duration': self.duration,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+            'student_ids': [student.id for student in self.student_ids],
+            'class_ids': [cls.id for cls in self.class_ids],
+            'student_name': [student.name for student in self.student_ids],
+            'class_name': [cls.name for cls in self.class_ids],
+        }
+        return {
+            'type': 'ir.actions.report',
+            'data': {
+                'model': 'report.school_management.report_leave',
+                 'options': json.dumps(data, default=json_default),
+                 'output_format': 'xlsx',
+                 'report_name': 'Leave Report',
+            },
+            'report_type': 'xlsx',
+        }
