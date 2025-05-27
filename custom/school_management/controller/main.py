@@ -32,3 +32,40 @@ class XLSXReportController(http.Controller):
                'data': se
            }
            return request.make_response(html_escape(json.dumps(error)))
+
+
+class StudentRegistrationController(http.Controller):
+   @http.route('/registration', auth='user', website=True)
+   def student_registration(self):
+       return request.render('school_management.student_registration_template')
+
+   @http.route(['/register_student/'], type='http', auth="user", website=True,  methods=['POST'])
+   def register_student(self, **post):
+       first_name = post.get('first_name')
+       last_name = post.get('last_name')
+       email = post.get('email')
+       mobile = post.get('mobile')
+       dob = post.get('dob')
+       age = post.get('age')
+       aadhaar =  post.get('aadhaar')
+       gender =  post.get('gender')
+       try:
+           student = request.env['student'].sudo().create({
+               'first_name': first_name,
+               'last_name': last_name,
+               'email': email,
+               'mobile': mobile,
+               'dob': dob,
+               'aadhaar_number': aadhaar,
+               'gender': gender,
+               'class_id':'',
+               'dept_id':'',
+               'stage':'registered',
+
+           })
+           print(student.id)
+           return request.redirect('/register_student')
+       except Exception as e:
+           print(e)
+           return request.render('school_management.student_registration_template',
+                                  {'submitted': post.get('submitted', False)})
