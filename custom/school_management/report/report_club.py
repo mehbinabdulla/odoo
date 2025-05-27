@@ -15,9 +15,6 @@ class ReportClub(models.AbstractModel):
         student_ids = tuple(data.get('student_ids')) if len(data.get('student_ids')) != 1 else tuple(data.get('student_ids')) + (0, )
         club_ids = tuple(data.get('club_ids')) if len(data.get('club_ids')) != 1 else tuple(data.get('club_ids')) + (0, )
 
-        print(club_ids)
-        print(student_ids)
-
         self.env.cr.execute(SQL(f"""
             SELECT club.id as id, club.name as name
             FROM school_club as club
@@ -30,7 +27,6 @@ class ReportClub(models.AbstractModel):
 
         clubs = self.env.cr.dictfetchall()
         for club in clubs:
-            print(club.get('name'))
             docids.append(club.get('id'))
 
         if len(docids) > 0:

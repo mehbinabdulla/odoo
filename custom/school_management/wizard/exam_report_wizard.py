@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from odoo import models, fields, api
 
 
@@ -12,15 +12,18 @@ class ExamReportFilterWizard(models.TransientModel):
 
     @api.depends('student_ids')
     def _compute_class_ids(self):
+        """To set the class based on the student"""
         for record in self:
             record.class_ids = record.student_ids.class_id
 
     @api.depends('class_ids')
     def _compute_student_ids(self):
+        """To set the student id None when the class id is changed"""
         for record in self:
             record.student_ids = None
 
     def action_print_report(self):
+        """To pass data to the template"""
         data = {
             'student_ids': [student.id for student in self.student_ids],
             'class_ids': [cls.id for cls in self.class_ids],

@@ -18,8 +18,6 @@ class ReportStudent(models.AbstractModel):
         department_ids = tuple(data.get('department_ids')) if len(data.get('department_ids')) != 1 else tuple(data.get('department_ids')) + (0, )
         class_ids = tuple(data.get('class_ids')) if len(data.get('class_ids')) != 1 else tuple(data.get('class_ids')) + (0, )
 
-        print(data)
-
         self.env.cr.execute(SQL(f"""
         SELECT student.id as id, student.name as name, student.email as email,
                 student.mobile as mobile, student.reg_id as reg_id,
@@ -34,7 +32,6 @@ class ReportStudent(models.AbstractModel):
         """, class_id = class_ids, department_id = department_ids))
         students = self.env.cr.dictfetchall()
         for student in students:
-            print(student)
             docids.append(student.get('id'))
 
         if len(docids) > 0:

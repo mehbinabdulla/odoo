@@ -12,7 +12,7 @@ class Student(models.Model):
     stage = fields.Selection([('draft', 'Draft'),('registered', 'Registered')], string='Status', default='draft')
     first_name = fields.Char(string='Name', required=True)
     last_name = fields.Char(string='Last Name', required=True)
-    name = fields.Char(string='Full Name', compute='_compute_name')
+    name = fields.Char(string='Full Name', store=True, compute='_compute_name')
     partner_id = fields.Many2one('res.partner', ondelete='cascade', readonly=True)
     email = fields.Char(string='Email', related='partner_id.email', store=True, required=True, readonly=False)
     mobile = fields.Char(string='Mobile', related='partner_id.mobile', store=True, readonly=False)

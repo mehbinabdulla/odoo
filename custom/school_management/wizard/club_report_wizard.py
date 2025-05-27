@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from odoo import models, fields, api
 
 
@@ -12,15 +12,18 @@ class ClubReportFilterWizard(models.TransientModel):
     
     @api.depends('student_ids')
     def _compute_club_ids(self):
+        """To set club id None when student id changed"""
         for record in self:
             record.club_ids = None
 
     @api.depends('club_ids')
     def _compute_student_ids(self):
+        """To set student id None when club id changed"""
         for record in self:
             record.student_ids = None
 
     def action_print_report(self):
+        """To pass data to the template"""
         data = {
             'student_ids': [student.id for student in self.student_ids],
             'club_ids': [club.id for club in self.club_ids],

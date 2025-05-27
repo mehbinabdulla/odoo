@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -21,10 +21,12 @@ class EventReportFilterWizard(models.TransientModel):
 
     @api.constrains('start_date', 'end_date')
     def _check_date_difference(self):
+        """To check the date difference"""
         if self.start_date and self.end_date and self.start_date > self.end_date:
             raise ValidationError('Start date must be greater than or equal to end date!')
 
     def action_print_report(self):
+        """To pass data to the template"""
         data = {
             'duration': self.duration,
             'start_date': self.start_date,

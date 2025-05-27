@@ -24,8 +24,6 @@ class ReportEvent(models.AbstractModel):
         week_start = today - timedelta(days = today.weekday())
         week_end = today + timedelta(days = 6 - today.weekday())
 
-        print(club_ids)
-
         self.env.cr.execute(SQL(f"""
             SELECT id, club_id, date_begin, date_end
             FROM event_event
@@ -56,7 +54,6 @@ class ReportEvent(models.AbstractModel):
 
         events = self.env.cr.dictfetchall()
         for event in events:
-            print(event)
             docids.append(event.get('id'))
 
         if duration == 'today':

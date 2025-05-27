@@ -15,9 +15,6 @@ class ReportExam(models.AbstractModel):
         student_ids = tuple(data.get('student_ids')) if len(data.get('student_ids')) != 1 else tuple(data.get('student_ids')) + (0, )
         class_ids = tuple(data.get('class_ids')) if len(data.get('class_ids')) != 1 else tuple(data.get('class_ids')) + (0, )
 
-        print(class_ids)
-        print(student_ids)
-
         self.env.cr.execute(SQL(f"""
             SELECT exam.id as id, exam.name as name, exam.class_id
             FROM school_exam as exam
@@ -30,7 +27,6 @@ class ReportExam(models.AbstractModel):
 
         exams = self.env.cr.dictfetchall()
         for exam in exams:
-            print(exam.get('name'))
             docids.append(exam.get('id'))
 
         if len(docids) > 0:

@@ -1,1 +1,2 @@
+# -*- coding: utf-8 -*-
 from . import report_student, report_leave, report_exam, report_event, report_club

@@ -27,9 +27,6 @@ class ReportLeave(models.AbstractModel):
         week_start = today - timedelta(days = today.weekday())
         week_end = today + timedelta(days = 6 - today.weekday())
 
-        print(class_ids)
-        print(student_ids)
-
         self.env.cr.execute(SQL(f"""
             SELECT id, student_id, class_id,
                 date_from, date_to, is_half_day, half_day
@@ -63,7 +60,6 @@ class ReportLeave(models.AbstractModel):
 
         leaves = self.env.cr.dictfetchall()
         for leave in leaves:
-            print(leave)
             docids.append(leave.get('id'))
 
         if duration == 'today':
@@ -129,7 +125,6 @@ class ReportLeave(models.AbstractModel):
             sheet.write('A12', 'Class', sub_head)
             sheet.write('B12', docs.class_id.name, txt)
         index = 12 if len(set(docs.student_id)) == 1 else 9
-        print(index)
         for class_id in set(docs.class_id):
             order = 0
             index += 3
@@ -160,7 +155,7 @@ class ReportLeave(models.AbstractModel):
                                 leave.date_to.strftime('%Y-%m-%d'), row_even if index % 2 == 0 else row_odd)
                     if leave.is_half_day:
                         sheet.write(f'{'G' if len(set(docs.student_id)) != 1 else 'E'}{index}',
-                                    f'Half Day {leave.half_day}', row_even if index % 2 == 0 else row_odd)
+                                    f'Half Day ({leave.half_day})', row_even if index % 2 == 0 else row_odd)
                     else:
                         sheet.write(f'{'G' if len(set(docs.student_id)) != 1 else 'E'}{index}',
                                     'Full Day', row_even if index % 2 == 0 else row_odd)

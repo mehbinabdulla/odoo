@@ -26,6 +26,7 @@ class Partner(models.Model):
     ]
 
     def create_user(self):
+        """To create user for staff and teachers"""
         partner_ids = self.search([('partner_type', 'in', ['teacher', 'staff'])])
         for val in partner_ids:
             existing_user = self.env['res.users'].search([('login', '=', val.email)], limit=1)

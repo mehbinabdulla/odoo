@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
@@ -23,20 +24,24 @@ class LeaveReportFilterWizard(models.TransientModel):
 
     @api.constrains('start_date', 'end_date')
     def _check_date_difference(self):
+        """To check the date difference"""
         if self.start_date and self.end_date and self.start_date > self.end_date:
             raise ValidationError('Start date must be greater than or equal to end date!')
 
     @api.depends('student_ids')
     def _compute_class_ids(self):
+        """To set class ids based on the students"""
         for record in self:
             record.class_ids = record.student_ids.class_id
 
     @api.depends('class_ids')
     def _compute_student_ids(self):
+        """To set student id None when the class id is changed"""
         for record in self:
             record.student_ids = None
 
     def action_print_report(self):
+        """To pass data to the template"""
         data = {
             'duration': self.duration,
             'start_date': self.start_date,
@@ -49,6 +54,7 @@ class LeaveReportFilterWizard(models.TransientModel):
         return self.env.ref('school_management.action_report_leave_template').report_action(None, data)
 
     def action_print_xls(self):
+        """To pass data to the XLSX sheet"""
         data = {
             'duration': self.duration,
             'start_date': self.start_date,
