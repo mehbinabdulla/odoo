@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from odoo import api, models
 from datetime import date, timedelta
 import calendar
@@ -6,12 +7,13 @@ from odoo.tools import SQL
 
 
 class ReportEvent(models.AbstractModel):
+    """Report generation of events"""
     _name = 'report.school_management.report_event'
     _description = 'Event Report'
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        """ Endpoint for PDF display. """
+        """Pass values to the PDF template"""
         duration = data.get('duration')
         start_date = data.get('start_date')
         end_date = data.get('end_date')

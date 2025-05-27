@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import io
 import xlsxwriter
 from odoo import api, models
@@ -8,12 +9,13 @@ from odoo.tools import SQL
 
 
 class ReportLeave(models.AbstractModel):
+    """Report generation of leave"""
     _name = 'report.school_management.report_leave'
     _description = 'Leave Report'
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        """ Endpoint for PDF display. """
+        """Pass values to the PDF template"""
         duration = data.get('duration')
         start_date = data.get('start_date')
         end_date = data.get('end_date')
@@ -87,6 +89,7 @@ class ReportLeave(models.AbstractModel):
             raise ValidationError('No Record Found')
 
     def  get_xlsx_report(self, data, response):
+        """To pass values to the XLSX sheet"""
         record = self._get_report_values([], data)
         docs = record.get('docs')
         output = io.BytesIO()

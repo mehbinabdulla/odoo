@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'School Management',
     'version': '18.0.1.1.0',

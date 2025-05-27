@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 import io
 from datetime import datetime
-
 import xlsxwriter
 from odoo import api, models
 from odoo.exceptions import ValidationError

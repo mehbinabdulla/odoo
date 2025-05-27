@@ -1,15 +1,17 @@
+# -*- coding: utf-8 -*-
 from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import SQL
 
 
 class ReportExam(models.AbstractModel):
+    """Report generation of exams"""
     _name = 'report.school_management.report_exam'
     _description = 'Leave Report'
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        """ Endpoint for PDF display. """
+        """Pass values to the PDF template"""
         student_ids = tuple(data.get('student_ids')) if len(data.get('student_ids')) != 1 else tuple(data.get('student_ids')) + (0, )
         class_ids = tuple(data.get('class_ids')) if len(data.get('class_ids')) != 1 else tuple(data.get('class_ids')) + (0, )
 

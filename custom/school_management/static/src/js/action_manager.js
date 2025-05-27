@@ -6,7 +6,7 @@ registry.category("ir.actions.report handlers").add("xlsx", async(action)=> {
    //Passing data to the controller to print the excel file
   if (action.report_type === 'xlsx') {
           BlockUI;
-await download({
+          await download({
                url: '/xlsx_reports',
                data: action.data,
                complete: () => unblockUI,
