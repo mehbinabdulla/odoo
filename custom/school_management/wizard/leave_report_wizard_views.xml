@@ -18,7 +18,7 @@
                 </group>
                 <footer>
                     <button string="Print PDF"
-                            data-hotkey="q"
+                            data-hotkey="p"
                             name="action_print_report"
                             type="object"
                             class="print btn-primary o_mail_send">

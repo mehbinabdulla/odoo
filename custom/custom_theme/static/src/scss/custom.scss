@@ -107,7 +107,8 @@ button.py-1.py-lg-0.o-dropdown.dropdown-toggle.dropdown {
  .o_main_navbar .o_menu_systray a,
  .o-dropdown.dropdown-toggle.dropdown span,
  .o-dropdown.dropdown-toggle.dropdown small,
- .o-dropdown-item.dropdown-item.o-navigable.o_nav_entry {
+ .o-dropdown-item.dropdown-item.o-navigable,
+ .o_nav_entry {
     color: $o-gray-800 !important;
     font-weight: 500 !important;
 }
@@ -186,4 +187,11 @@ span.o-mail-DiscussSidebarChannel-badge.badge.rounded-pill:hover,
 .o_notebook .o_notebook_headers a.nav-link.active {
     border-bottom: 3px solid $o-brand-primary-custom !important;
     color: $o-brand-primary-custom !important;
+}
+
+.o-website-btn-custo-secondary.btn.d-flex.align-items-center.rounded-0.border-0.px-3,
+.o-website-btn-custo-primary.btn.position-relative.d-flex.align-items-center.rounded-0.border-0.px-3 span,
+.o_new_content_element.col-md-4.mb8 a i,
+.o_new_content_element.col-md-4.mb8 a i:hover {
+    color: $o-white !important;
 }

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import json
 from odoo import models, fields, api
+from odoo.tools import json_default
 
 
 class ExamReportFilterWizard(models.TransientModel):
@@ -31,3 +33,22 @@ class ExamReportFilterWizard(models.TransientModel):
             'class_name': [cls.name for cls in self.class_ids],
         }
         return self.env.ref('school_management.action_report_exam_template').report_action(None, data)
+    
+    def action_print_xls(self):
+        """To pass data to the XLSX sheet"""
+        data = {
+            'student_ids': [student.id for student in self.student_ids],
+            'class_ids': [cls.id for cls in self.class_ids],
+            'student_name': [student.name for student in self.student_ids],
+            'class_name': [cls.name for cls in self.class_ids],
+        }
+        return {
+            'type': 'ir.actions.report',
+            'data': {
+                'model': 'report.school_management.report_exam',
+                 'options': json.dumps(data, default=json_default),
+                 'output_format': 'xlsx',
+                 'report_name': 'Exam Report',
+            },
+            'report_type': 'xlsx',
+        }

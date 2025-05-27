@@ -4,14 +4,11 @@
     'summary': 'Odoo Example Module',
     'category': 'Test',
     'author': 'Cybrosys',
-    'depends': ['base'],
+    'depends': ['base', 'product'],
     'sequence':3,
-    'images': [
-        'static/description/icon.png'
-    ],
     'data': [
         'security/ir.model.access.csv',
-        'views/example_views.xml',
+        'views/example_view.xml',
         'views/example_lines_views.xml',
         'views/example_tags_views.xml',
         'views/example_menus.xml',

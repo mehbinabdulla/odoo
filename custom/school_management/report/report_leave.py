@@ -73,7 +73,6 @@ class ReportLeave(models.AbstractModel):
         elif duration == 'all':
             data.update({'duration': 'All'})
 
-
         if len(docids) > 0:
             return {
                 'doc_ids': docids,

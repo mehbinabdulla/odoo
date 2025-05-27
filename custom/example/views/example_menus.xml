@@ -7,20 +7,20 @@
 
     <menuitem id="menu_example"
           name="Example"
-          action="action_view_example"
+          action="example_view_action"
           parent="menu_example_root"
           sequence="10"/>
 
     <menuitem id="menu_example_tags"
           name="Example Tags"
           parent="menu_example_root"
-          action="action_view_example_tags"
+          action="action_example_tags"
           sequence="10"/>
 
     <menuitem id="menu_example_lines"
-          name="Example Tags"
+          name="Example Lines"
           parent="menu_example_root"
-          action="action_view_example_lines"
+          action="action_example_lines"
           sequence="10"/>
 
 </odoo>

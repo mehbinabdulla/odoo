@@ -74,7 +74,7 @@ class Student(models.Model):
         return super(Student, self).create(vals)
 
 
-    @api.onchange('first_name','last_name')
+    @api.depends('first_name','last_name')
     def _compute_name(self):
         """To compute full name of the student"""
         for rec in self:

@@ -15,10 +15,16 @@
                 </group>
                 <footer>
                     <button string="Print"
-                            data-hotkey="q"
+                            data-hotkey="p"
                             name="action_print_report"
                             type="object"
                             class="print btn-primary o_mail_send">
+                    </button>
+                     <button string="Print Excel"
+                            data-hotkey="x"
+                            name="action_print_xls"
+                            type="object"
+                            class="print btn-secondary o_mail_send">
                     </button>
                 </footer>
             </form>
