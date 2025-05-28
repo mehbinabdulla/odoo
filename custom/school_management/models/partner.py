@@ -20,11 +20,6 @@ class Partner(models.Model):
         ('normal','Not Marked')
     ], compute='_compute_attendance_state', string='Attendance')
 
-    _sql_constraints = [
-        ('unique_email', 'UNIQUE(email)',
-         "You entered Email is already exists. Please check the data is correct!"),
-    ]
-
     def create_user(self):
         """To create user for staff and teachers"""
         partner_ids = self.search([('partner_type', 'in', ['teacher', 'staff'])])

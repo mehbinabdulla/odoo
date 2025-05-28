@@ -71,98 +71,102 @@
                                 </p>
                                 <t t-if="error">
                                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                        <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+                                        <strong>Error:</strong> <span t-out="error"/>
+                                    </div>
+                                </t>
+                                <t t-if="success">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <strong>Success:</strong> <span t-out="success"/>
                                     </div>
                                 </t>
                                 <section>
                                     <div class="container">
                                         <form id="form_student_registration" action="/register_student/" method="post" enctype="multipart/form-data">
                                             <div class="row">
+
                                                 <div class="my-4">
                                                     <h5 class="mb-3">Personal Details</h5>
                                                     <hr/>
                                                 </div>
+
                                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                                 
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="first_name">First Name *</label>
-                                                    <input id="first_name" type="text" class="form-control" name="first_name" required=""/>
+                                                    <input id="first_name" type="text" class="form-control" name="first_name" t-att-value="values.get('first_name', '')" required=""/>
                                                 </div>
     
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="last_name">Last Name *</label>
-                                                    <input id="last_name" type="text" class="form-control" name="last_name" required=""/>
+                                                    <input id="last_name" type="text" class="form-control" name="last_name" t-att-value="values.get('last_name', '')" required=""/>
                                                 </div>
     
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="email">Email *</label>
-                                                    <input id="email" type="email" class="form-control" name="email" required=""/>
+                                                    <input id="email" type="email" class="form-control" name="email" t-att-value="values.get('email', '')" required=""/>
                                                 </div>
     
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="mobile">Mobile *</label>
-                                                    <input id="mobile" type="tel" class="form-control" name="mobile" required=""/>
+                                                    <input id="mobile" type="tel" class="form-control" name="mobile" t-att-value="values.get('mobile', '')" required=""/>
                                                 </div>
     
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="dob">Date of Birth *</label>
-                                                    <input id="dob" type="date" class="form-control" name="dob" required=""/>
+                                                    <input id="dob" type="date" class="form-control" name="dob" t-att-value="values.get('dob', '')" required=""/>
                                                 </div>
     
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="age">Age</label>
-                                                    <input id="age" type="number" class="form-control" name="age" readonly=""/>
+                                                    <input id="age" type="number" class="form-control" name="age" t-att-value="values.get('age', '')" readonly=""/>
                                                 </div>
     
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="aadhaar">Aadhaar Number</label>
-                                                    <input id="aadhaar" type="number" class="form-control" name="aadhaar"/>
+                                                    <input id="aadhaar" type="number" class="form-control" t-att-value="values.get('aadhaar', '')" name="aadhaar"/>
                                                 </div>
     
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="gender">Gender *</label>
-                                                    <select class="form-select" name="gender" id="gender" required="">
+                                                    <select class="form-select" name="gender" id="gender" t-att-value="values.get('gender', '')" required="">
                                                         <option value="male" selected="">Male</option>
                                                         <option value="female">Female</option>
                                                         <option value="other">Other</option>
                                                     </select>
                                                 </div>
-    
+
                                                 <div class="my-4">
                                                     <h5 class="mb-3">Academic Details</h5>
                                                     <hr/>
                                                 </div>
-    
+
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="class_id">Class *</label>
                                                     <select name="class_id" id="class_id" class="form-select" required="">
                                                         <t t-foreach="request.env['school.class'].sudo().search([])" t-as="school_class">
-                                                            <option t-att-value="school_class.id">
+                                                            <option t-att-value="school_class.id" t-att-selected="str(values.get('class_id', '1')) == str(school_class.id)">
                                                                 <t t-out="school_class.name"/>
                                                             </option>
                                                         </t>
                                                     </select>
                                                 </div>
-    
+
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="department_id">Department *</label>
                                                     <select name="department_id" id="department_id" class="form-select" required="">
                                                         <t t-foreach="request.env['school.department'].sudo().search([])" t-as="school_dept">
-                                                            <option t-att-value="school_dept.id">
+                                                            <option t-att-value="school_dept.id" t-att-selected="str(values.get('department_id', '1')) == str(school_dept.id)">
                                                                 <t t-out="school_dept.name"/>
                                                             </option>
                                                         </t>
                                                     </select>
                                                 </div>
-    
+
                                                 <div class="mb-0 py-2 col-12 text-end">
                                                     <span name="s_website_form_result" id="s_website_form_result"></span>
                                                     <input type="submit" class="btn btn-primary" value="Submit"/>
                                                 </div>
-    
-                                                <t t-if="error">
-                                                    <span t-out="error"/>
-                                                </t>
+
                                             </div>
                                         </form>
                                     </div>
@@ -174,8 +178,27 @@
             </div>
         </t>
     </template>
-    
 
+    <template id="form_success_template" name="Registration Form">
+        <t t-call="website.layout">
+            <div class="oe_structure oe_empty">
+                <section class="s_text_block pt40 pb40 o_colored_level">
+                    <div class="container s_allow_columns">
+                        <div class="row">
+                            <div class="col-lg-6 offset-lg-1 text-center">
+                                <div class="d-inline-block mx-auto p-4">
+                                    <i class="fa fa-paper-plane fa-2x mb-3 rounded-circle text-bg-success" role="presentation"/>
+                                    <h1 class="fw-bolder">Success</h1>
+                                    <p class="lead mb-0" t-out="message"/>
+                                    <a t-att-href="href">Create Another</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
 
     <record id="website_student_registration_menu" model="website.menu">
         <field name="name">Registrations</field>
