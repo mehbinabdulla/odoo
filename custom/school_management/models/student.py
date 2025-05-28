@@ -62,6 +62,7 @@ class Student(models.Model):
         ('length_of_aadhaar', 'CHECK(LENGTH(aadhaar_number) = 12 OR LENGTH(aadhaar_number) = 0)',
          "You entered Aadhaar Number is not in 12 digit. Please check the data is correct!"),
         ('unique_aadhaar', 'UNIQUE(aadhaar_number)',"You entered Aadhaar Number is already exists. Please check the data is correct!"),
+        ('unique_email', 'UNIQUE(email)',"You entered Email Address is already exists. Please check the data is correct!"),
         ('unique_partner_id', 'UNIQUE(partner_id)',"This partner is already linked with a student. Please check the data is correct!"),
     ]
 

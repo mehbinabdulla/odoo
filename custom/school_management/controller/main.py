@@ -3,6 +3,8 @@ import json
 from odoo import http
 from odoo.http import content_disposition, request
 from odoo.tools import html_escape
+
+
 class XLSXReportController(http.Controller):
    @http.route('/xlsx_reports', type='http', auth='user', methods=['POST'], csrf=False)
    def get_report_xlsx(self, model, options, output_format, report_name, **kw):
@@ -37,18 +39,19 @@ class XLSXReportController(http.Controller):
 class StudentRegistrationController(http.Controller):
    @http.route('/registration', auth='user', website=True)
    def student_registration(self):
-       return request.render('school_management.student_registration_template')
+       return request.render('school_management.student_registration_form_template')
 
-   @http.route(['/register_student/'], type='http', auth="user", website=True,  methods=['POST'])
+   @http.route(['/register_student/'], type='http', auth="user", csrf=True, website=True,  methods=['POST'])
    def register_student(self, **post):
        first_name = post.get('first_name')
        last_name = post.get('last_name')
        email = post.get('email')
        mobile = post.get('mobile')
        dob = post.get('dob')
-       age = post.get('age')
        aadhaar =  post.get('aadhaar')
        gender =  post.get('gender')
+       department_id =  post.get('department_id')
+       class_id =  post.get('class_id')
        try:
            student = request.env['student'].sudo().create({
                'first_name': first_name,
@@ -58,14 +61,18 @@ class StudentRegistrationController(http.Controller):
                'dob': dob,
                'aadhaar_number': aadhaar,
                'gender': gender,
-               'class_id':'',
-               'dept_id':'',
-               'stage':'registered',
-
+               'class_id': class_id,
+               'dept_id': department_id,
+               'stage': 'registered',
            })
            print(student.id)
-           return request.redirect('/register_student')
+           return request.redirect('/registration')
        except Exception as e:
-           print(e)
-           return request.render('school_management.student_registration_template',
-                                  {'submitted': post.get('submitted', False)})
+           print(str(e))
+           return request.render('school_management.student_registration_form_template', {'error': post.get('error', str(e))})
+
+   @http.route(['/students'], type='http', auth='public',website=True)
+   def students(self):
+       students = request.env['student'].sudo().search([])
+       return request.render('school_management.students_list_template',
+                             {'students': students})

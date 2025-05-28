@@ -8,6 +8,7 @@
     'sequence':3,
     'data': [
         'security/ir.model.access.csv',
+        'data/example_tag_data.xml',
         'views/example_view.xml',
         'views/example_lines_views.xml',
         'views/example_tags_views.xml',
