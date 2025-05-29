@@ -12,11 +12,11 @@
                 </div>
             </section>
             <!-- No events -->
-            <div t-if="not leaves" class="col-12 text-center">
+            <div t-if="not leaves" class="pt152 col-12 text-center">
                 <h3>No leaves created yet</h3>
                 <p>We couldn't find any leave created at this moment.</p>
                 <div class="o_not_editable my-3" groups="event.group_event_user">
-                    <a class="o_wevent_cta btn" target="_blank" href="/leaves/create">
+                    <a class="o_wevent_cta btn" href="/leaves/create">
                         <span class="fa fa-plus me-1"/> Create a Leave
                     </a>
                 </div>
@@ -26,7 +26,7 @@
                 <div id="o_wevent_index_main_col" class="col-md mb-3 opt_events_list_columns">
                     <div class="row g-4 g-lg-3 g-xxl-4">
                         <table class="table table-striped table-hover table-responsive">
-                            <thead>
+                            <thead t-if="leaves">
                                 <tr>
                                     <th scope="col">Sl. No.</th>
                                     <th scope="col">Name</th>
@@ -166,7 +166,6 @@
                     </div>
                 </section>
             </div>
-<!--            <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>-->
         </t>
     </template>
 

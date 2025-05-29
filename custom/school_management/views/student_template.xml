@@ -12,11 +12,11 @@
                 </div>
             </section>
             <!-- No events -->
-            <div t-if="not students" class="col-12 text-center">
+            <div t-if="not students" class="pt152 col-12 text-center">
                 <h3>No students registered yet</h3>
                 <p>We couldn't find any student registered at this moment.</p>
                 <div class="o_not_editable my-3" groups="event.group_event_user">
-                    <a class="o_wevent_cta btn" target="_blank" href="/registration">
+                    <a class="o_wevent_cta btn" href="/registration">
                         <span class="fa fa-plus me-1"/> Register a Student
                     </a>
                 </div>
@@ -26,7 +26,7 @@
                 <div id="o_wevent_index_main_col" class="col-md mb-3 opt_events_list_columns">
                     <div class="row g-4 g-lg-3 g-xxl-4">
                         <table class="table table-striped table-hover table-responsive">
-                            <thead>
+                            <thead t-if="students">
                                 <tr>
                                     <th scope="col">Sl. No.</th>
                                     <th scope="col">Name</th>
