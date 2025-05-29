@@ -1,23 +1,23 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="students_list_template" name="Students list">
+    <template id="student_leaves_list_template" name="Leave list">
         <t t-call="website.layout">
             <section class="s_title parallax bg-black-50 pt24 pb24">
                 <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
                 <div class="o_we_bg_filter bg-black-50"/>
                 <div class="container o_wevent_index_topbar_filters d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
-                    <h1 class="h1 my-0 me-auto pe-sm-4">Students</h1>
-                    <a href="/registration" class="btn btn-outline-light">New</a>
+                    <h1 class="h1 my-0 me-auto pe-sm-4">Leaves</h1>
+                    <a href="/leaves/create" class="btn btn-outline-light">New</a>
                 </div>
             </section>
             <!-- No events -->
-            <div t-if="not students" class="col-12 text-center">
-                <h3>No students registered yet</h3>
-                <p>We couldn't find any student registered at this moment.</p>
+            <div t-if="not leaves" class="col-12 text-center">
+                <h3>No leaves created yet</h3>
+                <p>We couldn't find any leave created at this moment.</p>
                 <div class="o_not_editable my-3" groups="event.group_event_user">
-                    <a class="o_wevent_cta btn" target="_blank" href="/registration">
-                        <span class="fa fa-plus me-1"/> Register a Student
+                    <a class="o_wevent_cta btn" target="_blank" href="/leaves/create">
+                        <span class="fa fa-plus me-1"/> Create a Leave
                     </a>
                 </div>
             </div>
@@ -31,24 +31,31 @@
                                     <th scope="col">Sl. No.</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Class</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Mobile</th>
-                                    <th scope="col">Registration Date</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">No. of Days</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">End Date</th>
+                                    <th scope="col">Type</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <t t-set="order" t-value="0"/>
-                                    <t t-foreach="students" t-as="student">
+                                    <t t-foreach="leaves" t-as="leave">
                                         <tr>
                                             <t t-set="order" t-value="order+1"/>
                                             <th scope="row"><span t-out="order"/></th>
-                                            <td><span t-out="student.name"/></td>
-                                            <td><span t-out="student.class_id.name"/></td>
-                                            <td><span t-out="student.email"/></td>
-                                            <td><span t-out="student.mobile"/></td>
-                                            <td><span t-out="student.reg_date"/></td>
-                                            <td><a class="btn btn-primary btn-sm" t-att-href="'/student/%s' % student.id">View</a></td>
+                                            <td><span t-out="leave.student_id.name"/></td>
+                                            <td><span t-out="leave.class_id.name"/></td>
+                                            <td><span t-out="leave.number_of_days"/></td>
+                                            <td><span t-out="leave.date_from"/></td>
+                                            <td><span t-out="leave.date_to"/></td>
+                                            <td>
+                                                <t t-if="leave.is_half_day">
+                                                    <span>Half Day</span><![CDATA[&nbsp;]]>(<span t-field="leave.half_day"/>)
+                                                </t>
+                                                <t t-else="">
+                                                    <span>Full Day</span>
+                                                </t>
+                                            </td>
                                         </tr>
                                     </t>
                             </tbody>
@@ -59,14 +66,14 @@
         </t>
     </template>
 
-    <template id="student_registration_form_template" name="Registration Form">
+    <template id="student_leave_create_form_template" name="Registration Form">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure">
                 <section class="s_title parallax bg-black-50 pt24 pb24">
                     <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
                     <div class="o_we_bg_filter bg-black-50"/>
                     <div class="container">
-                        <h1>Student Registration</h1>
+                        <h1>Create Leave</h1>
                     </div>
                 </section>
                 <section class="s_text_block pt40 pb40">
@@ -74,8 +81,8 @@
                         <div class="row">
                             <div class="col-lg-7 mt-4 mt-lg-0">
                                 <p class="lead">
-                                    Now you can register students from our website.<br/>
-                                    Also see the registrations from here.
+                                    Now you can create leaves from our website.<br/>
+                                    Also see the leaves from here.
                                 </p>
                                 <t t-if="error">
                                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -92,82 +99,57 @@
                                         <form id="form_student_registration" action="/register_student/" method="post" enctype="multipart/form-data">
                                             <div class="row">
 
-                                                <div class="my-4">
-                                                    <h5 class="mb-3">Personal Details</h5>
-                                                    <hr/>
-                                                </div>
-
                                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                                
-                                                <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="first_name">First Name *</label>
-                                                    <input id="first_name" type="text" class="form-control" name="first_name" t-att-value="values.get('first_name', '')" required=""/>
-                                                </div>
-    
-                                                <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="last_name">Last Name *</label>
-                                                    <input id="last_name" type="text" class="form-control" name="last_name" t-att-value="values.get('last_name', '')" required=""/>
-                                                </div>
-    
-                                                <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="email">Email *</label>
-                                                    <input id="email" type="email" class="form-control" name="email" t-att-value="values.get('email', '')" required=""/>
-                                                </div>
-    
-                                                <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="mobile">Mobile *</label>
-                                                    <input id="mobile" type="tel" class="form-control" name="mobile" t-att-value="values.get('mobile', '')" required=""/>
-                                                </div>
-    
-                                                <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="dob">Date of Birth *</label>
-                                                    <input id="dob" type="date" class="form-control" name="dob" t-att-value="values.get('dob', '')" required=""/>
-                                                </div>
-    
-                                                <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="age">Age</label>
-                                                    <input id="age" type="number" class="form-control" name="age" t-att-value="values.get('age', '')" readonly=""/>
-                                                </div>
-    
-                                                <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="aadhaar">Aadhaar Number</label>
-                                                    <input id="aadhaar" type="number" class="form-control" t-att-value="values.get('aadhaar', '')" name="aadhaar"/>
-                                                </div>
-    
-                                                <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="gender">Gender *</label>
-                                                    <select class="form-select" name="gender" id="gender" t-att-value="values.get('gender', '')" required="">
-                                                        <option value="male" selected="">Male</option>
-                                                        <option value="female">Female</option>
-                                                        <option value="other">Other</option>
-                                                    </select>
-                                                </div>
 
-                                                <div class="my-4">
-                                                    <h5 class="mb-3">Academic Details</h5>
-                                                    <hr/>
+                                                <div class="mb-3 col-lg-6">
+                                                    <label class="form-label" for="student_id">Student *</label>
+                                                    <select class="form-select" id="student_id" name="student_id">
+                                                        <option value="">Select the student</option>
+                                                        <t t-foreach="request.env['student'].sudo().search([])" t-as="student">
+                                                            <option t-att-value="student.id" t-att-selected="str(values.get('student_id')) == str(student.id)">
+                                                                <t t-out="student.name"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
                                                 </div>
 
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="class_id">Class *</label>
-                                                    <select name="class_id" id="class_id" class="form-select" required="">
-                                                        <t t-foreach="request.env['school.class'].sudo().search([])" t-as="school_class">
-                                                            <option t-att-value="school_class.id" t-att-selected="str(values.get('class_id', '1')) == str(school_class.id)">
-                                                                <t t-out="school_class.name"/>
-                                                            </option>
-                                                        </t>
-                                                    </select>
+                                                    <input id="class_name" type="text" class="form-control" placeholder="Class" name="class_name" t-att-value="values.get('class_name')" readonly=""/>
+                                                    <input id="class_id" type="hidden" class="form-control" name="class_id" t-att-value="values.get('class_id')"/>
                                                 </div>
 
                                                 <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="department_id">Department *</label>
-                                                    <select name="department_id" id="department_id" class="form-select" required="">
-                                                        <t t-foreach="request.env['school.department'].sudo().search([])" t-as="school_dept">
-                                                            <option t-att-value="school_dept.id" t-att-selected="str(values.get('department_id', '1')) == str(school_dept.id)">
-                                                                <t t-out="school_dept.name"/>
-                                                            </option>
-                                                        </t>
-                                                    </select>
+                                                    <label class="form-label" for="date_from">Start Date *</label>
+                                                    <input id="date_from" type="date" class="form-control" name="date_from" t-att-value="values.get('date_from')"/>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-6">
+                                                    <label class="form-label" for="date_to">End Date *</label>
+                                                    <input id="date_to" type="date" class="form-control" name="date_to" t-att-value="values.get('date_to')"/>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-6">
+                                                    <label class="form-label" for="date_to">Half Day</label>
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-text">
+                                                            <input class="form-check-input mt-0" type="checkbox" value="True"/>
+                                                        </div>
+                                                         <select class="form-select" id="inputGroupSelect01">
+                                                             <option selected="" value="fn">Forenoon</option>
+                                                             <option value="an">Afternoon</option>
+                                                          </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-6">
+                                                    <label class="form-label" for="class_id">Duration</label>
+                                                    <input id="duration" type="text" class="form-control" placeholder="0" name="duration" t-att-value="values.get('duration')" readonly=""/>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-12">
+                                                    <label class="form-label" for="reason">Reason *</label>
+                                                    <textarea id="reason" class="form-control" placeholder="Provide the reason" name="reason" t-att-value="values.get('reason')" required=""/>
                                                 </div>
 
                                                 <div class="mb-0 py-2 col-12 text-end">
@@ -184,10 +166,11 @@
                     </div>
                 </section>
             </div>
+<!--            <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>-->
         </t>
     </template>
 
-    <template id="student_view_form_template" name="Student View Form">
+    <template id="student_leave_view_form_template" name="Student View Form">
         <t t-call="website.layout">
             <div class="oe_structure pb24">
                 <div class="container pt24">
@@ -266,32 +249,11 @@
         </t>
     </template>
 
-    <template id="form_success_template" name="Success Page">
-        <t t-call="website.layout">
-            <div class="oe_structure oe_empty">
-                <section class="s_text_block pt40 pb40 o_colored_level">
-                    <div class="container s_allow_columns">
-                        <div class="row">
-                            <div class="col-lg-12 text-center">
-                                <div class="d-inline-block mx-auto p-4">
-                                    <i class="fa fa-paper-plane fa-2x mb-3 rounded-circle text-bg-success" role="presentation"/>
-                                    <h1 class="fw-bolder">Success</h1>
-                                    <p class="lead mb-0" t-out="message"/>
-                                    <a t-att-href="href">Create Another</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </t>
-    </template>
-
-     <record id="website_student_menu" model="website.menu">
-       <field name="name">Students</field>
-       <field name="url">/students</field>
+    <record id="website_leave_menu" model="website.menu">
+       <field name="name">Leaves</field>
+       <field name="url">/leaves</field>
        <field name="parent_id" ref="website.main_menu"/>
-       <field name="sequence" type="int">15</field>
+       <field name="sequence" type="int">16</field>
      </record>
 
 </odoo>

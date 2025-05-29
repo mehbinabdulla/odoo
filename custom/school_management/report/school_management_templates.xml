@@ -137,7 +137,6 @@
                                                         <t t-else="">
                                                             <span>Full Day</span>
                                                         </t>
-
                                                     </td>
                                                 </tr>
                                             </t>

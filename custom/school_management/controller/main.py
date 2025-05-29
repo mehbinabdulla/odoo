@@ -8,7 +8,7 @@ from odoo.tools import html_escape
 
 class XLSXReportController(http.Controller):
     @http.route('/xlsx_reports', type='http', auth='user', methods=['POST'], csrf=False)
-    def get_report_xlsx(self, model, options, output_format, report_name, **kw):
+    def get_report_xlsx(self, model, options, output_format, report_name):
         uid = request.session.uid
         report_obj = request.env[model].with_user(uid)
         options = json.loads(options)
@@ -43,6 +43,13 @@ class StudentRegistrationController(http.Controller):
         students = request.env['student'].sudo().search([])
         return request.render('school_management.students_list_template', {
             'students': students
+        })
+
+    @http.route(['/student/<int:student_id>'], type='http', auth='public', website=True)
+    def student_view(self, student_id):
+        student = request.env['student'].sudo().browse(student_id)
+        return request.render('school_management.student_view_form_template', {
+            'student': student
         })
 
     @http.route('/registration', auth='user', website=True)
@@ -100,10 +107,35 @@ class StudentRegistrationController(http.Controller):
             })
 
     @http.route(['/success'], type='http', auth='public', website=True)
-    def success(self, **params):
+    def success(self):
         message = request.session.pop('success_message', '')
         href = request.session.pop('success_href', '#')
         return request.render('school_management.form_success_template', {
             'message': message,
             'href': href
         })
+
+class StudentLeaveController(http.Controller):
+    @http.route(['/leaves'],  type='http', auth='public', website=True)
+    def leaves(self):
+        leaves = request.env['student.leave'].sudo().search([])
+        return request.render('school_management.student_leaves_list_template',{'leaves': leaves})
+
+    @http.route(['/leaves/create'], type='http', auth='public', website=True)
+    def create_leave(self):
+        return request.render('school_management.student_leave_create_form_template', {
+            'error': False,
+            'success': False,
+            'values': {}
+        })
+
+    @http.route(['/api/student/<int:student_id>'], type='json', auth='public', website=True)
+    def api_student_data(self, student_id):
+        student = request.env['student'].sudo().browse(student_id)
+        res = {
+            'id': student.id,
+            'name': student.name,
+            'class_id': student.class_id.id,
+            'class_name': student.class_id.name
+        }
+        return res

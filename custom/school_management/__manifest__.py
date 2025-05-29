@@ -32,6 +32,7 @@
         'views/school_club_views.xml',
         'views/partner_views.xml',
         'views/leave_views.xml',
+        'views/student_leave_template.xml',
         'views/exam_views.xml',
         'report/school_management_templates.xml',
         'report/school_management_reports.xml',
@@ -46,6 +47,10 @@
         'web.assets_backend':[
             'school_management/static/src/js/action_manager.js'
         ],
+
+        'web.assets_frontend':[
+            'school_management/static/src/js/fetch_student.js'
+        ]
     },
     'web_icon': 'static/description/icon.png',
     'installable': True,
