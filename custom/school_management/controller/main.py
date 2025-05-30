@@ -38,11 +38,22 @@ class XLSXReportController(http.Controller):
 
 
 class StudentRegistrationController(http.Controller):
-    @http.route(['/students'], type='http', auth='public', website=True)
-    def students(self):
-        students = request.env['student'].sudo().search([])
+    @http.route(['/students', '/students/page/<int:page>'], type='http', auth='public', website=True)
+    def students(self, page=0):
+        students = request.env['student'].sudo()
+        total = students.search_count([])
+        item_per_page = 10
+        pager = request.website.pager(
+            url = '/students',
+            total = total,
+            page = page,
+            step = item_per_page,
+            scope = 5,
+        )
+        students = students.search([], offset=pager['offset'], limit=item_per_page)
         return request.render('school_management.students_list_template', {
-            'students': students
+            'students': students,
+            'pager': pager,
         })
 
     @http.route('/students/registration', auth='user', website=True)
@@ -59,6 +70,13 @@ class StudentRegistrationController(http.Controller):
         return request.render('school_management.student_view_form_template', {
             'student': student
         })
+
+    @http.route(['/student/<int:student_id>/delete'], type='http', auth='public', website=True)
+    def delete_student(self, student_id):
+        partner_id = request.env['student'].sudo().browse(student_id).partner_id
+        request.env['res.users'].sudo().search([('partner_id', '=', partner_id.id)], limit=1).unlink()
+        partner_id.unlink()
+        return request.redirect('/students')
 
     @http.route(['/students/register-student'], type='http', auth="user", csrf=True, website=True, methods=['POST'])
     def register_student(self, **values):
@@ -87,7 +105,7 @@ class StudentRegistrationController(http.Controller):
             })
 
             request.session['success_message'] = f'Registration of {first_name} {last_name} is completed'
-            request.session['success_href'] = '/registration'
+            request.session['success_href'] = '/students/registration'
             return request.redirect('/success')
         except psycopg2.errors.UniqueViolation as e:
             print(str(e))

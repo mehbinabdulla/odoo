@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
+    <template id="dialog_box_template" name="Dialog">
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Record?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Do you want to delete the record?<br/>
+                        This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+                        <a class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="toast_template" name="Toast">
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img src="..." class="rounded me-2" alt="..."/>
+                    <strong class="me-auto">Deleted</strong>
+                    <small>Now</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    Record deleted!
+                </div>
+            </div>
+        </div>
+    </template>
+
     <template id="students_list_template" name="Students">
         <t t-call="website.layout">
             <section class="s_title parallax bg-black-50 pt24 pb24">
@@ -25,22 +62,24 @@
             <div class=" container mt-3 mb-4">
                 <div id="o_wevent_index_main_col" class="col-md mb-3 opt_events_list_columns">
                     <div class="row g-4 g-lg-3 g-xxl-4">
-                        <table class="table table-striped table-hover table-responsive">
-                            <thead t-if="students">
-                                <tr>
-                                    <th scope="col">Sl. No.</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Class</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Mobile</th>
-                                    <th scope="col">Registration Date</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-set="order" t-value="0"/>
+                        <div style="min-height: 50vh">
+                            <table class="table table-striped table-hover table-responsive">
+                                <thead t-if="students">
+                                    <tr>
+                                        <th scope="col">Sl. No.</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Class</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Mobile</th>
+                                        <th scope="col">Registration Date</th>
+                                        <th scope="col">State</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="order" t-value="pager.get('offset', 0)"/>
                                     <t t-foreach="students" t-as="student">
-                                        <tr>
+                                        <tr class="cursor-pointer" t-att-onclick="'window.location.href = \'/student/%s\'' % student.id">
                                             <t t-set="order" t-value="order+1"/>
                                             <th scope="row"><span t-out="order"/></th>
                                             <td><span t-out="student.name"/></td>
@@ -48,30 +87,40 @@
                                             <td><span t-out="student.email"/></td>
                                             <td><span t-out="student.mobile"/></td>
                                             <td><span t-out="student.reg_date"/></td>
-                                            <td><a class="btn btn-primary btn-sm" t-att-href="'/student/%s' % student.id">View</a></td>
+                                            <td><span t-field="student.stage" class="badge text-bg-primary"/></td>
+                                            <td>
+                                                <a
+                                                    class="btn btn-success btn-sm"
+                                                    onclick="event.stopPropagation();"
+                                                    t-att-href="'/student/%s/edit' % student.id">
+                                                    Edit
+                                                </a>
+                                                <button
+                                                    class="btn btn-danger btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal"
+                                                    t-att-data-id="student.id"
+                                                    onclick="
+                                                        event.stopPropagation();
+                                                        $('#deleteModal').find('a.btn-danger')
+                                                            .attr('href', '/student/' + $(this).data('id') + '/delete');">
+                                                    Delete
+                                                </button>
+                                            </td>
                                         </tr>
                                     </t>
-                            </tbody>
-                        </table>
-                        <nav class="d-inline-flex justify-content-center">
-                            <t t-set="pages" t-value=""/>
-                            <ul class="pagination">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                </li>
-                                <t t-foreach="len(students)" t-as="page">
-                                    <li class="page-item">
-                                        <a class="page-link" t-out="page" href="#"></a>
-                                    </li>
-                                </t>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="products_pager d-inline-flex justify-content-center mt-3 mb-4">
+                            <t t-call="website.pager">
+                                <t t-set="_classes">mt-2 ml-md-2</t>
+                            </t>
+                        </div>
                     </div>
                 </div>
             </div>
+            <t t-call="school_management.dialog_box_template"/>
         </t>
     </template>
 
@@ -105,7 +154,7 @@
                                 </t>
                                 <section>
                                     <div class="container">
-                                        <form id="form_student_registration" action="/students/register-student'" method="post" enctype="multipart/form-data">
+                                        <form id="form_student_registration" action="/students/register-student" method="post" enctype="multipart/form-data">
                                             <div class="row">
 
                                                 <div class="my-4">
