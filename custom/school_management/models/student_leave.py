@@ -15,7 +15,7 @@ class StudentLeave(models.Model):
     date_to = fields.Date('End Date', default=fields.Date.today())
     number_of_days = fields.Float('Duration (Days)', store=True, compute="_compute_number_of_days")
     is_half_day = fields.Boolean('Is Half Day')
-    half_day = fields.Selection([('fn','Forenoon'),('an','Afternoon')], default='fn', required=True)
+    half_day = fields.Selection([('fn','Forenoon'), ('an','Afternoon'), ('na', 'Not Applicable')], default='na', required=True)
     reason = fields.Html()
 
     @api.depends('student_id','date_from','date_to', 'is_half_day')

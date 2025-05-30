@@ -8,7 +8,7 @@ from odoo.tools import html_escape
 
 class XLSXReportController(http.Controller):
     @http.route('/xlsx_reports', type='http', auth='user', methods=['POST'], csrf=False)
-    def get_report_xlsx(self, model, options, output_format, report_name):
+    def get_report_xlsx(self, model, options, output_format, report_name, **kwargs):
         uid = request.session.uid
         report_obj = request.env[model].with_user(uid)
         options = json.loads(options)
@@ -45,14 +45,7 @@ class StudentRegistrationController(http.Controller):
             'students': students
         })
 
-    @http.route(['/student/<int:student_id>'], type='http', auth='public', website=True)
-    def student_view(self, student_id):
-        student = request.env['student'].sudo().browse(student_id)
-        return request.render('school_management.student_view_form_template', {
-            'student': student
-        })
-
-    @http.route('/registration', auth='user', website=True)
+    @http.route('/students/registration', auth='user', website=True)
     def student_registration(self):
         return request.render('school_management.student_registration_form_template', {
             'error': False,
@@ -60,7 +53,14 @@ class StudentRegistrationController(http.Controller):
             'values': {}
         })
 
-    @http.route(['/register_student/'], type='http', auth="user", csrf=True, website=True, methods=['POST'])
+    @http.route(['/student/<int:student_id>'], type='http', auth='public', website=True)
+    def student_view(self, student_id):
+        student = request.env['student'].sudo().browse(student_id)
+        return request.render('school_management.student_view_form_template', {
+            'student': student
+        })
+
+    @http.route(['/students/register-student'], type='http', auth="user", csrf=True, website=True, methods=['POST'])
     def register_student(self, **values):
         first_name = values.get('first_name')
         last_name = values.get('last_name')
@@ -115,27 +115,111 @@ class StudentRegistrationController(http.Controller):
             'href': href
         })
 
-class StudentLeaveController(http.Controller):
-    @http.route(['/leaves'],  type='http', auth='public', website=True)
-    def leaves(self):
-        leaves = request.env['student.leave'].sudo().search([])
-        return request.render('school_management.student_leaves_list_template',{'leaves': leaves})
-
-    @http.route(['/leaves/create'], type='http', auth='public', website=True)
-    def create_leave(self):
-        return request.render('school_management.student_leave_create_form_template', {
-            'error': False,
-            'success': False,
-            'values': {}
-        })
-
     @http.route(['/api/student/<int:student_id>'], type='json', auth='public', website=True)
     def api_student_data(self, student_id):
         student = request.env['student'].sudo().browse(student_id)
         res = {
             'id': student.id,
             'name': student.name,
-            'class_id': student.class_id.id,
-            'class_name': student.class_id.name
+            'class_id': {
+                'id': student.class_id.id,
+                'name': student.class_id.name
+            },
         }
         return res
+
+
+class StudentLeaveController(http.Controller):
+    @http.route(['/leaves'],  type='http', auth='public', website=True)
+    def leaves(self):
+        leaves = request.env['student.leave'].sudo().search([])
+        return request.render('school_management.student_leaves_list_template',{'leaves': leaves})
+
+    @http.route(['/leaves/new'], type='http', auth='public', website=True)
+    def leave_form(self):
+        return request.render('school_management.student_leave_create_form_template', {
+            'error': False,
+            'success': False,
+            'values': {}
+        })
+
+    @http.route(['/leaves/create'], type='http', auth="user", csrf=True, website=True, methods=['POST'])
+    def create_leave(self, **values):
+        student_id = values.get('student_id')
+        class_id = values.get('class_id')
+        date_from = values.get('date_from')
+        date_to = values.get('date_to')
+        is_half_day = values.get('is_half_day')
+        half_day = values.get('half_day')
+        number_of_days = values.get('number_of_days')
+        reason = values.get('reason')
+
+        if date_from > date_to:
+            return request.render('school_management.student_leave_create_form_template', {
+                'error': 'Start date must be lower than end date!',
+                'success': False,
+                'values': values
+            })
+
+        try:
+            request.env['student.leave'].sudo().create({
+                'student_id': student_id,
+                'class_id': class_id,
+                'date_from': date_from,
+                'date_to': date_to,
+                'is_half_day': True if is_half_day else False,
+                'half_day': half_day if is_half_day else 'na',
+                'reason': reason,
+            })
+            request.session['success_message'] = f'Leave from {date_from} to {date_to} is created'
+            request.session['success_href'] = '/leaves/new'
+            return request.redirect('/success')
+        except Exception as e:
+            print(str(e))
+            request.env.cr.rollback()
+            return request.render('school_management.student_leave_create_form_template', {
+                'error': str(e),
+                'success': False,
+                'values': values
+            })
+
+class SchoolEventController(http.Controller):
+    @http.route(['/event/new'], type='http', website=True, auth='user')
+    def event_form(self):
+        return request.render('school_management.school_event_create_form_template', {
+            'error': False,
+            'success': False,
+            'values': {}
+        })
+
+    @http.route(['/event/create'], type='http', website=True, auth='user', csrf=True, methods=['POST'])
+    def create_event(self, **values):
+        name = values.get('event_name')
+        club_id = values.get('club_id')
+        date_begin = values.get('date_from')
+        date_end = values.get('date_to')
+        description = values.get('description')
+
+        try:
+            request.env['event.event'].sudo().create({
+                'name': name,
+                'club_id': club_id,
+                'date_begin': date_begin,
+                'date_end': date_end,
+                'description': description,
+                'date_tz': 'Asia/Kolkata',
+                'website_published': True,
+                'is_published': True,
+            })
+            request.session['success_message'] = f'Event {name} is created'
+            request.session['success_href'] = '/event/new'
+            return request.redirect('/success')
+        except Exception as e:
+            print(str(e))
+            request.env.cr.rollback()
+            return request.render('school_management.school_event_create_form_template', {
+                'error': str(e),
+                'success': False,
+                'values': values
+            })
+

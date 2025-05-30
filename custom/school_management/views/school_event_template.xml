@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="events_toolbar_inherit" inherit_id="website_event.index_topbar">
+        <xpath expr="//h2[hasclass('h4')]" position="after">
+            <a href="/event/new" class="btn btn-primary">New</a>
+        </xpath>
+    </template>
+
+    <template id="events_list_inherit" inherit_id="website_event.events_list">
+        <xpath expr="//a[hasclass('o_wevent_cta')]" position="attributes">
+            <attribute name="href">/event/new</attribute>
+            <attribute name="class">btn btn-primary</attribute>
+        </xpath>
+    </template>
+
+    <template id="school_event_create_form_template" name="Event Creation">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="s_title parallax bg-black-50 pt24 pb24">
+                    <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
+                    <div class="o_we_bg_filter bg-black-50"/>
+                    <div class="container">
+                        <h1>Create Event</h1>
+                    </div>
+                </section>
+                <section class="s_text_block pt40 pb40">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-7 mt-4 mt-lg-0">
+                                <p class="lead">
+                                    Now you can create events from our website.
+                                </p>
+                                <t t-if="error">
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong>Error:</strong> <span t-out="error"/>
+                                    </div>
+                                </t>
+                                <t t-if="success">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <strong>Success:</strong> <span t-out="success"/>
+                                    </div>
+                                </t>
+                                <section>
+                                    <div class="container">
+                                        <form id="form_event_creation" action="/event/create" method="post" enctype="multipart/form-data">
+                                            <div class="row">
+
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                                <div class="mb-3 col-lg-6">
+                                                    <label class="form-label" for="event_name">Event *</label>
+                                                    <input id="event_name" type="text" class="form-control" placeholder="Event title" name="event_name" t-att-value="values.get('event_name')"/>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-6">
+                                                    <label class="form-label" for="club_id">Club *</label>
+                                                    <select class="form-select" id="club_id" required="" name="club_id">
+                                                        <option value="">Select the club</option>
+                                                        <t t-foreach="request.env['school.club'].sudo().search([])" t-as="club">
+                                                            <option t-att-value="club.id" t-att-selected="str(values.get('club_id')) == str(club.id)">
+                                                                <t t-out="club.name"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-6">
+                                                    <label class="form-label" for="date_from">Start Date *</label>
+                                                    <input id="date_from" type="date" class="form-control" name="date_from" required="" t-att-value="values.get('date_from')"/>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-6">
+                                                    <label class="form-label" for="date_to">End Date *</label>
+                                                    <input id="date_to" type="date" class="form-control" name="date_to" required="" t-att-value="values.get('date_to')"/>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-12">
+                                                    <label class="form-label" for="description">Description *</label>
+                                                    <textarea id="description" class="form-control" placeholder="Describe the event..." name="description" t-att-value="values.get('description')"/>
+                                                </div>
+
+                                                <div class="mb-0 py-2 col-12 text-end">
+                                                    <span name="s_website_form_result" id="s_website_form_result"/>
+                                                    <input type="submit" class="btn btn-primary" value="Create"/>
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+</odoo>

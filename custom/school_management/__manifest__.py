@@ -6,7 +6,7 @@
     'description': "The specific and easy-to-use School Managemnt system in Odoo allows you to keep track of your school administration",
     'category': 'Education',
     'author': 'Mehbin Abdulla',
-    'depends': ['base','event', 'web', 'website', 'sale','l10n_in', 'base_automation'],
+    'depends': ['base','event', 'web', 'website', 'website_event', 'sale','l10n_in', 'base_automation'],
     'sequence':2,
     'images': [
         'static/description/icon.png'
@@ -29,6 +29,7 @@
         'views/school_subject_views.xml',
         'views/school_academic_year_views.xml',
         'views/school_event_views.xml',
+        'views/school_event_template.xml',
         'views/school_club_views.xml',
         'views/partner_views.xml',
         'views/leave_views.xml',
@@ -50,7 +51,9 @@
 
         'web.assets_frontend':[
             'school_management/static/src/js/fetch_student.js',
-            'school_management/static/src/js/calculate_age.js'
+            'school_management/static/src/js/calculate_age.js',
+            'school_management/static/src/js/check_date_difference.js',
+            'school_management/static/src/js/leave_form_manager.js',
         ]
     },
     'web_icon': 'static/description/icon.png',

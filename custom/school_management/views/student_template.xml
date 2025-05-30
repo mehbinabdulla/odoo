@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <template id="students_list_template" name="Students list">
+    <template id="students_list_template" name="Students">
         <t t-call="website.layout">
             <section class="s_title parallax bg-black-50 pt24 pb24">
                 <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
                 <div class="o_we_bg_filter bg-black-50"/>
                 <div class="container o_wevent_index_topbar_filters d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
                     <h1 class="h1 my-0 me-auto pe-sm-4">Students</h1>
-                    <a href="/registration" class="btn btn-outline-light">New</a>
+                    <a href="/students/registration" class="btn btn-outline-light">New</a>
                 </div>
             </section>
             <!-- No events -->
@@ -16,7 +16,7 @@
                 <h3>No students registered yet</h3>
                 <p>We couldn't find any student registered at this moment.</p>
                 <div class="o_not_editable my-3" groups="event.group_event_user">
-                    <a class="o_wevent_cta btn" href="/registration">
+                    <a class="o_wevent_cta btn" href="/students/registration">
                         <span class="fa fa-plus me-1"/> Register a Student
                     </a>
                 </div>
@@ -53,13 +53,29 @@
                                     </t>
                             </tbody>
                         </table>
+                        <nav class="d-inline-flex justify-content-center">
+                            <t t-set="pages" t-value=""/>
+                            <ul class="pagination">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                </li>
+                                <t t-foreach="len(students)" t-as="page">
+                                    <li class="page-item">
+                                        <a class="page-link" t-out="page" href="#"></a>
+                                    </li>
+                                </t>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
         </t>
     </template>
 
-    <template id="student_registration_form_template" name="Registration Form">
+    <template id="student_registration_form_template" name="Registration">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure">
                 <section class="s_title parallax bg-black-50 pt24 pb24">
@@ -89,7 +105,7 @@
                                 </t>
                                 <section>
                                     <div class="container">
-                                        <form id="form_student_registration" action="/register_student/" method="post" enctype="multipart/form-data">
+                                        <form id="form_student_registration" action="/students/register-student'" method="post" enctype="multipart/form-data">
                                             <div class="row">
 
                                                 <div class="my-4">
@@ -172,7 +188,7 @@
 
                                                 <div class="mb-0 py-2 col-12 text-end">
                                                     <span name="s_website_form_result" id="s_website_form_result"/>
-                                                    <input type="submit" class="btn btn-primary" value="Submit"/>
+                                                    <input type="submit" class="btn btn-primary" value="Register"/>
                                                 </div>
 
                                             </div>
@@ -187,7 +203,7 @@
         </t>
     </template>
 
-    <template id="student_view_form_template" name="Student View Form">
+    <template id="student_view_form_template" name="Student">
         <t t-call="website.layout">
             <div class="oe_structure pb24">
                 <div class="container pt24">
@@ -266,7 +282,7 @@
         </t>
     </template>
 
-    <template id="form_success_template" name="Success Page">
+    <template id="form_success_template" name="Success">
         <t t-call="website.layout">
             <div class="oe_structure oe_empty">
                 <section class="s_text_block pt40 pb40 o_colored_level">

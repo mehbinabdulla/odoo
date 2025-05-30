@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="student_leaves_list_template" name="Leave list">
+    <template id="student_leaves_list_template" name="Leaves">
         <t t-call="website.layout">
             <section class="s_title parallax bg-black-50 pt24 pb24">
                 <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
                 <div class="o_we_bg_filter bg-black-50"/>
                 <div class="container o_wevent_index_topbar_filters d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
                     <h1 class="h1 my-0 me-auto pe-sm-4">Leaves</h1>
-                    <a href="/leaves/create" class="btn btn-outline-light">New</a>
+                    <a href="/leaves/new" class="btn btn-outline-light">New</a>
                 </div>
             </section>
             <!-- No events -->
@@ -16,7 +16,7 @@
                 <h3>No leaves created yet</h3>
                 <p>We couldn't find any leave created at this moment.</p>
                 <div class="o_not_editable my-3" groups="event.group_event_user">
-                    <a class="o_wevent_cta btn" href="/leaves/create">
+                    <a class="o_wevent_cta btn" href="/leaves/new">
                         <span class="fa fa-plus me-1"/> Create a Leave
                     </a>
                 </div>
@@ -66,7 +66,7 @@
         </t>
     </template>
 
-    <template id="student_leave_create_form_template" name="Registration Form">
+    <template id="student_leave_create_form_template" name="Create Leave">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure">
                 <section class="s_title parallax bg-black-50 pt24 pb24">
@@ -96,14 +96,14 @@
                                 </t>
                                 <section>
                                     <div class="container">
-                                        <form id="form_student_registration" action="/register_student/" method="post" enctype="multipart/form-data">
+                                        <form id="form_leave_creation" action="/leaves/create" method="post" enctype="multipart/form-data">
                                             <div class="row">
 
                                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="student_id">Student *</label>
-                                                    <select class="form-select" id="student_id" name="student_id">
+                                                    <select class="form-select" id="student_id" required="" name="student_id">
                                                         <option value="">Select the student</option>
                                                         <t t-foreach="request.env['student'].sudo().search([])" t-as="student">
                                                             <option t-att-value="student.id" t-att-selected="str(values.get('student_id')) == str(student.id)">
@@ -121,30 +121,30 @@
 
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="date_from">Start Date *</label>
-                                                    <input id="date_from" type="date" class="form-control" name="date_from" t-att-value="values.get('date_from')"/>
+                                                    <input id="date_from" type="date" class="form-control" name="date_from" required="" t-att-value="values.get('date_from')"/>
                                                 </div>
 
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="date_to">End Date *</label>
-                                                    <input id="date_to" type="date" class="form-control" name="date_to" t-att-value="values.get('date_to')"/>
+                                                    <input id="date_to" type="date" class="form-control" name="date_to" required="" t-att-value="values.get('date_to')"/>
                                                 </div>
 
                                                 <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="date_to">Half Day</label>
+                                                    <label class="form-label" for="is_half_day">Half Day</label>
                                                     <div class="input-group mb-3">
                                                         <div class="input-group-text">
-                                                            <input class="form-check-input mt-0" type="checkbox" value="True"/>
+                                                            <input id="is_half_day" name="is_half_day" class="form-check-input mt-0" type="checkbox" value="true"/>
                                                         </div>
-                                                         <select class="form-select" id="inputGroupSelect01">
-                                                             <option selected="" value="fn">Forenoon</option>
-                                                             <option value="an">Afternoon</option>
+                                                         <select required="" class="form-select" id="half_day" name="half_day">
+                                                             <option id="option_fn" value="fn">Forenoon</option>
+                                                             <option id="option_an" value="an">Afternoon</option>
                                                           </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="mb-3 col-lg-6">
-                                                    <label class="form-label" for="class_id">Duration</label>
-                                                    <input id="duration" type="text" class="form-control" placeholder="0" name="duration" t-att-value="values.get('duration')" readonly=""/>
+                                                    <label class="form-label" for="number_of_days">Duration</label>
+                                                    <input id="number_of_days" type="text" class="form-control" placeholder="0" name="number_of_days" t-att-value="values.get('number_of_days')" readonly=""/>
                                                 </div>
 
                                                 <div class="mb-3 col-lg-12">
@@ -154,7 +154,7 @@
 
                                                 <div class="mb-0 py-2 col-12 text-end">
                                                     <span name="s_website_form_result" id="s_website_form_result"/>
-                                                    <input type="submit" class="btn btn-primary" value="Submit"/>
+                                                    <input type="submit" class="btn btn-primary" value="Create"/>
                                                 </div>
 
                                             </div>
@@ -165,85 +165,6 @@
                         </div>
                     </div>
                 </section>
-            </div>
-        </t>
-    </template>
-
-    <template id="student_leave_view_form_template" name="Student View Form">
-        <t t-call="website.layout">
-            <div class="oe_structure pb24">
-                <div class="container pt24">
-                <span><a href="/students">Students</a> / <span t-out="student.name"/></span>
-                </div>
-                <div class="container pt24 pb16">
-                    <h1><span t-out="student.name"/></h1>
-                    <p><span t-out="student.class_id.name"/> (<span t-out="student.dept_id.name"/>)</p>
-                    <p>Registered on <span t-out="student.reg_date"/> </p>
-                </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6 mt-4 mt-lg-0">
-                            <div class="container">
-                                <div class="my-4">
-                                    <h5 class="mb-3">Personal Details</h5>
-                                    <hr/>
-                                </div>
-                                <dl class="row">
-                                    <dt class="col-sm-3 pb8">Mobile</dt>
-                                    <dd class="col-sm-9">
-                                        <p t-out="student.mobile"/>
-                                    </dd>
-
-                                    <dt class="col-sm-3 pb8">Email</dt>
-                                    <dd class="col-sm-9">
-                                        <p t-out="student.email"/>
-                                    </dd>
-
-                                    <dt class="col-sm-3 pb8">Date of Birth</dt>
-                                    <dd class="col-sm-9">
-                                       <p t-out="student.dob"/>
-                                    </dd>
-
-                                    <dt class="col-sm-3 pb8">Gender</dt>
-                                    <dd class="col-sm-9">
-                                       <p t-out="student.gender.capitalize()"/>
-                                    </dd>
-
-                                    <dt class="col-sm-3 pb8">Address</dt>
-                                    <dd class="col-sm-9">
-                                        <p>
-                                           <span t-out="student.communication_addr_street"/> <span t-out="student.communication_addr_street2"/>
-                                           <span t-out="student.communication_addr_city"/> <span t-out="student.communication_addr_state_id.name"/>
-                                        </p>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 mt-4 mt-lg-0">
-                            <div class="container">
-                                <div class="my-4">
-                                    <h5 class="mb-3">Academic Details</h5>
-                                    <hr/>
-                                </div>
-                                <dl class="row">
-                                   <dt class="col-sm-3 pb8">Clubs</dt>
-                                   <dd class="col-sm-9">
-                                       <p t-out="', '.join([club_id.name for club_id in student.club_ids])"></p>
-                                   </dd>
-
-                                   <dt class="col-sm-3 pb8">Exams</dt>
-                                   <dd class="col-sm-9">
-                                       <ul class="list-group">
-                                           <t t-foreach="student.exam_ids" t-as="exam">
-                                               <li class="list-group-item"><span t-out="exam.name"/></li>
-                                           </t>
-                                       </ul>
-                                   </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
             </div>
         </t>
     </template>

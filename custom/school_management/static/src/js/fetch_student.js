@@ -11,8 +11,8 @@
         .then(response => response.json())
         .then(data => {
             var res = data.result
-            $("#class_id").val(res.class_id)
-            $("#class_name").val(res.class_name)
+            $("#class_id").val(res.class_id.id)
+            $("#class_name").val(res.class_id.name)
         })
         .catch(error => {
             console.log(error)
