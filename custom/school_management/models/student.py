@@ -10,9 +10,9 @@ class Student(models.Model):
 
     reg_id = fields.Char(string='Registration ID', readonly=True, default='New')
     stage = fields.Selection([('draft', 'Draft'),('registered', 'Registered')], string='Status', default='draft')
-    first_name = fields.Char(string='Name', required=True)
+    first_name = fields.Char(string='First Name', required=True)
     last_name = fields.Char(string='Last Name', required=True)
-    name = fields.Char(string='Full Name', store=True, compute='_compute_name')
+    name = fields.Char(string='Name', store=True, compute='_compute_name')
     partner_id = fields.Many2one('res.partner', ondelete='cascade', readonly=True)
     email = fields.Char(string='Email', related='partner_id.email', store=True, required=True, readonly=False)
     mobile = fields.Char(string='Mobile', related='partner_id.mobile', store=True, readonly=False)
@@ -23,7 +23,7 @@ class Student(models.Model):
         ('female', 'Female'),
         ('other', 'Other')
     ], default='male', string='Gender')
-    reg_date = fields.Date(string='Registration Date', default=fields.Date.today)
+    reg_date = fields.Date(string='Registration Date', readonly=True)
     photo = fields.Binary(string='Photo')
     dept_id = fields.Many2one('school.department', string='Department', required=True)
     class_id = fields.Many2one('school.class', string='Class', domain="[('department_id', '=?', dept_id)]", required=True)
@@ -35,6 +35,7 @@ class Student(models.Model):
     school_id = fields.Many2one('res.company', string='School', default=lambda self: self.env.company)
     club_ids = fields.Many2many('school.club', string='Clubs')
     exam_ids = fields.Many2many('school.exam', compute='_compute_exam')
+    is_created_from_front_end = fields.Boolean(default=False)
 
     father = fields.Char(string='Father')
     mother = fields.Char(string='Mother')
@@ -125,6 +126,7 @@ class Student(models.Model):
         for val in student_ids:
             if val.reg_id in ['Draft', 'New']:
                 val.reg_id = self.env['ir.sequence'].next_by_code('student_id_seq')
+                val.reg_date = fields.Date.today()
             if not val.partner_id:
                 user_id = self.env['res.users'].create([{
                     'name': val.name,

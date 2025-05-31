@@ -20,3 +20,4 @@ class SaleOrder(models.Model):
             'context': {'active_id': self.id},
         }
 
+

@@ -5,7 +5,7 @@
     'description': 'Custom Features for Odoo Sales Module',
     'category': 'Sales',
     'author': 'Mehbin Abdulla',
-    'depends': ['base','sale'],
+    'depends': ['base','sale',],
     'sequence':2,
     'images': [
         'static/description/icon.png'

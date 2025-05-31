@@ -53,7 +53,7 @@
             'school_management/static/src/js/fetch_student.js',
             'school_management/static/src/js/calculate_age.js',
             'school_management/static/src/js/check_date_difference.js',
-            'school_management/static/src/js/leave_form_manager.js',
+            'school_management/static/src/js/fetch_class.js',
         ]
     },
     'web_icon': 'static/description/icon.png',

@@ -86,11 +86,14 @@
                                             <td><span t-out="student.class_id.name"/></td>
                                             <td><span t-out="student.email"/></td>
                                             <td><span t-out="student.mobile"/></td>
-                                            <td><span t-out="student.reg_date"/></td>
-                                            <td><span t-field="student.stage" class="badge text-bg-primary"/></td>
+                                            <td><span t-out="student.reg_date or 'Not registered'"/></td>
+                                            <td><span t-field="student.stage"
+                                                      t-att-class="'badge text-bg-success'
+                                                            if student.stage == 'registered' else 'badge text-bg-primary'"/>
+                                            </td>
                                             <td>
                                                 <a
-                                                    class="btn btn-success btn-sm"
+                                                    class="btn btn-info btn-sm"
                                                     onclick="event.stopPropagation();"
                                                     t-att-href="'/student/%s/edit' % student.id">
                                                     Edit
@@ -216,8 +219,9 @@
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="class_id">Class *</label>
                                                     <select name="class_id" id="class_id" class="form-select" required="">
+                                                        <option value="" selected="">Select class</option>
                                                         <t t-foreach="request.env['school.class'].sudo().search([])" t-as="school_class">
-                                                            <option t-att-value="school_class.id" t-att-selected="str(values.get('class_id', '1')) == str(school_class.id)">
+                                                            <option t-att-value="school_class.id" t-att-selected="str(values.get('class_id')) == str(school_class)">
                                                                 <t t-out="school_class.name"/>
                                                             </option>
                                                         </t>
@@ -226,18 +230,13 @@
 
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="department_id">Department *</label>
-                                                    <select name="department_id" id="department_id" class="form-select" required="">
-                                                        <t t-foreach="request.env['school.department'].sudo().search([])" t-as="school_dept">
-                                                            <option t-att-value="school_dept.id" t-att-selected="str(values.get('department_id', '1')) == str(school_dept.id)">
-                                                                <t t-out="school_dept.name"/>
-                                                            </option>
-                                                        </t>
-                                                    </select>
+                                                    <input id="department_name" type="text" class="form-control" t-att-value="values.get('department_name', '')" name="department_name" readonly=""/>
+                                                    <input id="department_id" type="hidden" class="form-control" t-att-value="values.get('department_id', '')" name="department_id"/>
                                                 </div>
 
                                                 <div class="mb-0 py-2 col-12 text-end">
                                                     <span name="s_website_form_result" id="s_website_form_result"/>
-                                                    <input type="submit" class="btn btn-primary" value="Register"/>
+                                                    <input type="submit" class="btn btn-primary" t-att-value="'Create Draft' if not values else 'Save'"/>
                                                 </div>
 
                                             </div>

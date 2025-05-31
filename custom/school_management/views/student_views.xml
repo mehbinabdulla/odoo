@@ -33,23 +33,22 @@
                     <div class="oe_title">
                         <label for="reg_id"/>
                         <h1><field name="reg_id"/></h1>
-                        <label for="first_name"/>
-                        <group class="col-6">
-                            <h2><field name="first_name" placeholder="First Name" readonly="stage=='registered'"/></h2>
-                            <h2><field name="last_name" placeholder="Last Name" readonly="stage=='registered'"/></h2>
+                        <group class="col-4">
+                            <h2><field class="col-3" name="first_name" placeholder="First Name" readonly="stage=='registered'"/></h2>
+                            <h2><field class="col-3" name="last_name" placeholder="Last Name" readonly="stage=='registered'"/></h2>
                         </group>
                     </div>
                     <group>
+                        <group>
+                            <field name="email" placeholder="eg: student@example.com" readonly="stage=='registered'"/>
+                            <field name="mobile" placeholder="eg: +1 5432 000 000" readonly="stage=='registered'"/>
+                        </group>
                         <group>
                             <label for="partner_id"/>
                             <div class="o_row">
                                 <field name="partner_id" string="Partner" placeholder="Related Partner" widget="many2one_avatar_user" options="{'no_create': True ,'no_quick_create': True}"/>
                             </div>
-                            <field name="email" placeholder="eg: student@example.com" readonly="stage=='registered'"/>
-                            <field name="mobile" placeholder="eg: +1 5432 000 000" readonly="stage=='registered'"/>
-                        </group>
-                        <group>
-                            <field name="reg_date" readonly="stage=='registered'"/>
+                            <field name="reg_date" placeholder="Not registered"/>
                         </group>
                     </group>
                     <notebook>

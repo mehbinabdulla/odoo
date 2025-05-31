@@ -41,7 +41,8 @@ class StudentRegistrationController(http.Controller):
     @http.route(['/students', '/students/page/<int:page>'], type='http', auth='public', website=True)
     def students(self, page=0):
         students = request.env['student'].sudo()
-        total = students.search_count([])
+        domain = [('is_created_from_front_end', '=', True)]
+        total = students.search_count(domain)
         item_per_page = 10
         pager = request.website.pager(
             url = '/students',
@@ -50,7 +51,7 @@ class StudentRegistrationController(http.Controller):
             step = item_per_page,
             scope = 5,
         )
-        students = students.search([], offset=pager['offset'], limit=item_per_page)
+        students = students.search(domain, offset=pager['offset'], limit=item_per_page)
         return request.render('school_management.students_list_template', {
             'students': students,
             'pager': pager,
@@ -78,6 +79,26 @@ class StudentRegistrationController(http.Controller):
         partner_id.unlink()
         return request.redirect('/students')
 
+    @http.route(['/student/<int:student_id>/edit'], type='http', auth='public', website=True)
+    def edit_student(self, student_id):
+        student = request.env['student'].sudo().browse(student_id)
+        values = {
+            'first_name': student.first_name,
+            'last_name': student.last_name,
+            'email': student.email,
+            'mobile': student.mobile,
+            'dob': student.dob,
+            'aadhaar': student.aadhaar_number,
+            'gender': student.gender,
+            'department_id': student.dept_id,
+            'class_id': student.class_id,
+        }
+        return request.render('school_management.student_registration_form_template', {
+            'error': False,
+            'success': False,
+            'values': values
+        })
+
     @http.route(['/students/register-student'], type='http', auth="user", csrf=True, website=True, methods=['POST'])
     def register_student(self, **values):
         first_name = values.get('first_name')
@@ -101,7 +122,8 @@ class StudentRegistrationController(http.Controller):
                 'gender': gender,
                 'class_id': class_id,
                 'dept_id': department_id,
-                'stage': 'registered',
+                'is_created_from_front_end': True,
+                'stage': 'draft',
             })
 
             request.session['success_message'] = f'Registration of {first_name} {last_name} is completed'
@@ -142,6 +164,19 @@ class StudentRegistrationController(http.Controller):
             'class_id': {
                 'id': student.class_id.id,
                 'name': student.class_id.name
+            },
+        }
+        return res
+
+    @http.route(['/api/class/<int:class_id>'], type='json', auth='public', website=True)
+    def api_student_data(self, class_id):
+        class_res = request.env['school.class'].sudo().browse(class_id)
+        res = {
+            'id': class_res.id,
+            'name': class_res.name,
+            'department_id': {
+                'id': class_res.department_id.id,
+                'name': class_res.department_id.name
             },
         }
         return res
