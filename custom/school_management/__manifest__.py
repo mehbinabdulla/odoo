@@ -46,14 +46,16 @@
     ],
     'assets':{
         'web.assets_backend':[
-            'school_management/static/src/js/action_manager.js'
+            'school_management/static/src/js/action_manager.js',
         ],
 
         'web.assets_frontend':[
+            'school_management/static/src/xml/latest_event_snippet.xml',
             'school_management/static/src/js/fetch_student.js',
             'school_management/static/src/js/calculate_age.js',
             'school_management/static/src/js/check_date_difference.js',
             'school_management/static/src/js/fetch_class.js',
+            'school_management/static/src/js/dynamic.js',
         ]
     },
     'web_icon': 'static/description/icon.png',

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Product Category tab content template-->
+<templates xml:space="preserve">
+    <t t-name="dynamic_snippet.category_data">
+        <section class="categories_section">
+            <div class="container">
+                <h3 class="section_heading">Latest</h3>
+                   <div class="container school_event_snippet">
+               <div class="row">
+                   <div class="col-md-12">
+                       <h2>Latest Events</h2>
+                       <h4>Get ready to the day</h4>
+                       <span id="total_sold"/>
+                   </div>
+               </div>
+           </div>
+            </div>
+        </section>
+    </t>
+</templates>

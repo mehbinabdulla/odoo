@@ -40,8 +40,7 @@
 
     <template id="students_list_template" name="Students">
         <t t-call="website.layout">
-            <section class="s_title parallax bg-black-50 pt24 pb24">
-                <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;"/>
+            <section class="s_title s_parallax_bg oe_img_bg bg-black-50 pt24 pb24" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 0;">
                 <div class="o_we_bg_filter bg-black-50"/>
                 <div class="container o_wevent_index_topbar_filters d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
                     <h1 class="h1 my-0 me-auto pe-sm-4">Students</h1>
@@ -60,6 +59,9 @@
             </div>
             <!-- List -->
             <div class=" container mt-3 mb-4">
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Students</t>
+                </t>
                 <div id="o_wevent_index_main_col" class="col-md mb-3 opt_events_list_columns">
                     <div class="row g-4 g-lg-3 g-xxl-4">
                         <div style="min-height: 50vh">
@@ -139,6 +141,7 @@
                 </section>
                 <section class="s_text_block pt40 pb40">
                     <div class="container">
+                        <t t-set="breadcrumbs_searchbar" t-value="True"/>
                         <div class="row">
                             <div class="col-lg-7 mt-4 mt-lg-0">
                                 <p class="lead">
@@ -157,7 +160,7 @@
                                 </t>
                                 <section>
                                     <div class="container">
-                                        <form id="form_student_registration" action="/students/register-student" method="post" enctype="multipart/form-data">
+                                        <form id="form_student_registration" action="/students/register" method="post" enctype="multipart/form-data">
                                             <div class="row">
 
                                                 <div class="my-4">
@@ -166,6 +169,7 @@
                                                 </div>
 
                                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input type="hidden" name="student_id" t-att-value="student_id if student_id else False"/>
                                                 
                                                 <div class="mb-3 col-lg-6">
                                                     <label class="form-label" for="first_name">First Name *</label>
@@ -221,7 +225,7 @@
                                                     <select name="class_id" id="class_id" class="form-select" required="">
                                                         <option value="" selected="">Select class</option>
                                                         <t t-foreach="request.env['school.class'].sudo().search([])" t-as="school_class">
-                                                            <option t-att-value="school_class.id" t-att-selected="str(values.get('class_id')) == str(school_class)">
+                                                            <option t-att-value="school_class.id" t-att-selected="str(values.get('class_id')) == str(school_class.id)">
                                                                 <t t-out="school_class.name"/>
                                                             </option>
                                                         </t>
@@ -341,7 +345,9 @@
                                     <i class="fa fa-paper-plane fa-2x mb-3 rounded-circle text-bg-success" role="presentation"/>
                                     <h1 class="fw-bolder">Success</h1>
                                     <p class="lead mb-0" t-out="message"/>
-                                    <a t-att-href="href">Create Another</a>
+                                    <a t-if="href" t-att-href="href">Create another</a>
+                                    <span>or</span>
+                                    <a t-if="view" t-att-href="view">go back to the list</a>.
                                 </div>
                             </div>
                         </div>

@@ -97,4 +97,22 @@
         </t>
     </template>
 
+    <template id="school_management.latest_event_snippet" name="Latest Events">
+       <section class="container school_event_snippet">
+           <div class="row">
+               <div class="col-md-12">
+                   <h2>Latest Events</h2>
+                   <h4>Get ready to the day</h4>
+                   <span id="total_sold"/>
+               </div>
+           </div>
+       </section>
+    </template>
+
+    <template id="external_snippets" inherit_id="website.snippets" priority="8">
+       <xpath expr="//snippets[@id='snippet_groups']//t[@t-snippet][last()]" position="after">
+           <t t-snippet="school_management.latest_event_snippet" t-install="school-management" string="Latest Events" t-thumbnail="./website/static/src/img/snippets_thumbs/s_event_upcoming_snippet.svg"/>
+       </xpath>
+    </template>
+
 </odoo>

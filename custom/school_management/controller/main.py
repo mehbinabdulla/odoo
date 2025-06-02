@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+from collections import OrderedDict
 import psycopg2
 from odoo import http
 from odoo.http import content_disposition, request
@@ -39,9 +40,23 @@ class XLSXReportController(http.Controller):
 
 class StudentRegistrationController(http.Controller):
     @http.route(['/students', '/students/page/<int:page>'], type='http', auth='public', website=True)
-    def students(self, page=0):
+    def students(self, page=1, **params):
+        domain = []
+        searchbar_filters = {
+            'all': {'label': 'All', 'domain': []},
+            'registered': {
+                'label': 'Registered',
+                'domain': [('stage', '=', 'registered')]},
+            'draft': {
+                'label': 'Draft',
+                'domain': [('stage', '=', 'draft')]},
+            'front_end': {
+                'label': 'From Website',
+                'domain': [('is_created_from_front_end', '=', True)]},
+        }
+        filterby = params.get('filterby') if params.get('filterby') else 'all'
+        domain += searchbar_filters[filterby]['domain']
         students = request.env['student'].sudo()
-        domain = [('is_created_from_front_end', '=', True)]
         total = students.search_count(domain)
         item_per_page = 10
         pager = request.website.pager(
@@ -50,10 +65,14 @@ class StudentRegistrationController(http.Controller):
             page = page,
             step = item_per_page,
             scope = 5,
+            url_args = params
         )
-        students = students.search(domain, offset=pager['offset'], limit=item_per_page)
+        students = students.search(domain, offset=pager['offset'], limit=item_per_page, order='id DESC')
         return request.render('school_management.students_list_template', {
             'students': students,
+            'default_url': f'/students/page/{page}',
+            'searchbar_filters': OrderedDict(searchbar_filters.items()),
+            'filterby': filterby,
             'pager': pager,
         })
 
@@ -90,16 +109,18 @@ class StudentRegistrationController(http.Controller):
             'dob': student.dob,
             'aadhaar': student.aadhaar_number,
             'gender': student.gender,
-            'department_id': student.dept_id,
-            'class_id': student.class_id,
+            'department_id': student.dept_id.id,
+            'department_name': student.dept_id.name,
+            'class_id': student.class_id.id,
         }
         return request.render('school_management.student_registration_form_template', {
             'error': False,
             'success': False,
+            'student_id': student_id,
             'values': values
         })
 
-    @http.route(['/students/register-student'], type='http', auth="user", csrf=True, website=True, methods=['POST'])
+    @http.route(['/students/register'], type='http', auth="user", csrf=True, website=True, methods=['POST'])
     def register_student(self, **values):
         first_name = values.get('first_name')
         last_name = values.get('last_name')
@@ -110,24 +131,40 @@ class StudentRegistrationController(http.Controller):
         gender = values.get('gender')
         department_id = values.get('department_id')
         class_id = values.get('class_id')
+        student_id = values.get('student_id')
 
         try:
-            request.env['student'].sudo().create({
-                'first_name': first_name,
-                'last_name': last_name,
-                'email': email,
-                'mobile': mobile,
-                'dob': dob,
-                'aadhaar_number': aadhaar,
-                'gender': gender,
-                'class_id': class_id,
-                'dept_id': department_id,
-                'is_created_from_front_end': True,
-                'stage': 'draft',
-            })
+            if student_id:
+                request.env['student'].sudo().browse(int(student_id)).write({
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'email': email,
+                    'mobile': mobile,
+                    'dob': dob,
+                    'aadhaar_number': aadhaar,
+                    'gender': gender,
+                    'class_id': int(class_id),
+                    'dept_id': int(department_id),
+                    'is_created_from_front_end': True,
+                })
+            else:
+                request.env['student'].sudo().create({
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'email': email,
+                    'mobile': mobile,
+                    'dob': dob,
+                    'aadhaar_number': aadhaar,
+                    'gender': gender,
+                    'class_id': int(class_id),
+                    'dept_id': int(department_id),
+                    'is_created_from_front_end': True,
+                    'stage': 'draft',
+                })
 
-            request.session['success_message'] = f'Registration of {first_name} {last_name} is completed'
+            request.session['success_message'] = f'{'Editing' if student_id else 'Registration'} of {first_name} {last_name} is completed'
             request.session['success_href'] = '/students/registration'
+            request.session['success_view'] = '/students'
             return request.redirect('/success')
         except psycopg2.errors.UniqueViolation as e:
             print(str(e))
@@ -149,10 +186,12 @@ class StudentRegistrationController(http.Controller):
     @http.route(['/success'], type='http', auth='public', website=True)
     def success(self):
         message = request.session.pop('success_message', '')
-        href = request.session.pop('success_href', '#')
+        href = request.session.pop('success_href', False)
+        view = request.session.pop('success_view', False)
         return request.render('school_management.form_success_template', {
             'message': message,
-            'href': href
+            'href': href,
+            'view': view,
         })
 
     @http.route(['/api/student/<int:student_id>'], type='json', auth='public', website=True)
@@ -275,4 +314,9 @@ class SchoolEventController(http.Controller):
                 'success': False,
                 'values': values
             })
+
+    @http.route(['/event/widget/latest'], type="json", auth="public")
+    def latest_events(self):
+        events = request.env['event.event'].sudo().search([('club_id', '!=', False)], limit=4, order='id DESC')
+        return events
 
