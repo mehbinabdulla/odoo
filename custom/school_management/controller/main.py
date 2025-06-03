@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import calendar
 import json
 from collections import OrderedDict
+from datetime import datetime
 import psycopg2
-from odoo import http
+from odoo import http, exceptions
 from odoo.http import content_disposition, request
+import ast
 from odoo.tools import html_escape
 
 
@@ -127,6 +130,7 @@ class StudentRegistrationController(http.Controller):
         email = values.get('email')
         mobile = values.get('mobile')
         dob = values.get('dob')
+        age = values.get('age')
         aadhaar = values.get('aadhaar')
         gender = values.get('gender')
         department_id = values.get('department_id')
@@ -134,6 +138,9 @@ class StudentRegistrationController(http.Controller):
         student_id = values.get('student_id')
 
         try:
+            if 5 > int(age) < 20:
+                raise Exception('You entered age is not between 5 and 20. Please check the data is correct!')
+
             if student_id:
                 request.env['student'].sudo().browse(int(student_id)).write({
                     'first_name': first_name,
@@ -171,6 +178,14 @@ class StudentRegistrationController(http.Controller):
             request.env.cr.rollback()
             return request.render('school_management.student_registration_form_template', {
                 'error': f'Email ({email}) already exists',
+                'success': False,
+                'values': values
+            })
+        except exceptions.ValidationError as e:
+            print(str(e))
+            request.env.cr.rollback()
+            return request.render('school_management.student_registration_form_template', {
+                'error': f'{str(e)}',
                 'success': False,
                 'values': values
             })
@@ -265,6 +280,7 @@ class StudentLeaveController(http.Controller):
             })
             request.session['success_message'] = f'Leave from {date_from} to {date_to} is created'
             request.session['success_href'] = '/leaves/new'
+            request.session['success_view'] = '/leaves'
             return request.redirect('/success')
         except Exception as e:
             print(str(e))
@@ -296,15 +312,15 @@ class SchoolEventController(http.Controller):
             request.env['event.event'].sudo().create({
                 'name': name,
                 'club_id': club_id,
-                'date_begin': date_begin,
-                'date_end': date_end,
+                'date_begin': datetime.strptime(date_begin, '%Y-%m-%dT%H:%M'),
+                'date_end': datetime.strptime(date_end, '%Y-%m-%dT%H:%M'),
                 'description': description,
-                'date_tz': 'Asia/Kolkata',
                 'website_published': True,
                 'is_published': True,
             })
             request.session['success_message'] = f'Event {name} is created'
             request.session['success_href'] = '/event/new'
+            request.session['success_view'] = '/event'
             return request.redirect('/success')
         except Exception as e:
             print(str(e))
@@ -315,8 +331,46 @@ class SchoolEventController(http.Controller):
                 'values': values
             })
 
-    @http.route(['/event/widget/latest'], type="json", auth="public")
+    @http.route(['/event/widget/latest'], type="json", auth="public", website=True)
     def latest_events(self):
-        events = request.env['event.event'].sudo().search([('club_id', '!=', False)], limit=4, order='id DESC')
-        return events
+        events_list = request.env['event.event'].sudo().search_read(
+            [('club_id', '!=', False)],
+            fields=['id', 'name', 'date_begin', 'date_end', 'club_id', 'description', 'cover_properties'],
+            limit=4,
+            order='id DESC'
+        )
+
+        for event in events_list:
+            cover_properties = ast.literal_eval(event.get('cover_properties'))
+            background_image = cover_properties.get('background-image')
+            background_image_url = background_image.split("'")[1]
+
+            date_begin_obj = event.get('date_begin')
+            date_begin = {
+                'year': date_begin_obj.year,
+                'month': calendar.month_abbr[date_begin_obj.month],
+                'day': date_begin_obj.day,
+                'hour': date_begin_obj.hour,
+                'minute': date_begin_obj.minute,
+            }
+
+            date_end_obj = event.get('date_end')
+            date_end = {
+                'year': date_end_obj.year,
+                'month': calendar.month_abbr[date_end_obj.month],
+                'day': date_end_obj.day,
+                'hour': date_end_obj.hour,
+                'minute': date_end_obj.minute,
+            }
+
+            event.update({
+                'background_image_url': background_image_url,
+                'date_begin': date_begin,
+                'date_end': date_end
+            })
+
+        values = {
+            'events': events_list,
+        }
+        return values
 
