@@ -332,12 +332,12 @@ class SchoolEventController(http.Controller):
             })
 
     @http.route(['/event/widget/latest'], type="json", auth="public", website=True)
-    def latest_events(self):
+    def latest_events(self, **params):
         events_list = request.env['event.event'].sudo().search_read(
             [('club_id', '!=', False)],
-            fields=['id', 'name', 'date_begin', 'date_end', 'club_id', 'description', 'cover_properties'],
-            limit=4,
-            order='id DESC'
+            fields = ['id', 'name', 'date_begin', 'date_end', 'club_id', 'description', 'cover_properties'],
+            limit = int(params.get('limit', '1')),
+            order = 'id DESC'
         )
 
         for event in events_list:

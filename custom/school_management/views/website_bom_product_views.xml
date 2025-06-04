@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_website_bom_product" model="ir.actions.act_window">
+        <field name="name">BOM Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.bom</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="_view_nocontent_create">
+                No bill of materials found. Let's create one!
+            </p>
+            <p>
+                Bills of materials allow you to define the list of required raw materials used to make a finished product;
+                through a manufacturing order or a pack of products.
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="BOM Products" id="menu_catalog_website_bom_product" parent="website_sale.menu_catalog" action="action_website_bom_product"/>
+</odoo>

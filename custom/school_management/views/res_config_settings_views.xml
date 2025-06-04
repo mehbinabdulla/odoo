@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Define a view to extend POS configuration settings with delivery options -->
+    <record id="view_pos_configuration_form" model="ir.ui.view">
+        <field name="name">pos.config.view.form.inherit.pos.order.types</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='sale_product_catalog_settings']//setting[last()]" position="after">
+                <setting id="website_product_bom_setting">
+                    <label for="product_ids" string="Show Product BOM"/>
+                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                    <div class="text-muted">
+                        Show the bill of materials of the product in Shop and Cart page
+                    </div>
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <field name="product_ids" class="o_light_label" widget="many2many_tags"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
