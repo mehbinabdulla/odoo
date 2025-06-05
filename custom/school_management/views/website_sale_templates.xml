@@ -4,14 +4,18 @@
         <xpath expr="//div[@name='o_wsale_cart_line_button_container']" position="before">
             <t t-if="str(line.product_id.id) in request.env['ir.config_parameter'].sudo().get_param('res.config.settings.product_ids')">
                 <div class="py-3">
-                    <h5 class="mb-2">Bill of Materials</h5>
+                    <strong class="mb-2">Bill of Materials</strong>
                     <t t-set="bom_ids" t-value="request.env['mrp.bom'].sudo().search([('product_tmpl_id', '=', line.product_id.id)], limit=1).bom_line_ids"/>
                     <p t-if="len(bom_ids) == 0">No Bill of Materials available</p>
-                    <ul class="list-group">
+                    <ul class="list-group pt-2">
                         <t t-foreach="bom_ids" t-as="bom">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <p t-out="bom.product_id.name"/>
-                                <p><span t-out="bom.product_qty"/> Units</p>
+                            <li id="product_detail_main" class="list-group-item d-flex justify-content-between align-items-center">
+                                <p class="w-50 text-truncate" t-out="bom.product_id.name"/>
+                                <p><span t-out="bom.product_qty"/> Unit(s)</p>
+                                <span class="border-left"></span>
+                                <a t-att-data-product-id="bom.product_id.id" t-att-data-add-qty="bom.product_qty" class="border-left" name="add_bom_to_cart">
+                                    <i class="fa fa-cart-plus"/>
+                                </a>
                             </li>
                         </t>
                     </ul>
