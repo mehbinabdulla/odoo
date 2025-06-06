@@ -11,7 +11,7 @@
                     <label for="product_ids" string="Show Product BOM"/>
                     <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
                     <div class="text-muted">
-                        Show the bill of materials of the product in Shop and Cart page
+                        Show the bill of materials of the product in cart
                     </div>
                     <div class="content-group">
                         <div class="row mt16">

@@ -7,5 +7,4 @@ from . import (school_class,
                school_event,
                partner,
                student_leave,
-               school_exam,
-               res_config_settings)
+               school_exam)
