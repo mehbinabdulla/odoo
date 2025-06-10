@@ -11,8 +11,10 @@ from odoo.tools import html_escape
 
 
 class XLSXReportController(http.Controller):
+    """Controller for Excel report"""
     @http.route('/xlsx_reports', type='http', auth='user', methods=['POST'], csrf=False)
     def get_report_xlsx(self, model, options, output_format, report_name, **kwargs):
+        """Controller to pass the data to the action manager"""
         uid = request.session.uid
         report_obj = request.env[model].with_user(uid)
         options = json.loads(options)
@@ -42,8 +44,10 @@ class XLSXReportController(http.Controller):
 
 
 class StudentRegistrationController(http.Controller):
+    """Student Registration Controller"""
     @http.route(['/students', '/students/page/<int:page>'], type='http', auth='public', website=True)
     def students(self, page=1, **params):
+        """Controller to pass the data to the students list"""
         domain = []
         searchbar_filters = {
             'all': {'label': 'All', 'domain': []},
@@ -81,6 +85,7 @@ class StudentRegistrationController(http.Controller):
 
     @http.route('/students/registration', auth='user', website=True)
     def student_registration(self):
+        """Controller to load the registration form"""
         return request.render('school_management.student_registration_form_template', {
             'error': False,
             'success': False,
@@ -89,6 +94,7 @@ class StudentRegistrationController(http.Controller):
 
     @http.route(['/student/<int:student_id>'], type='http', auth='public', website=True)
     def student_view(self, student_id):
+        """Controller to load the view with a student's data"""
         student = request.env['student'].sudo().browse(student_id)
         return request.render('school_management.student_view_form_template', {
             'student': student
@@ -96,6 +102,7 @@ class StudentRegistrationController(http.Controller):
 
     @http.route(['/student/<int:student_id>/delete'], type='http', auth='public', website=True)
     def delete_student(self, student_id):
+        """Controller to delete a student"""
         partner_id = request.env['student'].sudo().browse(student_id).partner_id
         request.env['res.users'].sudo().search([('partner_id', '=', partner_id.id)], limit=1).unlink()
         partner_id.unlink()
@@ -103,6 +110,7 @@ class StudentRegistrationController(http.Controller):
 
     @http.route(['/student/<int:student_id>/edit'], type='http', auth='public', website=True)
     def edit_student(self, student_id):
+        """Controller to load the registration form with a student's data to edit"""
         student = request.env['student'].sudo().browse(student_id)
         values = {
             'first_name': student.first_name,
@@ -125,6 +133,7 @@ class StudentRegistrationController(http.Controller):
 
     @http.route(['/students/register'], type='http', auth="user", csrf=True, website=True, methods=['POST'])
     def register_student(self, **values):
+        """Controller to register a student"""
         first_name = values.get('first_name')
         last_name = values.get('last_name')
         email = values.get('email')
@@ -200,6 +209,7 @@ class StudentRegistrationController(http.Controller):
 
     @http.route(['/success'], type='http', auth='public', website=True)
     def success(self):
+        """To redirect after successful registration"""
         message = request.session.pop('success_message', '')
         href = request.session.pop('success_href', False)
         view = request.session.pop('success_view', False)
@@ -211,6 +221,7 @@ class StudentRegistrationController(http.Controller):
 
     @http.route(['/api/student/<int:student_id>'], type='json', auth='public', website=True)
     def api_student_data(self, student_id):
+        """Api for a student's data"""
         student = request.env['student'].sudo().browse(student_id)
         res = {
             'id': student.id,
@@ -224,6 +235,7 @@ class StudentRegistrationController(http.Controller):
 
     @http.route(['/api/class/<int:class_id>'], type='json', auth='public', website=True)
     def api_student_data(self, class_id):
+        """Api for a class' data"""
         class_res = request.env['school.class'].sudo().browse(class_id)
         res = {
             'id': class_res.id,
@@ -237,13 +249,16 @@ class StudentRegistrationController(http.Controller):
 
 
 class StudentLeaveController(http.Controller):
+    """Controllers for Leave"""
     @http.route(['/leaves'],  type='http', auth='public', website=True)
     def leaves(self):
+        """Controller of list view leaves"""
         leaves = request.env['student.leave'].sudo().search([])
         return request.render('school_management.student_leaves_list_template',{'leaves': leaves})
 
     @http.route(['/leaves/new'], type='http', auth='public', website=True)
     def leave_form(self):
+        """Controller for render the leave creation form"""
         return request.render('school_management.student_leave_create_form_template', {
             'error': False,
             'success': False,
@@ -252,6 +267,7 @@ class StudentLeaveController(http.Controller):
 
     @http.route(['/leaves/create'], type='http', auth="user", csrf=True, website=True, methods=['POST'])
     def create_leave(self, **values):
+        """Controller to create the leave"""
         student_id = values.get('student_id')
         class_id = values.get('class_id')
         date_from = values.get('date_from')
@@ -292,8 +308,10 @@ class StudentLeaveController(http.Controller):
             })
 
 class SchoolEventController(http.Controller):
+    """Controllers for events"""
     @http.route(['/event/new'], type='http', website=True, auth='user')
     def event_form(self):
+        """Controller to render the event creation form"""
         return request.render('school_management.school_event_create_form_template', {
             'error': False,
             'success': False,
@@ -302,6 +320,7 @@ class SchoolEventController(http.Controller):
 
     @http.route(['/event/create'], type='http', website=True, auth='user', csrf=True, methods=['POST'])
     def create_event(self, **values):
+        """Controller to create event"""
         name = values.get('event_name')
         club_id = values.get('club_id')
         date_begin = values.get('date_from')
@@ -333,6 +352,7 @@ class SchoolEventController(http.Controller):
 
     @http.route(['/event/widget/latest'], type="json", auth="public", website=True)
     def latest_events(self, **params):
+        """Controller fot the api call from the event's dynamic snippet"""
         events_list = request.env['event.event'].sudo().search_read(
             [('club_id', '!=', False)],
             fields = ['id', 'name', 'date_begin', 'date_end', 'club_id', 'description', 'cover_properties'],

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+   <t t-name="custom_pos_receipt.ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension">
+        <xpath expr="//article" position="inside">
+            <div t-if="this.props.product.rating" class="inline position-absolute p-2">
+                <span class="badge text-bg-success">
+                     <span><span t-out="this.props.product.rating"/> <span class="fa fa-star text-white "/></span>
+                </span>
+            </div>
+       </xpath>
+   </t>
+</templates>

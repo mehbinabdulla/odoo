@@ -28,6 +28,7 @@
             </div>
         </section>
     </t>
+
     <t t-name="school_management.carousel_event">
         <section class="school_carousel_event_snippet">
             <div id="carouselExampleDark" class="carousel slide">

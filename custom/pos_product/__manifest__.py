@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'POS Product Rating',
     'version': '18.0.1.1.0',
@@ -11,12 +12,16 @@
         'static/description/icon.png'
     ],
     'data': [
-        'security/ir.model.access.csv',
         'views/product_template_views.xml',
     ],
     'assets': {
         'web.assets_frontend':[
         ],
+        'point_of_sale._assets_pos': [
+            'pos_product/static/src/xml/pos_product_card.xml',
+            'pos_product/static/src/xml/order_receipt.xml',
+            'pos_product/static/src/js/order_receipt.js',
+        ]
     },
     'web_icon': 'static/description/icon.png',
     'installable': True,

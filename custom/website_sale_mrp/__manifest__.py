@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 {
-    'name': 'Sales Custom Features',
+    'name': 'Website Sales Custom Features',
     'version': '18.0.1.1.0',
     'summary': 'Custom Features for Odoo Sales Module',
     'description': 'Custom Features for Odoo Sales Module',

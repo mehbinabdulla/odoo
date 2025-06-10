@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 from ast import literal_eval
 from odoo import api, fields, models
 
 
 class WebsiteBomProduct(models.TransientModel):
+    """Transient model for the field product id in settings"""
     _inherit = 'res.config.settings'
 
     product_ids = fields.Many2many('product.product', string='Products')
