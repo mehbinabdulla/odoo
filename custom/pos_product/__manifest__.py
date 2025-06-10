@@ -13,6 +13,7 @@
     ],
     'data': [
         'views/product_template_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'assets': {
         'web.assets_frontend':[
@@ -20,7 +21,7 @@
         'point_of_sale._assets_pos': [
             'pos_product/static/src/xml/pos_product_card.xml',
             'pos_product/static/src/xml/order_receipt.xml',
-            'pos_product/static/src/js/order_receipt.js',
+            'pos_product/static/src/js/order_line.js',
         ]
     },
     'web_icon': 'static/description/icon.png',

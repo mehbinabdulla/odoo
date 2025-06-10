@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Define a view to extend POS configuration settings with delivery options -->
+    <record id="view_pos_configuration_form" model="ir.ui.view">
+        <field name="name">pos.config.view.form.inherit.pos.order.types</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='product_and_category_block']//setting[last()]" position="after">
+                <setting id="website_product_bom_setting">
+                    <label for="category_ids" string="Limit Discount"/>
+                    <div class="text-muted">
+                        Set discount limit based on POS Categories
+                    </div>
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <field name="category_ids">
+                                <list editable="bottom">
+                                    <field name="name" string="Category" readonly="True"/>
+                                    <field name="discount_limit" string="Limit" widget="percentage"/>
+                                </list>
+                            </field>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

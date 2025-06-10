@@ -13,6 +13,10 @@ patch(PosOrderline.prototype, {
             rating: this.get_product().rating,
         };
     },
+    set_discount(discount){
+        console.log(this.get_product().pos_categ_ids[0].discount_limit)
+        return super.set_discount(...arguments)
+    }
 });
 
 patch(Orderline, {
@@ -22,7 +26,7 @@ patch(Orderline, {
             ...Orderline.props.line,
             shape: {
                 ...Orderline.props.line.shape,
-                rating: { type: String, optional: true },
+                rating: { type: [String, Boolean], optional: true },
             },
         },
     },
