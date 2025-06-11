@@ -20,8 +20,10 @@
         ],
         'point_of_sale._assets_pos': [
             'pos_product/static/src/xml/pos_product_card.xml',
-            'pos_product/static/src/xml/order_receipt.xml',
-            'pos_product/static/src/js/order_line.js',
+            'pos_product/static/src/xml/orderline.xml',
+            'pos_product/static/src/xml/modal.xml',
+            'pos_product/static/src/js/modal.js',
+            'pos_product/static/src/js/orderline.js',
         ]
     },
     'web_icon': 'static/description/icon.png',

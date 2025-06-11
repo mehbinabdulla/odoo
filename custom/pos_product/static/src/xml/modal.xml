@@ -1,0 +1,20 @@
+<templates xml:space="preserve">
+  <t t-name="pos_custom_popup.Modal">
+    <div class="popup pos-popup shadow rounded p-4 bg-white">
+      <div class="popup-body text-center">
+        <h4 class="mb-3" t-out="props.modalTitle" />
+        <p t-out="props.modalText" />
+      </div>
+      <div class="popup-footer text-center mt-3">
+        <t t-if="props.modalCancelText">
+          <button class="btn btn-secondary me-2" t-on-click="cancel">
+            <t t-out="props.modalCancelText" />
+          </button>
+        </t>
+        <button class="btn btn-primary" t-on-click="confirm">
+          <t t-out="props.modalOkText" />
+        </button>
+      </div>
+    </div>
+  </t>
+</templates>
