@@ -1,20 +1,24 @@
-<templates xml:space="preserve">
-  <t t-name="pos_custom_popup.Modal">
-    <div class="popup pos-popup shadow rounded p-4 bg-white">
-      <div class="popup-body text-center">
-        <h4 class="mb-3" t-out="props.modalTitle" />
-        <p t-out="props.modalText" />
-      </div>
-      <div class="popup-footer text-center mt-3">
-        <t t-if="props.modalCancelText">
-          <button class="btn btn-secondary me-2" t-on-click="cancel">
-            <t t-out="props.modalCancelText" />
-          </button>
-        </t>
-        <button class="btn btn-primary" t-on-click="confirm">
-          <t t-out="props.modalOkText" />
-        </button>
-      </div>
-    </div>
-  </t>
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_product.DiscountLimit">
+        <Dialog>
+            <t t-set-slot="header">
+                <h4 class="modal-title"><span t-out="props.title"/></h4>
+                <button type="button" class="btn-close" aria-label="Close" t-on-click="confirm" tabindex="-1"/>
+            </t>
+            <div class="body">
+                <span t-out="props.body"/>
+            </div>
+            <t t-set-slot="footer">
+                <div class="modal-footer-left d-flex gap-2">
+                    <div class="modal-footer-left d-flex gap-2">
+                        <button class="button highlight btn btn btn-primary" t-on-click="confirm">OK</button>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
 </templates>
+

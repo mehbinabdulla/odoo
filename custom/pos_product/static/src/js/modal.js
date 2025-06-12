@@ -1,15 +1,14 @@
-/** @odoo-module **/
-
+import { Dialog } from "@web/core/dialog/dialog";
 import { Component } from "@odoo/owl";
 
-export class Modal extends Component {
-  static template = "pos_custom_popup.Modal";
+export class DiscountLimit extends Component {
+    static components = { Dialog };
+    static template = "pos_product.DiscountLimit";
+    static props = ["close", "title", "body"];
 
-  confirm() {
-    this.props.resolve({ confirmed: true });
-  }
+    setup() {}
 
-  cancel() {
-    this.props.resolve({ confirmed: false });
-  }
+    confirm() {
+        this.props.close();
+    }
 }

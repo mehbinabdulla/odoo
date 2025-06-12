@@ -7,3 +7,5 @@ class PosCategory(models.Model):
     _inherit = 'pos.category'
 
     discount_limit = fields.Float('Discount Limit', default=100)
+
+    _sql_constraints = [('check_limit', 'CHECK(discount_limit BETWEEN 0 AND 1)', 'Discount limit must be between 0 and 100')]
