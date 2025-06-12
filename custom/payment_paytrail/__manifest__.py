@@ -12,8 +12,8 @@
             'static/description/icon.png'
     ],
     'data': [
-        'data/payment_provider_data.xml',
         'views/payment_paytrail_templates.xml',
+        'data/payment_provider_data.xml',
         'views/payment_provider_views.xml',
     ],
     'web_icon': 'static/description/icon.png',

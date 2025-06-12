@@ -8,11 +8,11 @@
         <field name="arch" type="xml">
             <group name="provider_credentials" position='inside'>
                 <group invisible="code != 'paytrail'">
-                    <field name="paytrail_key_secret"
+                    <field name="paytrail_merchant_id"
                            string="Merchant ID"
                            invisible="code != 'paytrail'"
                            required="code == 'paytrail' and state != 'disabled'"/>
-                    <field name="paytrail_key_secret"
+                    <field name="paytrail_secret_key"
                            string="Secret Key"
                            invisible="code != 'paytrail'"
                            required="code == 'paytrail' and state != 'disabled'"
