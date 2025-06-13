@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from ast import literal_eval
 from odoo import api, fields, models
+from odoo.api import ondelete
 
 
 class ResConfigSettings(models.TransientModel):
@@ -8,7 +9,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     is_discount_limit = fields.Boolean()
-    category_ids = fields.Many2many('pos.category', string='Category', relation='pos_category_discount_limit_rel')
+    category_ids = fields.Many2many('pos.category', string='Category', relation='pos_category_discount_limit_rel', ondelete='cascade')
 
     @api.model
     def get_values(self):

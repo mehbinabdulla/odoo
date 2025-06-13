@@ -13,9 +13,10 @@ class PaymentPaytrailController(http.Controller):
     @http.route('/payment/paytrail/return', type='http', auth='public')
     def paytrail_return(self, **kwargs):
         reference = kwargs.get('checkout-reference')
-        tx = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
-        if tx:
-            tx._set_done()
+        print('\nResponse: ', kwargs, '\n------------------end---------------------')
+        transaction = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
+        if transaction:
+            transaction._set_done()
         return request.redirect('/payment/status')
 
     @http.route('/payment/paytrail/cancel', type='http', auth='public')

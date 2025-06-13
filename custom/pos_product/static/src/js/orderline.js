@@ -64,6 +64,19 @@ patch(PosOrderline.prototype, {
     }
 });
 
+patch(Orderline, {
+    props: {
+        ...Orderline.props,
+        line: {
+            ...Orderline.props.line,
+            shape: {
+                ...Orderline.props.line.shape,
+                rating: { type: [String, Boolean], optional: true },
+                discount_limit: { type: Number, optional: true },
+            },
+        },
+    },
+})
 
 patch(Orderline.prototype, {
 
@@ -87,17 +100,5 @@ patch(Orderline.prototype, {
            title: "Discount Limit Exceeded",
            body: `Maximum discount limit (${event.detail.limit}%) of category ${event.detail.category} exceeded.`,
         });
-    },
-
-    props: {
-        ...Orderline.props,
-        line: {
-            ...Orderline.props.line,
-            shape: {
-                ...Orderline.props.line.shape,
-                rating: { type: [String, Boolean], optional: true },
-                discount_limit: { type: Number, optional: true },
-            },
-        },
     },
 });

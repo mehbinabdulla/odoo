@@ -7,7 +7,7 @@
     'author': 'Mehbin Abdulla',
     'summary': "Paytrail Payment Gateway for Odoo",
     'description': "Paytrail Payment Gateway for Odoo",  # Non-empty string to avoid loading the README file.
-    'depends': ['payment'],
+    'depends': ['payment', 'account'],
     'images': [
             'static/description/icon.png'
     ],

@@ -1,7 +1,8 @@
 import logging
-import hmac, hashlib, base64, json, requests
+import hmac, hashlib, json, requests
 import uuid
 from datetime import datetime, timezone
+from math import floor
 from odoo import fields, models
 
 
@@ -23,32 +24,6 @@ class Crypto:
         data.append('{key}:{value}'.format(key = key, value = value))
     data.append(body)
     return self.compute_sha256_hash('\n'.join(data), secret)
-
-# class Crypto:
-#
-#     @staticmethod
-#     def compute_sha256_hash(message: str, secret: str) -> str:
-#         hash_key = hmac.new(secret.encode(), message.encode(), digestmod=hashlib.sha256)
-#         return hash_key.hexdigest()
-#
-#     @staticmethod
-#     def calculate_hmac(self, secret: str, header_params: dict, body: str = '') -> str:
-#         # Only take headers starting with "checkout-"
-#         filtered_headers = {
-#             k.lower(): v for k, v in header_params.items() if k.lower().startswith('checkout-')
-#         }
-#
-#         # Sort keys alphabetically
-#         sorted_keys = sorted(filtered_headers.keys())
-#
-#         # Build the signed string
-#         data_lines = [f"{key}:{filtered_headers[key]}" for key in sorted_keys]
-#         if body:
-#             data_lines.append(body)
-#
-#         signed_string = '\n'.join(data_lines)
-#         return self.compute_sha256_hash(signed_string, secret)
-
 
 
 class PaymentProvider(models.Model):
@@ -78,14 +53,18 @@ class PaymentProvider(models.Model):
     #     }
 
     def paytrail_create_payment(self, transaction):
+        from_currency = transaction.currency_id
+        to_currency = self.env['res.currency'].search([('name', '=', 'EUR')], limit=1)
+        converted_amount = floor(from_currency._convert(int(transaction.amount), to_currency, self.env.company, datetime.now()) * 100)
+        print(converted_amount)
         payload = {
             "stamp": str(uuid.uuid4()),
             "reference": transaction.reference,
-            "amount": int(transaction.amount * 100),
+            "amount": converted_amount,
             "currency": "EUR",
             "language": "EN",
             "items": [{
-                "unitPrice": int(transaction.amount * 100),
+                "unitPrice": converted_amount,
                 "units": 1,
                 "vatPercentage": 15,
                 "productCode": transaction.reference,
@@ -114,7 +93,7 @@ class PaymentProvider(models.Model):
         response = requests.post("https://services.paytrail.com/payments", headers=headers, data=body)
 
         if response.status_code == 201:
-            print(response.json()['href'])
+            print('Response:', response.json()['reference'], '---------end------------')
             return response.json()["href"]
         else:
             raise Exception(f"Paytrail Error: {response.text}")
