@@ -55,7 +55,9 @@ class PaymentProvider(models.Model):
     def paytrail_create_payment(self, transaction):
         from_currency = transaction.currency_id
         to_currency = self.env['res.currency'].search([('name', '=', 'EUR')], limit=1)
-        converted_amount = floor(from_currency._convert(int(transaction.amount), to_currency, self.env.company, datetime.now()) * 100)
+        converted_amount = from_currency._convert(transaction.amount, to_currency, self.env.company, datetime.now()) * 100
+        if from_currency != to_currency:
+            converted_amount = floor(converted_amount)
         print(converted_amount)
         payload = {
             "stamp": str(uuid.uuid4()),

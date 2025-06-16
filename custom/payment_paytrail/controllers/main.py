@@ -16,6 +16,7 @@ class PaymentPaytrailController(http.Controller):
         print('\nResponse: ', kwargs, '\n------------------end---------------------')
         transaction = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
         if transaction:
+            transaction.provider_reference = reference
             transaction._set_done()
         return request.redirect('/payment/status')
 
