@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="SystrayWeather">
+        <Dropdown position="'bottom-end'" state="dropdown" beforeOpen.bind="onBeforeOpen" menuClass="discussSystray.menuClass">
+            <button>
+                <i class="fa fa-cloud" role="img" aria-label="Weather"></i>
+            </button>
+            <t t-set-slot="content">
+                <div t-att-class="o-mail-ActivityMenu`">
+                    <div class="o-mail-ActivityMenu-empty align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">
+                        <span>Congratulations, you're done with your activities.</span>
+                    </div>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

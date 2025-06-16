@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 import hmac, hashlib, json, requests
 import uuid
@@ -10,23 +11,27 @@ _logger = logging.getLogger(__name__)
 
 
 class Crypto:
+    """To calculate the hmac of the params then hash with sha256 algorithm"""
 
-  @staticmethod
-  def compute_sha256_hash(message: str, secret: str) -> str:
-    hash_key = hmac.new(secret.encode(), message.encode() ,digestmod=hashlib.sha256)
-    return hash_key.hexdigest()
+    @staticmethod
+    def compute_sha256_hash(message: str, secret: str) -> str:
+        """To hash hmac and secret key with sha256 algorithm"""
+        hash_key = hmac.new(secret.encode(), message.encode() ,digestmod=hashlib.sha256)
+        return hash_key.hexdigest()
 
-  @staticmethod
-  def calculate_hmac(self, secret: str, header_params: dict, body: str='') -> str:
-    data = []
-    for key,value in header_params.items():
-      if key.startswith('checkout-'):
-        data.append('{key}:{value}'.format(key = key, value = value))
-    data.append(body)
-    return self.compute_sha256_hash('\n'.join(data), secret)
+    @staticmethod
+    def calculate_hmac(self, secret: str, header_params: dict, body: str='') -> str:
+        """To compute hmac"""
+        data = []
+        for key,value in header_params.items():
+              if key.startswith('checkout-'):
+                data.append('{key}:{value}'.format(key = key, value = value))
+        data.append(body)
+        return self.compute_sha256_hash('\n'.join(data), secret)
 
 
 class PaymentProvider(models.Model):
+    """Adding required fields for Paytrail Integration"""
     _inherit = 'payment.provider'
 
     code = fields.Selection(
@@ -43,22 +48,13 @@ class PaymentProvider(models.Model):
         groups='base.group_system',
     )
 
-    # def _get_item(self, unit_price, units, vat_percentage, product_code, delivery_date):
-    #     return {
-    #         "unitPrice": unit_price,
-    #         "units": units,
-    #         "vatPercentage": vat_percentage,
-    #         "productCode": product_code,
-    #         "stamp": delivery_date
-    #     }
-
     def paytrail_create_payment(self, transaction):
+        """Initializing payload and headers then creating payment request"""
         from_currency = transaction.currency_id
         to_currency = self.env['res.currency'].search([('name', '=', 'EUR')], limit=1)
         converted_amount = from_currency._convert(transaction.amount, to_currency, self.env.company, datetime.now()) * 100
         if from_currency != to_currency:
             converted_amount = floor(converted_amount)
-        print(converted_amount)
         payload = {
             "stamp": str(uuid.uuid4()),
             "reference": transaction.reference,
@@ -91,11 +87,9 @@ class PaymentProvider(models.Model):
         body = json.dumps(payload, separators=(',', ':'))
         enc_data = Crypto.calculate_hmac(Crypto, self.paytrail_secret_key, headers, body)
         headers["signature"] = enc_data
-        print(headers)
         response = requests.post("https://services.paytrail.com/payments", headers=headers, data=body)
 
         if response.status_code == 201:
-            print('Response:', response.json()['reference'], '---------end------------')
             return response.json()["href"]
         else:
             raise Exception(f"Paytrail Error: {response.text}")
