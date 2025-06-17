@@ -1,28 +1,6 @@
-/** @odoo-module **/
-import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
-class SystrayIcon extends Component {
-   setup() {
-       super.setup();
-       this.notification = useService("notification");
-   }
-   showWeather() {
-       this.notification.add("Hello! This is a notification", {
-           title: "Systray Notification",
-           type: "info",
-           sticky: false,
-       });
-   }
-}
-Weather.template = "SystrayWeather";
-export const systrayItem = {
-   Component: Weather,
-};
-registry.category("systray").add("SystrayWeather", systrayItem, { sequence: 1 });
-
-import { Component, useState } from "@odoo/owl";
-
+/* odoo-module **/
+import { Component, useState, onMounted } from "@odoo/owl";
+import { rpc } from "@web/core/network/rpc";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -31,94 +9,100 @@ import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 
-export class ActivityMenu extends Component {
+export class SystrayWeather extends Component {
     static components = { Dropdown };
     static props = [];
-    static template = "mail.ActivityMenu";
+    static template = "SystrayWeather";
+
 
     setup() {
         super.setup();
-        this.discussSystray = useDiscussSystray();
-        this.action = useService("action");
-        this.userId = user.userId;
-        this.ui = useState(useService("ui"));
+        onMounted(this.onMounted);
+        this.weatherData = null;
+        this.state = useState({'api':null, 'city': null, 'state': null, 'country': null})
         this.dropdown = useDropdownState();
     }
 
-    onBeforeOpen() {
-        this.store.fetchData({ systray_get_activities: true });
-    }
+    getLocation() {
+        if (this.state.city) {
+            fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${this.state.city},${this.state.city},${this.state.country}&limit={limit}&appid=${this.state.api}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data)
+                });
+        } else {
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0,
+            };
 
-    availableViews(group) {
-        return [
-            [false, "kanban"],
-            [false, "list"],
-            [false, "form"],
-            [false, "activity"],
-        ];
-    }
-
-    openActivityGroup(group, filter="all") {
-        this.dropdown.close();
-        const context = {
-            // Necessary because activity_ids of mail.activity.mixin has auto_join
-            // So, duplicates are faking the count and "Load more" doesn't show up
-            force_search_count: 1,
-        };
-        if (group.model === "mail.activity") {
-            this.action.doAction("mail.mail_activity_without_access_action", {
-                additionalContext: {
-                    active_ids: group.activity_ids,
-                    active_model: "mail.activity",
-                },
-            });
-            return;
-        }
-
-        if (filter === "all") {
-            context["search_default_activities_overdue"] = 1;
-            context["search_default_activities_today"] = 1;
-        }
-        else if (filter === "overdue") {
-            context["search_default_activities_overdue"] = 1;
-        }
-        else if (filter === "today") {
-            context["search_default_activities_today"] = 1;
-        }
-        else if (filter === "upcoming_all") {
-            context["search_default_activities_upcoming_all"] = 1;
-        }
-
-        let domain = [["activity_user_id", "=", this.userId]];
-        if (group.domain) {
-            domain = Domain.and([domain, group.domain]).toList();
-        }
-        const views = this.availableViews(group);
-
-        this.action.doAction(
-            {
-                context,
-                domain,
-                name: group.name,
-                res_model: group.model,
-                search_view_id: [false],
-                type: "ir.actions.act_window",
-                views,
-            },
-            {
-                clearBreadcrumbs: true,
-                viewType: group.view_type,
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(this.updateLocation.bind(this), this.handleLocationError.bind(this), options);
+            } else {
+                console.log("Geolocation is not supported by this browser.");
             }
-        );
+        }
     }
 
-    openMyActivities() {
-        this.dropdown.close();
-        this.action.doAction("mail.mail_activity_action_my", { clearBreadcrumbs: true });
+    updateLocation(position) {
+        const { latitude, longitude } = position.coords;
+        const apiKey = '39935437eb2d27164cfb2600006caedd'
+
+        if (!(latitude || longitude)) {
+            console.log("No lat log")
+            return
+        }
+
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                this.weatherData = {
+                    'name': data.name,
+                    'current_date':`${new Date().getDate()} ${new Date().toLocaleString('en-IN',{month:'long'})} ${new Date().getFullYear()}`,
+                    'date': new Date(data.dt * 1000).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+                    'temp': Math.round((data.main.feels_like - 273.15  + Number.EPSILON) * 100) / 100,
+                    'weather': data.weather[0].main,
+                    'weather_description': data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1),
+                    'img_url': `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
+
+                }
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
+
+    }
+
+    handleLocationError(error) {
+        console.log(error)
+    }
+
+     onMounted() {
+        rpc("/api/openweather/credentials", {}).then((data) => {
+            console.log(data)
+            if (data.api_key) this.state.api = data.api_key
+            if (data.location?.name) this.state.city = data.location.name
+            if (data.location?.state) this.state.state = data.location.state
+            if (data.location?.country) this.state.country = data.location.country
+            this.getLocation()
+        });
     }
 }
 
 registry
     .category("systray")
-    .add("mail.activity_menu", { Component: ActivityMenu }, { sequence: 20 });
+    .add("systray_weather", { Component: SystrayWeather }, { sequence: 20 });
 

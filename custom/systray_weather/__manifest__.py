@@ -7,15 +7,15 @@
     'author': 'Mehbin Abdulla',
     'summary': "Weather in System Tray",
     'description': "Weather in System Tray",
-    'depends': ['base', 'web'],
+    'depends': ['base', 'base_setup', 'base_address_extended', 'web'],
     'images': [
             'static/description/icon.png'
     ],
     'data': [
-
+        'views/res_config_settings_views.xml',
     ],
     'assets':{
-        'web.assets_frontend':[
+        'web.assets_backend':[
             'systray_weather/static/src/xml/systray_weather.xml',
             'systray_weather/static/src/js/systray_weather.js',
         ]

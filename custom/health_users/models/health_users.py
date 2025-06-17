@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 import jwt
 import secrets
 from odoo import fields, models, api
 
 
 class HealthUsers(models.Model):
+    """Model to store the user credentials"""
     _name = 'health.users'
     _description = 'Health Users'
 
@@ -19,6 +21,7 @@ class HealthUsers(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        """To override create() and generating JWT encoded secret key"""
         for vals in vals_list:
             secret = secrets.token_hex(32)
             payload = {
@@ -29,6 +32,7 @@ class HealthUsers(models.Model):
         return super(HealthUsers, self).create(vals_list)
 
     def check_expiry(self):
+        """To check the expiry of subscription plan"""
         today = fields.Date.today()
         for record in self.search([]):
             if today > record.expiry:

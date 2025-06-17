@@ -2,14 +2,32 @@
 <templates xml:space="preserve">
 
     <t t-name="SystrayWeather">
-        <Dropdown position="'bottom-end'" state="dropdown" beforeOpen.bind="onBeforeOpen" menuClass="discussSystray.menuClass">
+        <Dropdown position="'bottom-end'" state="dropdown">
             <button>
                 <i class="fa fa-cloud" role="img" aria-label="Weather"></i>
             </button>
             <t t-set-slot="content">
-                <div t-att-class="o-mail-ActivityMenu`">
-                    <div class="o-mail-ActivityMenu-empty align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">
-                        <span>Congratulations, you're done with your activities.</span>
+                <div class="overflow-hidden">
+                    <div t-if="weatherData" class="align-items-center p-3 row">
+                        <div class="col-auto">
+                            <span class="text-muted" t-out="weatherData.current_date"/>
+                            <h1 class="h1">
+                                <b><t t-out="weatherData.temp"/>&#176; <t t-out="weatherData.weather"/></b>
+                            </h1>
+                            <span>
+                                <b><t t-out="weatherData.weather_description"/> in <t t-out="weatherData.name"/></b><br/>
+                            </span>
+                            <span class="pt-1">Last updated on:<br/></span>
+                            <span class="text-muted" t-out="weatherData.date"/>
+                        </div>
+                        <div class="col-auto p-0 m-0">
+                            <img class="p-0 m-0" t-att-src="weatherData.img_url"/>
+                        </div>
+                    </div>
+                    <div t-else="" class="align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">
+                        <div class="spinner-grow" role="status">
+                            <span class="sr-only"></span>
+                        </div>
                     </div>
                 </div>
             </t>
@@ -17,3 +35,4 @@
     </t>
 
 </templates>
+

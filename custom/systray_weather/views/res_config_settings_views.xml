@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Define a view to extend POS configuration settings with delivery options -->
+    <record id="view_base_setup_configuration_form" model="ir.ui.view">
+        <field name="name">base.setup.config.view.form.inherit.openweather.api</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='integration']//setting[last()]" position="after">
+                <setting id="website_product_bom_setting" help="Connect with OpenWeather API">
+                    <field name="open_weather_is_active" string="OpenWeather API"/>
+                    <div class="content-group mt16" invisible="not open_weather_is_active">
+                        <span class="o_form_label" for="">OpenWeather Credentials</span>
+                        <div class="mt16 row">
+                            <label for="open_weather_api" class="col-3 o_light_label"/>
+                            <field name="open_weather_api" required="open_weather_is_active"/>
+                        </div>
+                        <div class="mt16 row">
+                            <label for="open_weather_location" class="col-3 o_light_label"/>
+                            <field name="open_weather_location" placeholder="Current Location"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
