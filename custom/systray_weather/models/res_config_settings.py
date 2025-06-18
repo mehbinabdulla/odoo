@@ -23,7 +23,7 @@ class ResConfigSettings(models.TransientModel):
         res.update(
             open_weather_api = open_weather_api,
             open_weather_is_active = open_weather_is_active,
-            open_weather_location = open_weather_location,
+            open_weather_location = self.env['res.city'].browse(int(open_weather_location)),
         )
         return res
 

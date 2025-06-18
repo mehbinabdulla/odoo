@@ -21,7 +21,7 @@
                             <span class="text-muted" t-out="weatherData.date"/>
                         </div>
                         <div class="col-auto p-0 m-0">
-                            <img class="p-0 m-0" t-att-src="weatherData.img_url"/>
+                            <img class="w-100 p-0 m-0" style="width: 150px" t-att-src="weatherData.img_url"/>
                         </div>
                     </div>
                     <div t-else="" class="align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">

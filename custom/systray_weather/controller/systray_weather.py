@@ -12,8 +12,7 @@ class SystrayWeatherController(http.Controller):
             return None
         api_key = request.env['ir.config_parameter'].sudo().get_param('res.config.settings.open_weather_api')
         location_id = request.env['ir.config_parameter'].sudo().get_param('res.config.settings.open_weather_location')
-        location = request.env['res.city'].sudo().browse(location_id)
-        print(location)
+        location = request.env['res.city'].sudo().browse(int(location_id)) if location_id else None
 
         response = {
             'api_key': api_key,
