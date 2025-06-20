@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
-access_survey_contact,access.survey.contact,model_survey_contact,base.group_allow_export,1,1,1,1
+access_survey_contact,access.survey.contact,model_survey_contact,base.group_user,1,1,1,1
+access_res_partner_field_helper,access.res.partner.field.helper,model_res_partner_field_helper,base.group_user,1,1,1,1
 

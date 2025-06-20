@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, fields, models
 
 
@@ -11,12 +9,12 @@ class SurveyUserInput(models.Model):
     contact_creation_id = fields.Many2one('res.partner')
 
 class SurveyUserInputLine(models.Model):
-    """ Metadata for a set of one user's answers to a particular survey """
+    """ Single answer of question of a particular survey """
     _inherit = 'survey.user_input.line'
 
     @api.model_create_multi
     def create(self, vals_list):
-        new_lines = []
+        """Creating a contact from input lines"""
         for vals in vals_list:
             print(vals_list)
             user_input = self.env['survey.user_input'].browse(vals.get('user_input_id'))
@@ -32,9 +30,9 @@ class SurveyUserInputLine(models.Model):
             for survey_contact_id in survey_contact_ids:
                 if survey_contact_id.question_id.id == question_id:
                     if contact:
-                        contact.write({survey_contact_id.partner_field: answer})
+                        contact.write({survey_contact_id.partner_field_id.name: answer})
                     else:
-                        if survey_contact_id.partner_field == 'name' and answer:
+                        if survey_contact_id.partner_field_id.name == 'name' and answer:
                             new_contact = self.env['res.partner'].create({'name': answer})
                             user_input.contact_creation_id = new_contact.id
         return super(SurveyUserInputLine, self).create(vals_list)

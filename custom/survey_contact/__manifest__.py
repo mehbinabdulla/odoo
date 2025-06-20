@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Survey Contacts',
     'version': '18.0.1.1.0',
@@ -14,7 +15,6 @@
         'views/survey_survey_views.xml',
     ],
     'web_icon': 'static/description/icon.png',
-    'post_init_hook': 'create_partner_fields',
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
